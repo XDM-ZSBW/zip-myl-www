@@ -248,7 +248,8 @@
             try {
                 console.log('🔍 [DEBUG] Checking authentication status for device:', deviceId);
                 
-                const response = await fetch('https://api.myl.zip/api/v1/device/status', {
+                // Try the simple check endpoint first
+                const response = await fetch('https://api.myl.zip/api/v1/device/check', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -256,17 +257,17 @@
                     body: JSON.stringify({ deviceId: deviceId })
                 });
                 
-                console.log('🔍 [DEBUG] Status response:', response.status);
+                console.log('🔍 [DEBUG] Check response:', response.status);
                 
                 if (response.ok) {
                     const data = await response.json();
-                    console.log('🔍 [DEBUG] Status data:', data);
+                    console.log('🔍 [DEBUG] Check data:', data);
                     
                     isAuthenticated = data.authenticated;
-                    document.getElementById('authStatus').textContent = isAuthenticated ? 'Verified' : 'Not verified';
+                    document.getElementById('authStatus').textContent = isAuthenticated ? 'Verified' : 'Ready for verification';
                     document.getElementById('authStatus').style.color = isAuthenticated ? '#4CAF50' : '#FF9800';
                 } else {
-                    console.log('🔍 [DEBUG] Status check failed:', response.status);
+                    console.log('🔍 [DEBUG] Check failed:', response.status);
                     document.getElementById('authStatus').textContent = 'Error checking status';
                     document.getElementById('authStatus').style.color = '#F44336';
                 }
