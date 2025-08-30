@@ -1,0 +1,46 @@
+# Git and version control
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+README.md
+*.md
+docs/
+documentation/
+
+# Deployment files (not needed in container)
+ftp-config.json
+ftp-deploy.js
+deploy.bat
+deploy-secure.bat
+env-template.txt
+deployment-log.txt
+.mylzipignore
+
+# Node.js files (not needed for static serving)
+node_modules/
+package.json
+package-lock.json
+npm-debug.log*
+
+# Development files
+.vscode/
+.idea/
+*.log
+*.tmp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Testing files
+__tests__/
+*.test.js
+*.test.ts
+coverage/
+
+# Build outputs
+dist/
+build/
+out/

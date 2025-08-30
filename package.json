@@ -1,0 +1,28 @@
+{
+  "name": "zip-myl-www",
+  "version": "1.0.0",
+  "description": "Web application with automated Google Cloud Run deployment",
+  "main": "index.js",
+  "scripts": {
+    "start": "echo 'Service runs on Google Cloud Run'",
+    "build": "echo 'Build handled by Cloud Build'",
+    "test": "echo 'Add your test command here'",
+    "dev": "echo 'For local development, open src/index.html in your browser'"
+  },
+  "keywords": [
+    "web",
+    "deployment",
+    "cloud-run",
+    "automation",
+    "static-files"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {}
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
