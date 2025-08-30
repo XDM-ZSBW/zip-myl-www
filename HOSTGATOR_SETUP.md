@@ -1,4 +1,4 @@
-# 🚀 Hostgator Setup Guide
+# 🚀 Hostgator Emergency Setup Guide
 
 ## 📋 Quick Start
 
@@ -28,10 +28,14 @@ cd hostgator
 test-connection.bat
 ```
 
-### **Step 4: Deploy**
+### **Step 4: Initial Deployment**
 ```bash
 deploy.bat
 ```
+
+### **Step 5: Keep DNS Pointing to Cloud Run**
+- **Primary**: `myl.zip` → Google Cloud Run
+- **Emergency**: `myl.zip` → Hostgator (DNS change only)
 
 ## 🔧 Detailed Setup
 
@@ -137,46 +141,81 @@ deploy.bat
 ## 🌐 Domain Configuration
 
 ### **Primary Domain Setup**
-1. **Point DNS** to Hostgator nameservers
-2. **Enable SSL** in Hostgator control panel
-3. **Test** `https://myl.zip`
+1. **Keep DNS pointing** to Google Cloud Run
+2. **Cloud Run serves** myl.zip (primary)
+3. **Hostgator ready** for emergency switch
 
-### **Portal Domain Setup**
-1. **Create subdomain**: `portal.myl.zip`
-2. **Point** to Google Cloud Run URL
-3. **Test** `https://portal.myl.zip`
+### **Emergency Domain Setup**
+1. **Hostgator IP**: Get from Hostgator control panel
+2. **DNS A record**: Change myl.zip to Hostgator IP
+3. **SSL**: Automatic with Let's Encrypt
 
-### **Fallback Domain Setup**
-1. **Create subdomain**: `backup.myl.zip`
-2. **Point** to Google Cloud Run URL
-3. **Use** for emergency redirects
+### **DNS Emergency Switch**
+```bash
+# Emergency DNS switch procedure
+emergency-dns-switch.bat
+```
 
 ## 📊 Monitoring Setup
 
-### **Uptime Monitoring**
-- **Service**: UptimeRobot (free)
-- **URL**: `https://myl.zip`
-- **Interval**: 5 minutes
-- **Alerts**: Email/SMS on downtime
+### **Primary Monitoring (Cloud Run)**
+- **Google Cloud Console**: Monitor Cloud Run service
+- **Uptime monitoring**: Ping myl.zip every 5 minutes
+- **Performance**: Built-in Cloud Run analytics
 
-### **Performance Monitoring**
-- **Google Analytics**: Track visitor behavior
+### **Emergency Monitoring (Hostgator)**
+- **Uptime monitoring**: Ping Hostgator URL every 5 minutes
 - **PageSpeed Insights**: Monitor load times
-- **Core Web Vitals**: Track user experience
+- **Error logging**: Check Hostgator error logs
 
 ## 🔄 Deployment Workflow
 
-### **Daily Workflow**
+### **Normal Workflow (Cloud Run Primary)**
 1. **Make changes** locally in `src/` directory
 2. **Test locally** by opening `src/index.html`
-3. **Deploy to Hostgator**: `deploy.bat`
-4. **Verify**: Check `https://myl.zip`
-5. **Optional**: Sync to Cloud Run: `sync-to-cloud.bat`
+3. **Commit and push**: `git add . && git commit -m "Update" && git push`
+4. **Cloud Run auto-deploys** (primary)
+5. **Optional**: Sync to Hostgator: `sync-from-cloud.bat`
 
-### **Emergency Workflow**
-1. **Hostgator down**: Redirect to Cloud Run
-2. **Cloud Run down**: Hostgator continues serving
-3. **Both down**: Use backup domain
+### **Emergency Workflow (Hostgator Failover)**
+1. **Cloud Run down**: Detect outage
+2. **Deploy to Hostgator**: `deploy.bat`
+3. **Change DNS**: Point myl.zip to Hostgator
+4. **Monitor**: Watch DNS propagation
+5. **Recovery**: Switch back when Cloud Run restored
+
+### **Sync Workflows**
+```bash
+# Sync Cloud Run → Hostgator (backup)
+sync-from-cloud.bat
+
+# Sync Hostgator → Cloud Run (emergency recovery)
+sync-to-cloud.bat
+
+# Emergency DNS switch
+emergency-dns-switch.bat
+```
+
+## 🚨 Emergency Procedures
+
+### **Cloud Run Down (Primary Emergency)**
+1. **Immediate**: Deploy to Hostgator: `./hostgator/deploy.bat`
+2. **DNS change**: Point myl.zip to Hostgator
+3. **Investigation**: Check Cloud Run status
+4. **Recovery**: Restore Cloud Run service
+5. **DNS change**: Point myl.zip back to Cloud Run
+
+### **Hostgator Down (Backup Emergency)**
+1. **Continue**: Cloud Run remains primary
+2. **Monitor**: Watch for Hostgator recovery
+3. **Update**: Keep Cloud Run content current
+4. **Recovery**: Hostgator auto-deploys on fix
+
+### **DNS Emergency Switch**
+```bash
+# Emergency DNS switch to Hostgator
+emergency-dns-switch.bat
+```
 
 ## 🚨 Troubleshooting
 
@@ -192,25 +231,36 @@ deploy.bat
 - **Check for file conflicts** on server
 - **Review deployment logs**
 
-### **Domain Issues**
+### **DNS Issues**
 - **DNS propagation** takes 24-48 hours
 - **SSL certificate** may take time to activate
 - **Check domain status** in Hostgator panel
+- **Monitor propagation** at whatsmydns.net
 
 ## 💰 Cost Breakdown
 
-### **Hostgator Costs**
-- **Domain**: $15/year
-- **Hosting**: $3.95/month (Baby Plan)
-- **SSL**: Free (Let's Encrypt)
-- **Total**: ~$62/year
+### **Cloud Run Costs (Primary)**
+- **Compute**: ~$0-5/month (low traffic)
+- **Storage**: ~$0-2/month
+- **Domain**: ~$15/year
+- **Total**: ~$15-87/year
 
-### **Additional Services**
-- **Uptime Monitoring**: Free (UptimeRobot)
-- **Analytics**: Free (Google Analytics)
-- **CDN**: Optional ($5-10/month)
+### **Hostgator Costs (Emergency)**
+- **Domain**: Already covered
+- **Hosting**: ~$3.95/month (Baby Plan)
+- **SSL**: Free (Let's Encrypt)
+- **Total**: ~$47/year
+
+### **Total Strategy Cost**
+- **Combined**: ~$62-134/year
+- **Redundancy**: Worth the cost for reliability
 
 ## 📞 Support Resources
+
+### **Cloud Run Support**
+- **Google Cloud Console**: Monitor service status
+- **Cloud Run Issues**: Check Google Cloud console
+- **Deployment Issues**: Check build logs
 
 ### **Hostgator Support**
 - **Live Chat**: Available 24/7
@@ -218,20 +268,42 @@ deploy.bat
 - **Email**: support@hostgator.com
 - **Knowledge Base**: help.hostgator.com
 
-### **Technical Support**
-- **FTP Issues**: Hostgator support
-- **Domain Issues**: Hostgator support
-- **SSL Issues**: Hostgator support
-- **Deployment Issues**: Check logs and configuration
+### **DNS Support**
+- **Domain Issues**: Contact domain registrar
+- **DNS Propagation**: Monitor at whatsmydns.net
+- **SSL Issues**: Check certificate status
 
 ## 🎯 Next Steps
 
 1. **Complete Hostgator setup** following this guide
-2. **Test deployment** with sample content
-3. **Configure monitoring** and alerts
-4. **Set up backup procedures**
-5. **Document team procedures**
+2. **Test emergency deployment** workflow
+3. **Configure DNS failover** procedures
+4. **Set up monitoring** for both services
+5. **Document emergency procedures** for team use
+
+## 📋 Emergency Checklist
+
+### **Before Emergency**
+- [ ] Hostgator account active
+- [ ] FTP credentials configured
+- [ ] Test deployment successful
+- [ ] DNS change procedure documented
+- [ ] Team trained on emergency procedures
+
+### **During Emergency**
+- [ ] Deploy latest content to Hostgator
+- [ ] Change DNS A record to Hostgator IP
+- [ ] Monitor DNS propagation
+- [ ] Verify site loads correctly
+- [ ] Keep Hostgator updated
+
+### **After Emergency**
+- [ ] Restore Cloud Run service
+- [ ] Deploy latest content to Cloud Run
+- [ ] Change DNS back to Cloud Run
+- [ ] Monitor DNS propagation
+- [ ] Verify primary site restored
 
 ---
 
-**Remember**: Hostgator for speed, Cloud Run for safety! 🚀
+**Remember**: Cloud Run for primary, Hostgator for emergency! 🚀

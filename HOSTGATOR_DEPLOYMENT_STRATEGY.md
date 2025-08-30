@@ -2,32 +2,38 @@
 
 ## 📋 Overview
 
-This strategy uses **Hostgator for instant static content publishing** while maintaining **Google Cloud Run as a portal/replica** for operational flexibility and different audiences.
+This strategy uses **Google Cloud Run as the primary public front door** with **Hostgator as an emergency DNS failover** for instant static content publishing and operational flexibility.
 
 ## 🎯 Benefits
 
-### **Hostgator (Primary - Instant Publishing)**
-- ✅ **Instant FTP publishing** - Changes live immediately
+### **Google Cloud Run (Primary - Public Front Door)**
+- ✅ **Primary domain** - myl.zip points to Cloud Run
+- ✅ **Global CDN** - Faster access worldwide
+- ✅ **Built-in monitoring** - Analytics and logging
+- ✅ **Auto-scaling** - Handles traffic spikes
+- ✅ **SSL managed** - Automatic certificate renewal
+
+### **Hostgator (Emergency Failover)**
+- ✅ **Instant DNS failover** - Emergency switch capability
 - ✅ **Direct domain control** - Your own domain (myl.zip)
 - ✅ **Cost-effective** - Standard hosting costs
 - ✅ **Familiar workflow** - Traditional FTP deployment
 - ✅ **No build delays** - Direct file upload
 
-### **Google Cloud Run (Portal/Replica)**
-- ✅ **Operational safety** - Backup if Hostgator is down
-- ✅ **Different audience** - Alternative domain/URL
-- ✅ **Easy rollback** - Quick switch if needed
-- ✅ **Monitoring** - Built-in analytics and logging
-- ✅ **Global CDN** - Faster access worldwide
-
 ## 🏗️ Architecture
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Development   │    │   Hostgator     │    │  Google Cloud   │
-│   (Local)       │───▶│   (Primary)     │    │  Run (Portal)   │
-│                 │    │   myl.zip       │    │  Backup/Replica │
+│   Development   │    │  Google Cloud    │    │   Hostgator     │
+│   (Local)       │───▶│  Run (Primary)   │    │  (Emergency)    │
+│                 │    │   myl.zip        │    │  DNS Failover   │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
+                              │
+                              ▼
+                       ┌─────────────────┐
+                       │   DNS Control   │
+                       │  (Emergency)    │
+                       └─────────────────┘
 ```
 
 ## 📁 Directory Structure
@@ -59,25 +65,26 @@ zip-myl-www/
 
 ## 🚀 Deployment Workflows
 
-### **Option 1: Hostgator Primary (Recommended)**
-```bash
-# 1. Make changes locally
-# 2. Deploy to Hostgator (instant)
-./hostgator/deploy.bat
-
-# 3. Optionally sync to Cloud Run (backup)
-./hostgator/sync-to-cloud.bat
-```
-
-### **Option 2: Cloud Run Primary**
+### **Option 1: Cloud Run Primary (Current)**
 ```bash
 # 1. Make changes locally
 # 2. Commit and push to GitHub
 git add . && git commit -m "Update" && git push
 
-# 3. Cloud Run auto-deploys
-# 4. Optionally sync to Hostgator
-./cloud-run/sync-to-hostgator.bat
+# 3. Cloud Run auto-deploys (primary)
+# 4. Optionally sync to Hostgator (backup)
+./hostgator/sync-to-hostgator.bat
+```
+
+### **Option 2: Hostgator Emergency**
+```bash
+# 1. Make changes locally
+# 2. Deploy to Hostgator (instant)
+./hostgator/deploy.bat
+
+# 3. Change DNS to point to Hostgator
+# 4. Optionally sync to Cloud Run (when resolved)
+./hostgator/sync-to-cloud.bat
 ```
 
 ### **Option 3: Dual Deployment**
@@ -88,49 +95,51 @@ git add . && git commit -m "Update" && git push
 
 ## 🔧 Setup Instructions
 
-### **Step 1: Hostgator Setup**
+### **Step 1: Cloud Run Primary Setup**
+1. **Keep existing Cloud Run setup** as primary public front door
+2. **Domain**: `myl.zip` → Google Cloud Run
+3. **SSL**: Managed by Google Cloud
+4. **Monitoring**: Built-in Cloud Run monitoring
+
+### **Step 2: Hostgator Emergency Setup**
 1. **Create Hostgator account** with domain (myl.zip)
 2. **Set up FTP credentials** in `hostgator/ftp-config.json`
 3. **Test FTP connection** with `./hostgator/test-connection.bat`
 4. **Initial deployment** with `./hostgator/deploy.bat`
+5. **Keep DNS pointing to Cloud Run** (primary)
 
-### **Step 2: Cloud Run Portal Setup**
-1. **Keep existing Cloud Run setup** as backup/portal
-2. **Update nginx config** to serve as replica
-3. **Add monitoring** for operational status
-4. **Set up health checks** for both services
-
-### **Step 3: Domain Configuration**
-1. **Primary domain**: `myl.zip` → Hostgator
-2. **Portal domain**: `portal.myl.zip` → Cloud Run
-3. **Fallback**: `backup.myl.zip` → Cloud Run
+### **Step 3: DNS Configuration**
+1. **Primary domain**: `myl.zip` → Google Cloud Run
+2. **Emergency domain**: `myl.zip` → Hostgator (DNS change only)
+3. **Monitoring**: Both services monitored independently
 
 ## 📊 Monitoring Strategy
 
-### **Hostgator Monitoring**
-- ✅ **Uptime monitoring** - Ping myl.zip every 5 minutes
-- ✅ **Content verification** - Check key pages load correctly
-- ✅ **Performance tracking** - Page load times
-- ✅ **Error logging** - 404s, 500s, etc.
-
-### **Cloud Run Monitoring**
+### **Cloud Run Monitoring (Primary)**
 - ✅ **Service health** - Cloud Run service status
 - ✅ **Deployment status** - Build success/failure
 - ✅ **Traffic analytics** - Usage patterns
 - ✅ **Error rates** - Application errors
+- ✅ **Uptime monitoring** - Ping myl.zip every 5 minutes
+
+### **Hostgator Monitoring (Emergency)**
+- ✅ **Uptime monitoring** - Ping Hostgator URL every 5 minutes
+- ✅ **Content verification** - Check key pages load correctly
+- ✅ **Performance tracking** - Page load times
+- ✅ **Error logging** - 404s, 500s, etc.
 
 ## 🔄 Sync Strategy
+
+### **Cloud Run → Hostgator**
+```bash
+# Sync changes from Cloud Run to Hostgator (backup)
+./cloud-run/sync-to-hostgator.bat
+```
 
 ### **Hostgator → Cloud Run**
 ```bash
 # Sync changes from Hostgator to Cloud Run
 ./hostgator/sync-to-cloud.bat
-```
-
-### **Cloud Run → Hostgator**
-```bash
-# Sync changes from Cloud Run to Hostgator
-./cloud-run/sync-to-hostgator.bat
 ```
 
 ### **Bidirectional Sync**
@@ -141,49 +150,66 @@ git add . && git commit -m "Update" && git push
 
 ## 🚨 Emergency Procedures
 
-### **Hostgator Down**
-1. **Immediate**: Redirect traffic to Cloud Run
-2. **DNS change**: Point myl.zip to Cloud Run
-3. **Investigation**: Check Hostgator status
-4. **Recovery**: Restore Hostgator service
+### **Cloud Run Down (Primary Emergency)**
+1. **Immediate**: Deploy to Hostgator: `./hostgator/deploy.bat`
+2. **DNS change**: Point myl.zip to Hostgator
+3. **Investigation**: Check Cloud Run status
+4. **Recovery**: Restore Cloud Run service
+5. **DNS change**: Point myl.zip back to Cloud Run
 
-### **Cloud Run Down**
-1. **Continue**: Hostgator remains primary
-2. **Monitor**: Watch for Cloud Run recovery
-3. **Update**: Keep Hostgator content current
-4. **Recovery**: Cloud Run auto-deploys on fix
+### **Hostgator Down (Backup Emergency)**
+1. **Continue**: Cloud Run remains primary
+2. **Monitor**: Watch for Hostgator recovery
+3. **Update**: Keep Cloud Run content current
+4. **Recovery**: Hostgator auto-deploys on fix
+
+### **DNS Emergency Switch**
+```bash
+# Emergency DNS switch to Hostgator
+# 1. Deploy latest content to Hostgator
+./hostgator/deploy.bat
+
+# 2. Change DNS A record:
+#    FROM: Cloud Run IP
+#    TO: Hostgator IP
+
+# 3. Monitor DNS propagation (24-48 hours)
+# 4. Switch back when Cloud Run is restored
+```
 
 ## 💰 Cost Analysis
 
-### **Hostgator Costs**
-- **Domain**: ~$15/year
-- **Hosting**: ~$5-10/month
-- **Total**: ~$75-135/year
-
-### **Cloud Run Costs**
+### **Cloud Run Costs (Primary)**
 - **Compute**: ~$0-5/month (low traffic)
 - **Storage**: ~$0-2/month
-- **Total**: ~$0-84/year
+- **Domain**: ~$15/year
+- **Total**: ~$15-87/year
+
+### **Hostgator Costs (Emergency)**
+- **Domain**: Already covered
+- **Hosting**: ~$3.95/month (Baby Plan)
+- **SSL**: Free (Let's Encrypt)
+- **Total**: ~$47/year
 
 ### **Total Strategy Cost**
-- **Combined**: ~$75-219/year
+- **Combined**: ~$62-134/year
 - **Redundancy**: Worth the cost for reliability
 
 ## 🎯 Next Steps
 
-1. **Set up Hostgator account** and FTP credentials
-2. **Create deployment scripts** for instant publishing
-3. **Configure monitoring** for both services
-4. **Test dual deployment** workflow
-5. **Document procedures** for team use
+1. **Keep Cloud Run as primary** public front door
+2. **Set up Hostgator account** and FTP credentials
+3. **Test emergency deployment** workflow
+4. **Configure DNS failover** procedures
+5. **Document emergency procedures** for team use
 
 ## 📞 Support
 
-- **Hostgator Issues**: Contact Hostgator support
 - **Cloud Run Issues**: Check Google Cloud console
+- **Hostgator Issues**: Contact Hostgator support
+- **DNS Issues**: Contact domain registrar
 - **Deployment Issues**: Check deployment logs
-- **Content Issues**: Verify source files
 
 ---
 
-**Remember**: Hostgator for speed, Cloud Run for safety! 🚀
+**Remember**: Cloud Run for primary, Hostgator for emergency! 🚀
