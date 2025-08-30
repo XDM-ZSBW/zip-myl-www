@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Setup Wizard</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .debug-info { background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .error { background: #ffebee; color: #c62828; }
+        .success { background: #e8f5e8; color: #2e7d32; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Setup Wizard Debug</h1>
+    
+    <div class="debug-info">
+        <h3>URL Parameters:</h3>
+        <div id="url-info">Loading...</div>
+    </div>
+    
+    <div class="debug-info">
+        <h3>Device ID Status:</h3>
+        <div id="device-id-status">Loading...</div>
+    </div>
+    
+    <div class="debug-info">
+        <h3>Element Status:</h3>
+        <div id="element-status">Loading...</div>
+    </div>
+    
+    <div class="debug-info">
+        <h3>Console Log:</h3>
+        <div id="console-log" style="background: #000; color: #0f0; padding: 10px; font-family: monospace; height: 200px; overflow-y: scroll;"></div>
+    </div>
+    
+    <script>
+        // Override console.log to capture output
+        const originalLog = console.log;
+        const logDiv = document.getElementById('console-log');
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            const logEntry = document.createElement('div');
+            logEntry.textContent = args.join(' ');
+            logDiv.appendChild(logEntry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        };
+        
+        // Debug URL parameters
+        function debugURL() {
+            const urlInfo = document.getElementById('url-info');
+            const deviceIdStatus = document.getElementById('device-id-status');
+            const elementStatus = document.getElementById('element-status');
+            
+            // URL info
+            urlInfo.innerHTML = `
+                <strong>Full URL:</strong> ${window.location.href}<br>
+                <strong>Search:</strong> ${window.location.search}<br>
+                <strong>Hash:</strong> ${window.location.hash}
+            `;
+            
+            // Device ID status
+            const urlParams = new URLSearchParams(window.location.search);
+            const deviceId = urlParams.get('deviceId');
+            
+            if (deviceId) {
+                deviceIdStatus.innerHTML = `<span class="success">✅ Device ID found: ${deviceId}</span>`;
+            } else {
+                deviceIdStatus.innerHTML = `<span class="error">❌ No device ID found in URL</span>`;
+            }
+            
+            // Element status
+            const testElements = ['extension-device-id', 'display-device-id', 'display-ssl-domain'];
+            let elementHtml = '';
+            
+            testElements.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    elementHtml += `<span class="success">✅ ${id}: Found</span><br>`;
+                } else {
+                    elementHtml += `<span class="error">❌ ${id}: Not found</span><br>`;
+                }
+            });
+            
+            elementStatus.innerHTML = elementHtml;
+        }
+        
+        // Run debug on load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔍 [DEBUG] Debug page loaded');
+            debugURL();
+        });
+    </script>
+    
+    <h2>Test Links:</h2>
+    <ul>
+        <li><a href="?deviceId=mylzip_auth_1756537896232_au5cpn2vw7s">With Device ID</a></li>
+        <li><a href="?">Without Device ID</a></li>
+        <li><a href="?deviceId=test123">With Test Device ID</a></li>
+    </ul>
+</body>
+</html>

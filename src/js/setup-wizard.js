@@ -13,21 +13,41 @@ let setupData = {
 
 // Initialize wizard
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('🔍 [DEBUG] Setup wizard initializing...');
+    console.log('🔍 [DEBUG] Current URL:', window.location.href);
+    
     // Get device ID from URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     setupData.deviceId = urlParams.get('deviceId');
     
+    console.log('🔍 [DEBUG] URL params:', window.location.search);
+    console.log('🔍 [DEBUG] Device ID from URL:', setupData.deviceId);
+    
     if (setupData.deviceId) {
+        console.log('✅ [DEBUG] Device ID found, updating display...');
         // Generate UUID subdomain
         setupData.uuidSubdomain = setupData.deviceId + '.myl.zip';
         
         // Update display elements
-        document.getElementById('extension-device-id').textContent = setupData.deviceId;
-        document.getElementById('display-device-id').textContent = setupData.deviceId;
-        document.getElementById('display-ssl-domain').textContent = setupData.uuidSubdomain;
-        document.getElementById('ssl-domain').textContent = setupData.uuidSubdomain;
-        document.getElementById('summary-domain').textContent = setupData.uuidSubdomain;
+        const elements = {
+            'extension-device-id': setupData.deviceId,
+            'display-device-id': setupData.deviceId,
+            'display-ssl-domain': setupData.uuidSubdomain,
+            'ssl-domain': setupData.uuidSubdomain,
+            'summary-domain': setupData.uuidSubdomain
+        };
+        
+        Object.entries(elements).forEach(([id, value]) => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.textContent = value;
+                console.log(`✅ [DEBUG] Updated ${id}: ${value}`);
+            } else {
+                console.log(`❌ [DEBUG] Element not found: ${id}`);
+            }
+        });
     } else {
+        console.log('⚠️ [DEBUG] No device ID found, adding manual input...');
         // Try to get device ID from Chrome extension
         setupExtensionCommunication();
         
@@ -95,24 +115,34 @@ function validateCurrentStep() {
 }
 
 function validateUserInfo() {
+    console.log('🔍 [DEBUG] Validating user info...');
+    console.log('🔍 [DEBUG] setupData.deviceId:', setupData.deviceId);
+    
     const userInitials = document.getElementById('userInitials').value.trim();
     const deviceName = document.getElementById('deviceName').value.trim();
     
+    console.log('🔍 [DEBUG] userInitials:', userInitials);
+    console.log('🔍 [DEBUG] deviceName:', deviceName);
+    
     if (!userInitials) {
+        console.log('❌ [DEBUG] No user initials');
         showError('Please enter your initials or email');
         return false;
     }
     
     if (!deviceName) {
+        console.log('❌ [DEBUG] No device name');
         showError('Please enter a device name');
         return false;
     }
     
     if (!setupData.deviceId) {
+        console.log('❌ [DEBUG] No device ID');
         showError('Device ID not found. Please enter your device ID manually or use the Chrome extension to access this page.');
         return false;
     }
     
+    console.log('✅ [DEBUG] All validation passed');
     // Store data
     setupData.userInitials = userInitials;
     setupData.deviceName = deviceName;
