@@ -780,16 +780,29 @@
                      console.log('🔑 [DEBUG] data.success:', data.success);
                      console.log('🔑 [DEBUG] data.data:', data.data);
                      console.log('🔑 [DEBUG] data.data.data:', data.data?.data);
-                     console.log('🔑 [DEBUG] data.data.data.apiKey:', data.data?.data?.apiKey);
+                                          console.log('🔑 [DEBUG] data.data.data.apiKey:', data.data?.data?.apiKey);
+                     console.log('🔑 [DEBUG] Full response structure:', JSON.stringify(data, null, 2));
                      
+                     // Try multiple possible response structures
+                     let apiKey = null;
                      if (data.success && data.data && data.data.data && data.data.data.apiKey) {
-                        console.log('✅ [API] API key generated successfully!');
-                        statusEl.className = 'status-indicator success';
-                        statusTextEl.textContent = 'API key generated successfully!';
-                        
-                        // Store API key for display
-                        setupData.apiKey = data.data.data.apiKey;
-                        console.log('🔑 [API] API key stored:', setupData.apiKey.substring(0, 10) + '...');
+                         apiKey = data.data.data.apiKey;
+                     } else if (data.success && data.data && data.data.apiKey) {
+                         apiKey = data.data.apiKey;
+                     } else if (data.success && data.apiKey) {
+                         apiKey = data.apiKey;
+                     } else if (data.data && data.data.apiKey) {
+                         apiKey = data.data.apiKey;
+                     }
+                     
+                     if (apiKey) {
+                         console.log('✅ [API] API key generated successfully!');
+                         statusEl.className = 'status-indicator success';
+                         statusTextEl.textContent = 'API key generated successfully!';
+                         
+                         // Store API key for display
+                         setupData.apiKey = apiKey;
+                         console.log('🔑 [API] API key stored:', setupData.apiKey.substring(0, 10) + '...');
                         
                         // Auto-advance to completion step after 2 seconds
                         setTimeout(() => {
