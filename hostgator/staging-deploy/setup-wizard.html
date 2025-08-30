@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zip MyL Setup Wizard</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="setup-wizard.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/setup-wizard.css">
 </head>
 <body>
     <div class="wizard-container">
@@ -51,13 +51,18 @@
                         <input type="text" id="deviceName" name="deviceName" placeholder="e.g., My Laptop" required>
                         <small>What would you like to call this device?</small>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="domain">Your Domain</label>
-                        <input type="text" id="domain" name="domain" placeholder="e.g., example.com" required>
-                        <small>The domain for your SSL certificate</small>
-                    </div>
                 </form>
+                
+                <div class="device-info-display">
+                    <div class="info-card">
+                        <h3>🔑 Your Device Information</h3>
+                        <ul>
+                            <li><strong>Device ID:</strong> <span id="display-device-id">Loading...</span></li>
+                            <li><strong>SSL Domain:</strong> <span id="display-ssl-domain">Loading...</span></li>
+                            <li><strong>Certificate:</strong> Wildcard *.myl.zip (Automatic)</li>
+                        </ul>
+                    </div>
+                </div>
                 
                 <div class="wizard-actions">
                     <button type="button" class="btn btn-primary" onclick="nextStep()">Continue</button>
@@ -73,10 +78,11 @@
                     <div class="info-card">
                         <h3>🔒 SSL Certificate Details</h3>
                         <ul>
-                            <li><strong>Domain:</strong> <span id="ssl-domain"></span></li>
-                            <li><strong>Type:</strong> Single Domain Certificate</li>
-                            <li><strong>Provider:</strong> Let's Encrypt</li>
+                            <li><strong>Device Domain:</strong> <span id="ssl-domain"></span></li>
+                            <li><strong>Certificate Type:</strong> Wildcard *.myl.zip</li>
+                            <li><strong>Provider:</strong> Google Cloud (Automatic)</li>
                             <li><strong>Auto-renewal:</strong> Enabled</li>
+                            <li><strong>Security:</strong> Military-grade encryption</li>
                         </ul>
                     </div>
                 </div>
@@ -133,10 +139,11 @@
                     <div class="summary-card">
                         <h3>✅ What's Been Set Up</h3>
                         <ul>
-                            <li>SSL certificate for <span id="summary-domain"></span></li>
+                            <li>SSL certificate for <span id="summary-domain"></span> (UUID subdomain)</li>
                             <li>Extension API key generated</li>
                             <li>Device registered and configured</li>
                             <li>Secure access enabled</li>
+                            <li>Wildcard certificate coverage</li>
                         </ul>
                     </div>
                     
@@ -167,6 +174,6 @@
         </div>
     </div>
 
-    <script src="setup-wizard.js"></script>
+    <script src="js/setup-wizard.js"></script>
 </body>
 </html>
