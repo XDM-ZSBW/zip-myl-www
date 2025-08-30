@@ -216,6 +216,12 @@
             return urlParams.get('deviceId');
         }
         
+        // Validate UUID format
+        function isValidUUID(deviceId) {
+            const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+            return uuidRegex.test(deviceId);
+        }
+        
         // Initialize page
         async function init() {
             console.log('🔍 [DEBUG] Auth page initializing...');
@@ -228,6 +234,12 @@
             
             if (!deviceId) {
                 showStatus('No device ID provided. Please use the Chrome extension to access this page.', 'error');
+                return;
+            }
+            
+            // Validate UUID format
+            if (!isValidUUID(deviceId)) {
+                showStatus('Invalid device ID format. Device ID must be a valid UUID (e.g., 12345678-1234-1234-1234-123456789abc). Please use the Chrome extension to get a proper device ID.', 'error');
                 return;
             }
             

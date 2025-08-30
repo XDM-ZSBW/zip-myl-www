@@ -527,7 +527,17 @@
             
             // Get device ID from URL parameters
             const urlParams = new URLSearchParams(window.location.search);
-            setupData.deviceId = urlParams.get('deviceId');
+            const deviceIdFromUrl = urlParams.get('deviceId');
+            if (deviceIdFromUrl) {
+                // Validate UUID format
+                const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+                if (uuidRegex.test(deviceIdFromUrl)) {
+                    setupData.deviceId = deviceIdFromUrl;
+                    setupData.uuidSubdomain = deviceIdFromUrl + '.myl.zip';
+                } else {
+                    console.warn('Invalid device ID format in URL:', deviceIdFromUrl);
+                }
+            }
             
             console.log('🔍 [DEBUG] URL params:', window.location.search);
             console.log('🔍 [DEBUG] Device ID from URL:', setupData.deviceId);
@@ -968,8 +978,8 @@
             document.addEventListener('mylzip-device-ready', (event) => {
                 console.log('Extension device ready:', event.detail);
                 if (event.detail.deviceId && !setupData.deviceId) {
-                    setupData.deviceId = event.detail.deviceId;
-                    setupData.uuidSubdomain = generateUUID() + '.myl.zip';
+                                    setupData.deviceId = event.detail.deviceId;
+                setupData.uuidSubdomain = event.detail.deviceId + '.myl.zip';
                     
                     // Update display elements
                     document.getElementById('extension-device-id').textContent = setupData.deviceId;
@@ -1003,7 +1013,7 @@
                             If you have your device ID from the Chrome extension, enter it here:
                         </p>
                         <div style="display: flex; gap: 10px; align-items: center;">
-                            <input type="text" id="manualDeviceId" placeholder="e.g., mylzip_auth_1234567890_abc123" 
+                            <input type="text" id="manualDeviceId" placeholder="e.g., 12345678-1234-1234-1234-123456789abc" 
                                    style="flex: 1; padding: 8px 12px; border: 1px solid rgba(255,255,255,0.3); border-radius: 4px; background: rgba(255,255,255,0.1); color: #fff;">
                             <button onclick="setManualDeviceId()" style="padding: 8px 16px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
                                 Set Device ID
@@ -1028,9 +1038,16 @@
             const manualInput = document.getElementById('manualDeviceId');
             const deviceId = manualInput.value.trim();
             
+            // Validate UUID format
+            const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+            if (!uuidRegex.test(deviceId)) {
+                showError('Invalid device ID format. Please enter a valid UUID (e.g., 12345678-1234-1234-1234-123456789abc)');
+                return;
+            }
+            
             if (deviceId) {
                 setupData.deviceId = deviceId;
-                setupData.uuidSubdomain = generateUUID() + '.myl.zip';
+                setupData.uuidSubdomain = deviceId + '.myl.zip';
                 
                 // Update display elements
                 document.getElementById('extension-device-id').textContent = setupData.deviceId;
