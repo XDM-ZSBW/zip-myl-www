@@ -30,25 +30,34 @@ async function deploy() {
         console.log('📤 Uploading files...');
         const localPath = path.resolve(config.localPath);
         
-        // Upload all files from src directory
-        await client.uploadFromDir(localPath, {
-            include: config.include,
-            exclude: config.exclude
-        });
+        // Upload files individually to avoid the error
+        const files = fs.readdirSync(localPath);
+        for (const file of files) {
+            const localFilePath = path.join(localPath, file);
+            const stats = fs.statSync(localFilePath);
+            
+            if (stats.isFile()) {
+                console.log(`   📄 Uploading ${file}...`);
+                await client.uploadFrom(localFilePath, file);
+            } else if (stats.isDirectory()) {
+                console.log(`   📁 Uploading directory ${file}...`);
+                await client.uploadFromDir(localFilePath);
+            }
+        }
 
         console.log('✅ All files uploaded successfully!');
 
         // List uploaded files
         console.log('\n📋 Uploaded files:');
-        const files = await client.list();
-        files.forEach(file => {
+        const uploadedFiles = await client.list();
+        uploadedFiles.forEach(file => {
             if (file.isFile) {
                 console.log(`   📄 ${file.name} (${file.size} bytes)`);
             }
         });
 
         // Test upload by checking if index.html exists
-        const indexExists = files.some(file => file.name === 'index.html');
+        const indexExists = uploadedFiles.some(file => file.name === 'index.html');
         if (indexExists) {
             console.log('\n✅ index.html found - deployment looks good!');
         } else {
@@ -67,7 +76,7 @@ async function deploy() {
 deploy()
     .then(() => {
         console.log('\n🎉 Deployment completed successfully!');
-        console.log('🌐 Your site should be live at: https://myl.zip');
+        console.log('🌐 Your staging site should be live at: https://stage.myl.zip');
         process.exit(0);
     })
     .catch((err) => {

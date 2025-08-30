@@ -1,32 +1,36 @@
 {
   "name": "zip-myl-www",
   "version": "1.0.0",
-  "description": "Web application with automated Google Cloud Run deployment",
+  "description": "Dual-path static site: Staging (Hostgator) + Portal (Google Cloud Run)",
   "main": "index.js",
   "scripts": {
-    "start": "echo 'Service runs on Google Cloud Run'",
-    "build": "echo 'Build handled by Cloud Build'",
-    "test": "echo 'Add your test command here'",
-    "dev": "echo 'For local development, open src/index.html in your browser'",
-    "deploy:hostgator": "node deploy-hostgator.js",
-    "deploy:cloudrun": "gcloud builds submit --config cloudbuild.yaml ."
+    "build:staging": "node scripts/build-staging.js",
+    "build:portal": "node scripts/build-portal.js",
+    "build:shared": "node scripts/build-shared.js",
+    "build:all": "npm run build:shared && npm run build:staging && npm run build:portal",
+    "deploy:staging": "npm run build:staging && cd hostgator && deploy.bat",
+    "deploy:portal": "npm run build:portal && git add . && git commit -m 'Portal update' && git push",
+    "deploy:all": "npm run build:all && npm run deploy:staging && npm run deploy:portal",
+    "sync:staging-to-portal": "cd hostgator && sync-to-portal.bat",
+    "sync:portal-to-staging": "cd cloud-run && sync-to-staging.bat",
+    "test:staging": "cd staging && python -m http.server 8000",
+    "test:portal": "cd portal && python -m http.server 8001"
   },
-  "keywords": [
-    "web",
-    "deployment",
-    "cloud-run",
-    "automation",
-    "static-files"
-  ],
-  "author": "",
-  "license": "MIT",
   "dependencies": {
-    "basic-ftp": "^5.0.0"
+    "basic-ftp": "^5.0.3"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "fs-extra": "^11.1.1",
+    "chalk": "^4.1.2"
   },
-  "engines": {
-    "node": ">=14.0.0"
-  }
+  "keywords": [
+    "static-site",
+    "staging",
+    "portal",
+    "hostgator",
+    "cloud-run",
+    "dual-path"
+  ],
+  "author": "Zip MyL Team",
+  "license": "MIT"
 }

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zip MyL - Staging Environment</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/staging.css">
+</head>
+<body>
+    <header class="staging-header">
+        <div class="staging-banner">
+            <span class="staging-label">🚧 STAGING ENVIRONMENT</span>
+            <span class="staging-url">stage.myl.zip</span>
+        </div>
+        <h1>🚀 Zip MyL - Development</h1>
+        <p>Staging environment for testing and development</p>
+    </header>
+    
+    <main>
+        <section class="hero staging-hero">
+            <h2>🔧 Development & Testing Environment</h2>
+            <p>This is the staging environment for Zip MyL. Use this for testing new features before they go to production.</p>
+            <div class="staging-actions">
+                <a href="setup-wizard.html" class="btn btn-primary staging-btn">
+                    🧪 Test Setup Wizard
+                </a>
+                <a href="https://myl.zip" class="btn btn-secondary" target="_blank">
+                    🌐 View Production
+                </a>
+            </div>
+        </section>
+        
+        <section class="staging-info">
+            <div class="info-card">
+                <h3>🔍 Development Features</h3>
+                <ul>
+                    <li>✅ Direct FTP deployment</li>
+                    <li>✅ Quick iteration testing</li>
+                    <li>✅ Backend integration testing</li>
+                    <li>✅ Performance monitoring</li>
+                </ul>
+            </div>
+            
+            <div class="info-card">
+                <h3>📊 Environment Details</h3>
+                <ul>
+                    <li><strong>URL:</strong> stage.myl.zip</li>
+                    <li><strong>Purpose:</strong> Development & Testing</li>
+                    <li><strong>Deployment:</strong> FTP to Hostgator</li>
+                    <li><strong>Sync:</strong> To production portal</li>
+                </ul>
+            </div>
+        </section>
+        
+        <section class="setup-wizard-section">
+            <h2>🧪 Test Setup Wizard</h2>
+            <p>Test the SSL certificate setup and extension API key generation workflow.</p>
+            <a href="setup-wizard.html" class="btn btn-primary">Launch Setup Wizard</a>
+            <p class="staging-note">This is the staging version - test thoroughly before syncing to production.</p>
+        </section>
+        
+        <section class="staging-controls">
+            <h2>🔄 Staging Controls</h2>
+            <div class="control-buttons">
+                <button class="btn btn-info" onclick="showStagingInfo()">📋 Show Staging Info</button>
+                <button class="btn btn-warning" onclick="testBackendConnection()">🔗 Test Backend</button>
+                <button class="btn btn-success" onclick="syncToProduction()">🚀 Sync to Production</button>
+            </div>
+        </section>
+    </main>
+    
+    <footer class="staging-footer">
+        <p>&copy; 2024 Zip MyL - Staging Environment</p>
+        <p class="staging-warning">⚠️ This is a development environment. Do not use for production data.</p>
+    </footer>
+    
+    <script src="js/main.js"></script>
+    <script src="js/staging.js"></script>
+</body>
+</html>
