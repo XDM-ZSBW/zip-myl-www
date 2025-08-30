@@ -778,13 +778,13 @@
                     const data = await response.json();
                     console.log('🔑 [API] Response data:', data);
                     
-                    if (data.success && data.data && data.data.success && data.data.data && data.data.data.apiKey) {
+                    if (data.success && data.data && data.data.apiKey) {
                         console.log('✅ [API] API key generated successfully!');
                         statusEl.className = 'status-indicator success';
                         statusTextEl.textContent = 'API key generated successfully!';
                         
                         // Store API key for display
-                        setupData.apiKey = data.data.data.apiKey;
+                        setupData.apiKey = data.data.apiKey;
                         console.log('🔑 [API] API key stored:', setupData.apiKey.substring(0, 10) + '...');
                         
                         // Auto-advance to completion step after 2 seconds
@@ -793,7 +793,7 @@
                             nextStep();
                         }, 2000);
                     } else {
-                        throw new Error(data.message || data.data?.message || 'API key generation failed');
+                        throw new Error(data.message || 'API key generation failed');
                     }
                 } else {
                     const errorText = await response.text();
