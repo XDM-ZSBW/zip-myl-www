@@ -25,6 +25,7 @@ async function deploy() {
         // Navigate to remote directory
         console.log(`[NAV] Navigating to ${config.remotePath}...`);
         await client.ensureDir(config.remotePath);
+        await client.cd(config.remotePath);
 
         // Upload files
         console.log('[UPLOAD] Uploading files...');
