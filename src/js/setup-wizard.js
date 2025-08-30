@@ -27,6 +27,12 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('display-ssl-domain').textContent = setupData.uuidSubdomain;
         document.getElementById('ssl-domain').textContent = setupData.uuidSubdomain;
         document.getElementById('summary-domain').textContent = setupData.uuidSubdomain;
+    } else {
+        // Try to get device ID from Chrome extension
+        setupExtensionCommunication();
+        
+        // Add manual device ID input option
+        addManualDeviceIdInput();
     }
     
     updateProgress();
@@ -103,7 +109,7 @@ function validateUserInfo() {
     }
     
     if (!setupData.deviceId) {
-        showError('Device ID not found. Please use the Chrome extension to access this page.');
+        showError('Device ID not found. Please enter your device ID manually or use the Chrome extension to access this page.');
         return false;
     }
     
@@ -326,7 +332,17 @@ function setupExtensionCommunication() {
         console.log('Extension device ready:', event.detail);
         if (event.detail.deviceId && !setupData.deviceId) {
             setupData.deviceId = event.detail.deviceId;
+            setupData.uuidSubdomain = setupData.deviceId + '.myl.zip';
+            
+            // Update display elements
             document.getElementById('extension-device-id').textContent = setupData.deviceId;
+            document.getElementById('display-device-id').textContent = setupData.deviceId;
+            document.getElementById('display-ssl-domain').textContent = setupData.uuidSubdomain;
+            document.getElementById('ssl-domain').textContent = setupData.uuidSubdomain;
+            document.getElementById('summary-domain').textContent = setupData.uuidSubdomain;
+            
+            // Hide manual input
+            hideManualDeviceIdInput();
         }
     });
     
@@ -336,6 +352,62 @@ function setupExtensionCommunication() {
             type: 'mylzip-portal-request',
             action: 'get-device-info'
         }, '*');
+    }
+}
+
+// Add manual device ID input
+function addManualDeviceIdInput() {
+    const deviceInfoCard = document.querySelector('.device-info-display .info-card');
+    if (deviceInfoCard) {
+        const manualInputHtml = `
+            <div class="manual-device-input" style="margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 8px;">
+                <h4 style="margin: 0 0 10px 0; color: #fff;">🔑 Enter Device ID Manually</h4>
+                <p style="margin: 0 0 10px 0; color: rgba(255,255,255,0.8); font-size: 14px;">
+                    If you have your device ID from the Chrome extension, enter it here:
+                </p>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="text" id="manualDeviceId" placeholder="e.g., mylzip_auth_1234567890_abc123" 
+                           style="flex: 1; padding: 8px 12px; border: 1px solid rgba(255,255,255,0.3); border-radius: 4px; background: rgba(255,255,255,0.1); color: #fff;">
+                    <button onclick="setManualDeviceId()" style="padding: 8px 16px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                        Set Device ID
+                    </button>
+                </div>
+            </div>
+        `;
+        deviceInfoCard.insertAdjacentHTML('beforeend', manualInputHtml);
+    }
+}
+
+// Hide manual device ID input
+function hideManualDeviceIdInput() {
+    const manualInput = document.querySelector('.manual-device-input');
+    if (manualInput) {
+        manualInput.style.display = 'none';
+    }
+}
+
+// Set manual device ID
+function setManualDeviceId() {
+    const manualInput = document.getElementById('manualDeviceId');
+    const deviceId = manualInput.value.trim();
+    
+    if (deviceId) {
+        setupData.deviceId = deviceId;
+        setupData.uuidSubdomain = setupData.deviceId + '.myl.zip';
+        
+        // Update display elements
+        document.getElementById('extension-device-id').textContent = setupData.deviceId;
+        document.getElementById('display-device-id').textContent = setupData.deviceId;
+        document.getElementById('display-ssl-domain').textContent = setupData.uuidSubdomain;
+        document.getElementById('ssl-domain').textContent = setupData.uuidSubdomain;
+        document.getElementById('summary-domain').textContent = setupData.uuidSubdomain;
+        
+        // Hide manual input
+        hideManualDeviceIdInput();
+        
+        showSuccess('Device ID set successfully!');
+    } else {
+        showError('Please enter a valid device ID');
     }
 }
 
