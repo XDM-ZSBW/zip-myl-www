@@ -1,151 +1,312 @@
-# 🚀 HostGator Setup Guide for stage.myl.zip
+# 🚀 Hostgator Staging Setup Guide
 
-## 📋 Prerequisites
+## 📋 Quick Start
 
-1. **HostGator Account**: Active hosting account
-2. **Domain Control**: Access to DNS settings for `stage.myl.zip`
-3. **FTP Credentials**: HostGator FTP username and password
+### **Step 1: Get Hostgator Account**
+1. **Sign up** for Hostgator hosting plan
+2. **Register domain** `myl.zip` (or use existing domain)
+3. **Get FTP credentials** from Hostgator control panel
 
-## 🔧 Step 1: Configure FTP Deployment
+### **Step 2: Configure FTP Settings**
+1. **Edit** `hostgator/ftp-config.json`
+2. **Fill in** your Hostgator FTP credentials:
+   ```json
+   {
+     "host": "your-server.com",
+     "username": "your-ftp-username", 
+     "password": "your-ftp-password",
+     "port": 21,
+     "secure": false,
+     "localPath": "./src",
+     "remotePath": "/public_html"
+   }
+   ```
 
-### Update FTP Configuration
-Edit `ftp-config.json` with your HostGator credentials:
+### **Step 3: Test Connection**
+```bash
+cd hostgator
+test-connection.bat
+```
 
+### **Step 4: Initial Deployment**
+```bash
+deploy.bat
+```
+
+### **Step 5: Configure Domains**
+- **Staging**: `stage.myl.zip` → Hostgator
+- **Production**: `myl.zip` → Google Cloud Run (portal)
+
+## 🔧 Detailed Setup
+
+### **Hostgator Account Setup**
+
+#### **1. Choose Hosting Plan**
+- **Hatchling Plan**: $2.75/month (basic)
+- **Baby Plan**: $3.95/month (recommended)
+- **Business Plan**: $5.95/month (advanced)
+
+#### **2. Domain Registration**
+- **Register**: `myl.zip` domain
+- **DNS Settings**: Point to Hostgator nameservers
+- **SSL Certificate**: Enable free Let's Encrypt SSL
+
+#### **3. FTP Access**
+- **Username**: Usually your domain name
+- **Password**: Set in Hostgator control panel
+- **Server**: Your server hostname
+- **Port**: 21 (standard FTP)
+
+### **FTP Configuration**
+
+#### **Find Your FTP Details**
+1. **Login** to Hostgator control panel
+2. **Go to** "Files" → "FTP Accounts"
+3. **Note down**:
+   - FTP Server
+   - Username
+   - Password
+   - Port (usually 21)
+
+#### **Update ftp-config.json**
 ```json
 {
-  "host": "stage.myl.zip",
-  "user": "your-hostgator-username",
-  "password": "your-hostgator-password",
+  "host": "your-server.com",
+  "username": "your-ftp-username",
+  "password": "your-ftp-password", 
   "port": 21,
   "secure": false,
   "localPath": "./src",
   "remotePath": "/public_html",
-  "verbose": true,
-  "createBackup": true
+  "exclude": [
+    ".git",
+    "node_modules",
+    "*.log"
+  ],
+  "include": [
+    "*.html",
+    "*.css", 
+    "*.js",
+    "*.png",
+    "*.jpg",
+    "*.gif"
+  ]
 }
 ```
 
-### Install Dependencies
+### **Testing Your Setup**
+
+#### **1. Test FTP Connection**
 ```bash
-npm install
+cd hostgator
+test-connection.bat
 ```
 
-## 🌐 Step 2: DNS Configuration
+**Expected Output:**
+```
+🔌 Testing connection to Hostgator...
+✅ Connection successful!
+📁 Current directory: /
+📋 Files in current directory:
+   📁 public_html
+   📁 logs
+✅ Navigation successful!
+🎉 All tests passed!
+```
 
-### Point Domain to HostGator
-Configure your DNS settings to point `stage.myl.zip` to HostGator's servers:
-
-1. **Go to your domain registrar** (where you bought `myl.zip`)
-2. **Add DNS record**:
-   ```
-   Type: A
-   Name: stage
-   Value: [HostGator IP Address]
-   ```
-
-### HostGator Nameservers (Alternative)
-If using HostGator nameservers:
-1. **Get nameservers** from HostGator control panel
-2. **Update nameservers** at your domain registrar
-3. **Wait 24-48 hours** for propagation
-
-## 🔒 Step 3: Let's Encrypt SSL Setup
-
-### Option A: HostGator AutoSSL (Recommended)
-1. **Login to HostGator cPanel**
-2. **Go to "SSL/TLS"** section
-3. **Click "Install SSL Certificate"**
-4. **Select "Let's Encrypt"**
-5. **Enter domain**: `stage.myl.zip`
-6. **Click "Install"**
-
-### Option B: Manual Let's Encrypt (Advanced)
-If HostGator doesn't support Let's Encrypt:
-
-1. **SSH into your HostGator server**
-2. **Install Certbot**:
-   ```bash
-   wget https://dl.eff.org/certbot-auto
-   chmod a+x certbot-auto
-   ```
-
-3. **Generate certificate**:
-   ```bash
-   ./certbot-auto certonly --webroot -w /home/username/public_html -d stage.myl.zip
-   ```
-
-4. **Configure Apache/Nginx** to use the certificate
-
-## 🚀 Step 4: Deploy Your Site
-
-### Deploy to HostGator
+#### **2. Test Deployment**
 ```bash
-npm run deploy:hostgator
+deploy.bat
 ```
 
-### Verify Deployment
-1. **Visit**: https://stage.myl.zip
-2. **Check SSL**: Look for padlock in browser
-3. **Test functionality**: Ensure all features work
-
-## 🔄 Step 5: Automated Deployment
-
-### GitHub Actions (Optional)
-Create `.github/workflows/deploy-hostgator.yml`:
-
-```yaml
-name: Deploy to HostGator
-on:
-  push:
-    branches: [main]
-    paths: ['src/**']
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '16'
-      - run: npm install
-      - run: npm run deploy:hostgator
-        env:
-          FTP_HOST: ${{ secrets.FTP_HOST }}
-          FTP_USER: ${{ secrets.FTP_USER }}
-          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+**Expected Output:**
+```
+🚀 Hostgator Deployment Script
+📦 Installing dependencies...
+🔄 Starting deployment to Hostgator...
+📤 Uploading files...
+✅ All files uploaded successfully!
+📋 Uploaded files:
+   📄 index.html (1704 bytes)
+   📄 setup-wizard.html (8450 bytes)
+   📄 css/style.css (179 bytes)
+   📄 css/setup-wizard.css (376 bytes)
+   📄 js/main.js (78 bytes)
+   📄 js/setup-wizard.js (394 bytes)
+✅ index.html found - deployment looks good!
+🎉 Deployment completed successfully!
+🌐 Your staging site should be live at: https://stage.myl.zip
 ```
 
-## 🛠️ Troubleshooting
+## 🌐 Domain Configuration
 
-### Common Issues
+### **Staging Domain Setup**
+1. **Create subdomain**: `stage.myl.zip`
+2. **Point DNS** to Hostgator IP address
+3. **Enable SSL** in Hostgator control panel
+4. **Test** `https://stage.myl.zip`
 
-1. **FTP Connection Failed**
-   - Verify credentials in `ftp-config.json`
-   - Check if HostGator allows FTP access
-   - Try different port (21 or 22)
+### **Production Domain Setup**
+1. **Keep existing**: `myl.zip` → Google Cloud Run
+2. **Cloud Run portal** syncs from stage.myl.zip
+3. **Auto-deployment** via GitHub integration
 
-2. **SSL Certificate Not Working**
-   - Wait 24-48 hours for DNS propagation
-   - Check if Let's Encrypt is supported
-   - Verify domain points to HostGator
+### **DNS Configuration**
+```
+stage.myl.zip → Hostgator (staging)
+myl.zip → Google Cloud Run (production portal)
+www.myl.zip → Google Cloud Run (production portal)
+```
 
-3. **Files Not Uploading**
-   - Check file permissions
-   - Verify remote path exists
-   - Ensure sufficient disk space
+## 📊 Monitoring Setup
 
-### Support Resources
-- **HostGator Support**: Live chat or ticket system
-- **Let's Encrypt Docs**: https://letsencrypt.org/docs/
-- **DNS Propagation Checker**: https://www.whatsmydns.net/
+### **Staging Monitoring (Hostgator)**
+- **Uptime monitoring**: Ping stage.myl.zip every 5 minutes
+- **PageSpeed Insights**: Monitor load times
+- **Error logging**: Check Hostgator error logs
 
-## 📞 Next Steps
+### **Production Monitoring (Cloud Run)**
+- **Google Cloud Console**: Monitor Cloud Run service
+- **Uptime monitoring**: Ping myl.zip every 5 minutes
+- **Portal sync status**: Monitor sync from staging
 
-1. **Update FTP credentials** in `ftp-config.json`
-2. **Configure DNS** to point to HostGator
-3. **Install Let's Encrypt SSL** via cPanel
-4. **Run deployment**: `npm run deploy:hostgator`
-5. **Test your site** at https://stage.myl.zip
+## 🔄 Deployment Workflow
 
-Your staging environment will be ready! 🎉
+### **Normal Workflow (Staging → Production)**
+1. **Make changes** locally in `src/` directory
+2. **Test locally** by opening `src/index.html`
+3. **Deploy to staging**: `deploy.bat`
+4. **Test staging**: Check `https://stage.myl.zip`
+5. **Sync to production**: `sync-to-production.bat`
+6. **Verify production**: Check `https://myl.zip`
+
+### **Direct Production Workflow**
+1. **Make changes** locally in `src/` directory
+2. **Commit and push**: `git add . && git commit -m "Update" && git push`
+3. **Cloud Run auto-deploys** (bypasses staging)
+4. **Optional**: Sync to staging: `sync-from-production.bat`
+
+### **Sync Workflows**
+```bash
+# Deploy to staging
+deploy.bat
+
+# Sync staging → production
+sync-to-production.bat
+
+# Sync production → staging
+sync-from-production.bat
+
+# Test staging connection
+test-connection.bat
+```
+
+## 🚨 Emergency Procedures
+
+### **Staging Down**
+1. **Continue**: Production remains available
+2. **Monitor**: Watch for staging recovery
+3. **Update**: Keep production content current
+4. **Recovery**: Staging auto-deploys on fix
+
+### **Production Down**
+1. **Immediate**: Direct users to stage.myl.zip
+2. **Investigation**: Check Cloud Run status
+3. **Recovery**: Restore Cloud Run service
+4. **Sync**: Ensure production has latest content
+
+### **Both Down**
+1. **Emergency**: Use backup hosting
+2. **Investigation**: Check both services
+3. **Recovery**: Restore both services
+4. **Sync**: Ensure consistency
+
+## 🚨 Troubleshooting
+
+### **FTP Connection Issues**
+- **Check credentials** in `ftp-config.json`
+- **Verify Hostgator account** is active
+- **Test with FileZilla** or similar FTP client
+- **Contact Hostgator support**
+
+### **Deployment Issues**
+- **Check file permissions** on Hostgator
+- **Verify file paths** in configuration
+- **Check for file conflicts** on server
+- **Review deployment logs**
+
+### **DNS Issues**
+- **DNS propagation** takes 24-48 hours
+- **SSL certificate** may take time to activate
+- **Check domain status** in Hostgator panel
+- **Monitor propagation** at whatsmydns.net
+
+## 💰 Cost Breakdown
+
+### **Hostgator Costs (Staging)**
+- **Domain**: Already covered (subdomain)
+- **Hosting**: ~$3.95/month (Baby Plan)
+- **SSL**: Free (Let's Encrypt)
+- **Total**: ~$47/year
+
+### **Cloud Run Costs (Production)**
+- **Compute**: ~$0-5/month (low traffic)
+- **Storage**: ~$0-2/month
+- **Domain**: ~$15/year
+- **Total**: ~$15-87/year
+
+### **Total Strategy Cost**
+- **Combined**: ~$62-134/year
+- **Staging + Production**: Worth the cost for reliability
+
+## 📞 Support Resources
+
+### **Hostgator Support**
+- **Live Chat**: Available 24/7
+- **Phone**: 1-866-96-GATOR
+- **Email**: support@hostgator.com
+- **Knowledge Base**: help.hostgator.com
+
+### **Cloud Run Support**
+- **Google Cloud Console**: Monitor service status
+- **Cloud Run Issues**: Check Google Cloud console
+- **Deployment Issues**: Check build logs
+
+### **DNS Support**
+- **Domain Issues**: Contact domain registrar
+- **DNS Propagation**: Monitor at whatsmydns.net
+- **SSL Issues**: Check certificate status
+
+## 🎯 Next Steps
+
+1. **Complete Hostgator setup** following this guide
+2. **Test staging deployment** workflow
+3. **Configure production portal** sync
+4. **Set up monitoring** for both environments
+5. **Document procedures** for team use
+
+## 📋 Staging Checklist
+
+### **Before Staging**
+- [ ] Hostgator account active
+- [ ] FTP credentials configured
+- [ ] Test deployment successful
+- [ ] DNS configured for stage.myl.zip
+- [ ] SSL certificate installed
+
+### **During Staging**
+- [ ] Deploy latest content to staging
+- [ ] Test all functionality at stage.myl.zip
+- [ ] Verify SSL certificate is working
+- [ ] Check all pages load correctly
+- [ ] Test user workflows
+
+### **After Staging**
+- [ ] Sync staging to production
+- [ ] Verify production site updated
+- [ ] Monitor for any issues
+- [ ] Keep staging in sync with production
+
+---
+
+**Remember**: Stage on Hostgator, serve on Cloud Run! 🚀
