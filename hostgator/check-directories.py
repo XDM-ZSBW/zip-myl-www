@@ -1,0 +1,1 @@
+import ftplib; ftp = ftplib.FTP(); ftp.connect("myl.zip", 21); ftp.login("mylzipftp@myl.zip", "h8r(wrKhdk"); print("[OK] Connected!"); print(f"[DIR] Current: {ftp.pwd()}"); files = ftp.nlst(); print("[LIST] Root files:"); [print(f"   {f}") for f in files]; ftp.quit()

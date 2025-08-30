@@ -3,60 +3,377 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyL.Zip - Redirecting...</title>
-    <meta http-equiv="refresh" content="0;url=https://zaido.org">
+    <title>MyL.Zip - Secure SSL Certificate Management</title>
+    <meta name="description" content="Professional SSL certificate management and API key generation for secure web services">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            text-align: center;
-            padding: 50px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            color: #333;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0;
+            line-height: 1.6;
         }
-        .container {
-            background: rgba(255, 255, 255, 0.1);
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .main {
+            margin-top: 80px;
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 4rem;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.95);
             padding: 2rem;
             border-radius: 15px;
             backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
         }
-        h1 {
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .feature-card p {
+            color: #666;
             margin-bottom: 1rem;
         }
-        p {
-            margin-bottom: 2rem;
+
+        .chat-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
         }
-        a {
-            color: #fff;
-            text-decoration: underline;
+
+        .chat-button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+
+        .chat-button:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-window {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 350px;
+            height: 400px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 1rem;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            max-height: 300px;
+        }
+
+        .chat-input {
+            padding: 1rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+        }
+
+        .chat-input button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.5rem 1rem;
+            border-radius: 15px;
+            max-width: 80%;
+        }
+
+        .message.user {
+            background: #667eea;
+            color: white;
+            margin-left: auto;
+        }
+
+        .message.bot {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .footer {
+            background: rgba(0, 0, 0, 0.1);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .chat-window {
+                width: 300px;
+                right: -50px;
+            }
         }
     </style>
-            <script>
-            // Console info for developers
-            console.log('🚀 [PROXY] MyL.Zip Proxy Layer Active - Updated');
-            console.log('📋 [INFO] This is the transparent proxy codebase');
-            console.log('🔗 [TARGET] Proxying to: https://zaido.org');
-            console.log('📝 [NOTE] In other deployments, this may be a unique codebase');
-            console.log('🔄 [STATUS] Auto-redirecting to staging environment...');
-            console.log('🔐 [AUTH] Authentication endpoints served locally');
-        </script>
 </head>
 <body>
-    <div class="container">
-        <h1>🚀 MyL.Zip</h1>
-        <p>Redirecting to staging environment...</p>
-        <p>If you're not redirected automatically, <a href="https://zaido.org">click here</a>.</p>
-        
-        <!-- Developer Notice -->
-        <div style="margin-top: 2rem; padding: 1rem; background: rgba(255, 255, 255, 0.2); border-radius: 8px; font-size: 0.9rem;">
-            <strong>🔧 Developer Info:</strong><br>
-            This is the transparent proxy codebase.<br>
-            Check browser console for deployment details.
+    <header class="header">
+        <nav class="nav">
+            <a href="/" class="logo">🚀 MyL.Zip</a>
+            <ul class="nav-links">
+                <li><a href="/setup-wizard.html">Setup Wizard</a></li>
+                <li><a href="/auth.html">Authentication</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main">
+        <section class="hero">
+            <h1>Secure SSL Certificate Management</h1>
+            <p>Professional-grade SSL certificate provisioning and API key generation for your web services</p>
+            <a href="/setup-wizard.html" class="cta-button">🚀 Start Setup Wizard</a>
+        </section>
+
+        <section id="features" class="features">
+            <div class="feature-card">
+                <h3>🔐 SSL Certificate Management</h3>
+                <p>Automated SSL certificate provisioning with UUID subdomain support for secure connections.</p>
+                <a href="/setup-wizard.html" style="color: #667eea; text-decoration: none;">→ Get Started</a>
+            </div>
+            
+            <div class="feature-card">
+                <h3>🔑 API Key Generation</h3>
+                <p>Secure API key generation with device-specific permissions and access controls.</p>
+                <a href="/setup-wizard.html" style="color: #667eea; text-decoration: none;">→ Generate Keys</a>
+            </div>
+            
+            <div class="feature-card">
+                <h3>🛡️ Device Authentication</h3>
+                <p>Robust device verification and authentication system with Chrome extension integration.</p>
+                <a href="/auth.html" style="color: #667eea; text-decoration: none;">→ Authenticate</a>
+            </div>
+        </section>
+    </main>
+
+    <div class="chat-container">
+        <button class="chat-button" onclick="toggleChat()">💬</button>
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <span>MyL.Zip Support</span>
+                <button onclick="toggleChat()" style="background: none; border: none; color: white; cursor: pointer;">✕</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">
+                    👋 Welcome to MyL.Zip! How can I help you today?
+                </div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="chatInput" placeholder="Type your message..." onkeypress="handleChatKeyPress(event)">
+                <button onclick="sendMessage()">Send</button>
+            </div>
         </div>
     </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 MyL.Zip - Professional SSL Certificate Management</p>
+    </footer>
+
+    <script>
+        // Chat functionality
+        function toggleChat() {
+            const chatWindow = document.getElementById('chatWindow');
+            chatWindow.style.display = chatWindow.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                addMessage(message, 'user');
+                input.value = '';
+                
+                // Simulate bot response
+                setTimeout(() => {
+                    const responses = [
+                        "Thanks for your message! I'll help you with that.",
+                        "Great question! Let me check our documentation.",
+                        "I can help you with the setup wizard. Have you tried visiting /setup-wizard.html?",
+                        "For SSL certificate issues, please use our setup wizard.",
+                        "Need help with API keys? The setup wizard will guide you through the process."
+                    ];
+                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                    addMessage(randomResponse, 'bot');
+                }, 1000);
+            }
+        }
+
+        function handleChatKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function addMessage(text, sender) {
+            const messages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.textContent = text;
+            messages.appendChild(messageDiv);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        // Console info for developers
+        console.log('🚀 [PRODUCTION] MyL.Zip Production Environment Active');
+        console.log('📋 [INFO] This is the production codebase for myl.zip');
+        console.log('🔗 [SETUP] Setup Wizard: https://myl.zip/setup-wizard.html');
+        console.log('🔐 [AUTH] Authentication: https://myl.zip/auth.html');
+        console.log('💬 [CHAT] Support chat is available');
+    </script>
 </body>
 </html>

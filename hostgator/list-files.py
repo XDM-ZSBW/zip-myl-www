@@ -1,0 +1,1 @@
+import ftplib; ftp = ftplib.FTP(); ftp.connect("myl.zip", 21); ftp.login("mylzipftp@myl.zip", "h8r(wrKhdk"); print("[OK] Connected!"); files = ftp.nlst(); print("[LIST] Root files:"); [print(f"   {f}") for f in files]; ftp.cwd("js"); js_files = ftp.nlst(); print("[LIST] JS files:"); [print(f"   {f}") for f in js_files]; ftp.quit()
