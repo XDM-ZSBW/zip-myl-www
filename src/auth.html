@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyL.Zip Device Authentication</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .auth-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .auth-header h1 {
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        
+        .auth-header p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+        }
+        
+        .device-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .device-info h3 {
+            color: #fff;
+            margin-bottom: 15px;
+        }
+        
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .info-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+        }
+        
+        .info-value {
+            color: #fff;
+            font-weight: 600;
+            font-family: monospace;
+        }
+        
+        .auth-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .status-indicator {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .status-success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+        
+        .status-error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+        }
+        
+        .status-pending {
+            background: rgba(255, 152, 0, 0.2);
+            border: 1px solid rgba(255, 152, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-header">
+            <h1>🔐 MyL.Zip Device Authentication</h1>
+            <p>Verify your device to access the MyL.Zip ecosystem</p>
+        </div>
+        
+        <div class="device-info">
+            <h3>Device Information</h3>
+            <div class="info-item">
+                <span class="info-label">Device ID:</span>
+                <span class="info-value" id="deviceId">Loading...</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">User Agent:</span>
+                <span class="info-value" id="userAgent">Loading...</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Platform:</span>
+                <span class="info-value" id="platform">Loading...</span>
+            </div>
+            <div class="info-item">
+                <span class="info-label">Authentication Status:</span>
+                <span class="info-value" id="authStatus">Checking...</span>
+            </div>
+        </div>
+        
+        <div class="status-indicator" id="statusIndicator" style="display: none;">
+            <div id="statusMessage"></div>
+        </div>
+        
+        <div class="auth-actions">
+            <button class="btn btn-primary" id="verifyBtn" onclick="verifyDevice()">
+                🔐 Verify Device
+            </button>
+            <button class="btn btn-secondary" id="setupBtn" onclick="openSetupWizard()">
+                ⚙️ Setup Wizard
+            </button>
+            <a href="/" class="btn btn-secondary">
+                🏠 Back to Home
+            </a>
+        </div>
+    </div>
+
+    <script>
+        let deviceId = null;
+        let isAuthenticated = false;
+        
+        // Get device ID from URL parameters
+        function getDeviceIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('deviceId');
+        }
+        
+        // Initialize page
+        async function init() {
+            // Get device ID from URL
+            deviceId = getDeviceIdFromUrl();
+            
+            if (!deviceId) {
+                showStatus('No device ID provided. Please use the Chrome extension to access this page.', 'error');
+                return;
+            }
+            
+            // Update device information
+            document.getElementById('deviceId').textContent = deviceId;
+            document.getElementById('userAgent').textContent = navigator.userAgent.substring(0, 50) + '...';
+            document.getElementById('platform').textContent = navigator.platform;
+            
+            // Check authentication status
+            await checkAuthenticationStatus();
+            
+            // Listen for extension messages
+            setupExtensionCommunication();
+        }
+        
+        // Check authentication status with backend
+        async function checkAuthenticationStatus() {
+            try {
+                const response = await fetch('https://api.myl.zip/api/v1/device/status', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ deviceId: deviceId })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    isAuthenticated = data.authenticated;
+                    document.getElementById('authStatus').textContent = isAuthenticated ? 'Verified' : 'Not verified';
+                    document.getElementById('authStatus').style.color = isAuthenticated ? '#4CAF50' : '#FF9800';
+                } else {
+                    document.getElementById('authStatus').textContent = 'Error checking status';
+                    document.getElementById('authStatus').style.color = '#F44336';
+                }
+            } catch (error) {
+                console.error('Error checking authentication status:', error);
+                document.getElementById('authStatus').textContent = 'Connection error';
+                document.getElementById('authStatus').style.color = '#F44336';
+            }
+        }
+        
+        // Verify device
+        async function verifyDevice() {
+            showStatus('Verifying device...', 'pending');
+            
+            try {
+                const response = await fetch('https://api.myl.zip/api/v1/device/verify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        deviceId: deviceId,
+                        userAgent: navigator.userAgent,
+                        platform: navigator.platform,
+                        language: navigator.language
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        showStatus('Device verified successfully!', 'success');
+                        isAuthenticated = true;
+                        document.getElementById('authStatus').textContent = 'Verified';
+                        document.getElementById('authStatus').style.color = '#4CAF50';
+                    } else {
+                        showStatus('Device verification failed: ' + (data.message || 'Unknown error'), 'error');
+                    }
+                } else {
+                    showStatus('Verification failed. Please try again.', 'error');
+                }
+            } catch (error) {
+                console.error('Error verifying device:', error);
+                showStatus('Connection error. Please check your internet connection.', 'error');
+            }
+        }
+        
+        // Open setup wizard
+        function openSetupWizard() {
+            window.location.href = `/setup-wizard.html?deviceId=${deviceId}`;
+        }
+        
+        // Show status message
+        function showStatus(message, type) {
+            const indicator = document.getElementById('statusIndicator');
+            const messageEl = document.getElementById('statusMessage');
+            
+            indicator.className = `status-indicator status-${type}`;
+            messageEl.textContent = message;
+            indicator.style.display = 'block';
+            
+            // Auto-hide success messages
+            if (type === 'success') {
+                setTimeout(() => {
+                    indicator.style.display = 'none';
+                }, 5000);
+            }
+        }
+        
+        // Setup extension communication
+        function setupExtensionCommunication() {
+            // Listen for extension events
+            document.addEventListener('mylzip-device-ready', (event) => {
+                console.log('Extension device ready:', event.detail);
+            });
+            
+            // Send device info to extension if available
+            if (typeof chrome !== 'undefined' && chrome.runtime) {
+                window.postMessage({
+                    type: 'mylzip-portal-request',
+                    action: 'get-device-info'
+                }, '*');
+            }
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

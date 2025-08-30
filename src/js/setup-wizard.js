@@ -1,394 +1,341 @@
-// Setup Wizard JavaScript
-// Handles UI interactions and API calls to the backend
+/**
+ * Setup Wizard JavaScript
+ * Handles the multi-step setup process for SSL certificates and extension configuration
+ */
 
-class SetupWizard {
-  constructor() {
-    this.currentStep = 1;
-    this.totalSteps = 4;
-    this.userData = {};
-    this.apiBaseUrl = 'https://api.myl.zip';
+let currentStep = 1;
+let setupData = {
+    userInitials: '',
+    deviceName: '',
+    domain: '',
+    deviceId: null
+};
+
+// Initialize wizard
+document.addEventListener('DOMContentLoaded', function() {
+    // Get device ID from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    setupData.deviceId = urlParams.get('deviceId');
     
-    this.initializeWizard();
-  }
-
-  initializeWizard() {
-    this.updateProgressBar();
-    this.attachEventListeners();
-  }
-
-  attachEventListeners() {
-    // Form validation on input
-    const inputs = document.querySelectorAll('.setup-form input');
-    inputs.forEach(input => {
-      input.addEventListener('input', () => this.validateForm());
-    });
-
-    // Enter key to proceed
-    document.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter' && this.currentStep === 1) {
-        this.nextStep();
-      }
-    });
-  }
-
-  validateForm() {
-    const form = document.querySelector('.setup-form');
-    const inputs = form.querySelectorAll('input[required]');
-    const continueBtn = document.querySelector('#step-1 .btn-primary');
-    
-    let isValid = true;
-    inputs.forEach(input => {
-      if (!input.value.trim()) {
-        isValid = false;
-      }
-    });
-    
-    continueBtn.disabled = !isValid;
-  }
-
-  nextStep() {
-    if (this.currentStep === 1) {
-      if (!this.validateStep1()) return;
-      this.collectUserData();
+    if (setupData.deviceId) {
+        document.getElementById('extension-device-id').textContent = setupData.deviceId;
     }
     
-    if (this.currentStep < this.totalSteps) {
-      this.currentStep++;
-      this.showStep(this.currentStep);
-      this.updateProgressBar();
-    }
-  }
+    updateProgress();
+});
 
-  prevStep() {
-    if (this.currentStep > 1) {
-      this.currentStep--;
-      this.showStep(this.currentStep);
-      this.updateProgressBar();
+// Navigation functions
+function nextStep() {
+    if (validateCurrentStep()) {
+        if (currentStep < 4) {
+            currentStep++;
+            showStep(currentStep);
+            updateProgress();
+        }
     }
-  }
+}
 
-  showStep(stepNumber) {
+function prevStep() {
+    if (currentStep > 1) {
+        currentStep--;
+        showStep(currentStep);
+        updateProgress();
+    }
+}
+
+function showStep(stepNumber) {
     // Hide all steps
     document.querySelectorAll('.wizard-step').forEach(step => {
-      step.classList.remove('active');
+        step.classList.remove('active');
     });
     
     // Show current step
-    const currentStepElement = document.getElementById(`step-${stepNumber}`);
-    if (currentStepElement) {
-      currentStepElement.classList.add('active');
-    }
-  }
+    document.getElementById(`step-${stepNumber}`).classList.add('active');
+}
 
-  updateProgressBar() {
+function updateProgress() {
+    // Update progress indicators
     document.querySelectorAll('.progress-step').forEach((step, index) => {
-      const stepNumber = index + 1;
-      step.classList.remove('active', 'completed');
-      
-      if (stepNumber === this.currentStep) {
-        step.classList.add('active');
-      } else if (stepNumber < this.currentStep) {
-        step.classList.add('completed');
-      }
+        const stepNumber = index + 1;
+        step.classList.remove('active', 'completed');
+        
+        if (stepNumber === currentStep) {
+            step.classList.add('active');
+        } else if (stepNumber < currentStep) {
+            step.classList.add('completed');
+        }
     });
-  }
+}
 
-  validateStep1() {
+function validateCurrentStep() {
+    switch (currentStep) {
+        case 1:
+            return validateUserInfo();
+        case 2:
+            return true; // SSL setup validation handled in provisionSSL()
+        case 3:
+            return true; // API key generation validation handled in generateApiKey()
+        default:
+            return true;
+    }
+}
+
+function validateUserInfo() {
     const userInitials = document.getElementById('userInitials').value.trim();
     const deviceName = document.getElementById('deviceName').value.trim();
     const domain = document.getElementById('domain').value.trim();
     
-    if (!userInitials || !deviceName || !domain) {
-      this.showError('Please fill in all required fields');
-      return false;
+    if (!userInitials) {
+        showError('Please enter your initials or email');
+        return false;
     }
     
-    // Basic domain validation
-    if (!this.isValidDomain(domain)) {
-      this.showError('Please enter a valid domain (e.g., example.com)');
-      return false;
+    if (!deviceName) {
+        showError('Please enter a device name');
+        return false;
     }
+    
+    if (!domain) {
+        showError('Please enter your domain');
+        return false;
+    }
+    
+    // Store data
+    setupData.userInitials = userInitials;
+    setupData.deviceName = deviceName;
+    setupData.domain = domain;
+    
+    // Update SSL domain display
+    document.getElementById('ssl-domain').textContent = domain;
+    document.getElementById('summary-domain').textContent = domain;
     
     return true;
-  }
+}
 
-  isValidDomain(domain) {
-    const domainRegex = /^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/;
-    return domainRegex.test(domain);
-  }
-
-  collectUserData() {
-    this.userData = {
-      userInitials: document.getElementById('userInitials').value.trim(),
-      deviceName: document.getElementById('deviceName').value.trim(),
-      domain: document.getElementById('domain').value.trim()
-    };
+// SSL Provisioning
+async function provisionSSL() {
+    const statusEl = document.getElementById('ssl-status');
+    const spinnerEl = document.getElementById('ssl-spinner');
+    const statusTextEl = statusEl.querySelector('.status-text');
     
-    // Update step 2 with collected data
-    document.getElementById('ssl-domain').textContent = this.userData.domain;
-  }
-
-  async provisionSSL() {
-    const statusElement = document.getElementById('ssl-status');
-    const spinner = document.getElementById('ssl-spinner');
-    const button = document.querySelector('#step-2 .btn-primary');
+    // Show loading state
+    statusEl.className = 'status-indicator pending';
+    statusTextEl.textContent = 'Provisioning SSL certificate...';
+    spinnerEl.style.display = 'inline-block';
     
     try {
-      // Update UI
-      statusElement.className = 'status-indicator';
-      statusElement.querySelector('.status-text').textContent = 'Provisioning SSL certificate...';
-      spinner.style.display = 'block';
-      button.disabled = true;
-      
-      // Call backend API
-      const response = await this.callBackendAPI('/api/v1/ssl/provision', {
-        method: 'POST',
-        body: JSON.stringify({
-          domain: this.userData.domain,
-          userInitials: this.userData.userInitials,
-          deviceName: this.userData.deviceName
-        })
-      });
-      
-      if (response.success) {
-        this.userData.deviceId = response.deviceId;
-        this.userData.sslCertificate = response.certificate;
+        const response = await fetch('https://api.myl.zip/api/v1/ssl/provision', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                domain: setupData.domain,
+                deviceId: setupData.deviceId,
+                userInitials: setupData.userInitials
+            })
+        });
         
-        statusElement.className = 'status-indicator status-success';
-        statusElement.querySelector('.status-text').textContent = 'SSL certificate provisioned successfully!';
-        
-        // Enable next step
-        setTimeout(() => {
-          this.nextStep();
-        }, 1500);
-      } else {
-        throw new Error(response.error || 'Failed to provision SSL certificate');
-      }
+        if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+                statusEl.className = 'status-indicator success';
+                statusTextEl.textContent = 'SSL certificate provisioned successfully!';
+                setTimeout(() => nextStep(), 2000);
+            } else {
+                throw new Error(data.message || 'SSL provisioning failed');
+            }
+        } else {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
     } catch (error) {
-      console.error('SSL provision error:', error);
-      statusElement.className = 'status-indicator status-error';
-      statusElement.querySelector('.status-text').textContent = `Error: ${error.message}`;
+        console.error('SSL provisioning error:', error);
+        statusEl.className = 'status-indicator error';
+        statusTextEl.textContent = `Error: ${error.message}`;
     } finally {
-      spinner.style.display = 'none';
-      button.disabled = false;
+        spinnerEl.style.display = 'none';
     }
-  }
+}
 
-  async generateApiKey() {
-    const statusElement = document.getElementById('api-key-status');
-    const spinner = document.getElementById('api-key-spinner');
-    const button = document.querySelector('#step-3 .btn-primary');
+// API Key Generation
+async function generateApiKey() {
+    const statusEl = document.getElementById('api-key-status');
+    const spinnerEl = document.getElementById('api-key-spinner');
+    const statusTextEl = statusEl.querySelector('.status-text');
+    
+    // Show loading state
+    statusEl.className = 'status-indicator pending';
+    statusTextEl.textContent = 'Generating API key...';
+    spinnerEl.style.display = 'inline-block';
     
     try {
-      // Update UI
-      statusElement.className = 'status-indicator';
-      statusElement.querySelector('.status-text').textContent = 'Generating API key...';
-      spinner.style.display = 'block';
-      button.disabled = true;
-      
-      // Update device ID display
-      document.getElementById('extension-device-id').textContent = this.userData.deviceId;
-      
-      // Call backend API
-      const response = await this.callBackendAPI('/api/v1/ssl/generate-extension-key', {
-        method: 'POST',
-        body: JSON.stringify({
-          deviceId: this.userData.deviceId,
-          userInitials: this.userData.userInitials,
-          deviceName: this.userData.deviceName
-        })
-      });
-      
-      if (response.success) {
-        this.userData.apiKey = response.apiKey;
+        const response = await fetch('https://api.myl.zip/api/v1/device/generate-key', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                deviceId: setupData.deviceId,
+                deviceName: setupData.deviceName,
+                userInitials: setupData.userInitials
+            })
+        });
         
-        statusElement.className = 'status-indicator status-success';
-        statusElement.querySelector('.status-text').textContent = 'API key generated successfully!';
-        
-        // Enable next step
-        setTimeout(() => {
-          this.nextStep();
-          this.displayCompletion();
-        }, 1500);
-      } else {
-        throw new Error(response.error || 'Failed to generate API key');
-      }
+        if (response.ok) {
+            const data = await response.json();
+            if (data.success && data.apiKey) {
+                statusEl.className = 'status-indicator success';
+                statusTextEl.textContent = 'API key generated successfully!';
+                
+                // Store API key for display
+                setupData.apiKey = data.apiKey;
+                
+                setTimeout(() => nextStep(), 2000);
+            } else {
+                throw new Error(data.message || 'API key generation failed');
+            }
+        } else {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
     } catch (error) {
-      console.error('API key generation error:', error);
-      statusElement.className = 'status-indicator status-error';
-      statusElement.querySelector('.status-text').textContent = `Error: ${error.message}`;
+        console.error('API key generation error:', error);
+        statusEl.className = 'status-indicator error';
+        statusTextEl.textContent = `Error: ${error.message}`;
     } finally {
-      spinner.style.display = 'none';
-      button.disabled = false;
+        spinnerEl.style.display = 'none';
     }
-  }
+}
 
-  displayCompletion() {
-    // Update completion summary
-    document.getElementById('summary-domain').textContent = this.userData.domain;
-    document.getElementById('generated-api-key').value = this.userData.apiKey;
-  }
-
-  async callBackendAPI(endpoint, options = {}) {
-    const url = `${this.apiBaseUrl}${endpoint}`;
-    
-    const defaultOptions = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      ...options
-    };
-    
-    try {
-      const response = await fetch(url, defaultOptions);
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.error || `HTTP ${response.status}`);
-      }
-      
-      return data;
-    } catch (error) {
-      console.error('API call failed:', error);
-      throw error;
-    }
-  }
-
-  async copyApiKey() {
+// Copy API Key
+function copyApiKey() {
     const apiKeyInput = document.getElementById('generated-api-key');
-    
-    try {
-      await navigator.clipboard.writeText(apiKeyInput.value);
-      this.showSuccess('API key copied to clipboard!');
-    } catch (error) {
-      console.error('Failed to copy API key:', error);
-      this.showError('Failed to copy API key');
+    if (setupData.apiKey) {
+        apiKeyInput.value = setupData.apiKey;
+        apiKeyInput.select();
+        document.execCommand('copy');
+        
+        // Show feedback
+        const copyBtn = document.querySelector('.api-key-container .btn');
+        const originalText = copyBtn.textContent;
+        copyBtn.textContent = 'Copied!';
+        copyBtn.style.background = '#4CAF50';
+        copyBtn.style.color = 'white';
+        
+        setTimeout(() => {
+            copyBtn.textContent = originalText;
+            copyBtn.style.background = '';
+            copyBtn.style.color = '';
+        }, 2000);
     }
-  }
+}
 
-  async downloadConfig() {
+// Download Configuration
+function downloadConfig() {
     const config = {
-      userInitials: this.userData.userInitials,
-      deviceName: this.userData.deviceName,
-      domain: this.userData.domain,
-      deviceId: this.userData.deviceId,
-      apiKey: this.userData.apiKey,
-      sslCertificate: this.userData.sslCertificate,
-      setupDate: new Date().toISOString()
+        deviceId: setupData.deviceId,
+        apiKey: setupData.apiKey,
+        domain: setupData.domain,
+        deviceName: setupData.deviceName,
+        userInitials: setupData.userInitials,
+        setupDate: new Date().toISOString()
     };
     
     const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
-    
     const a = document.createElement('a');
     a.href = url;
-    a.download = `zip-myl-config-${this.userData.userInitials}.json`;
+    a.download = `mylzip-config-${setupData.deviceId}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    
-    this.showSuccess('Configuration downloaded!');
-  }
+}
 
-  restartWizard() {
-    // Reset form
-    document.getElementById('userInitials').value = '';
-    document.getElementById('deviceName').value = '';
-    document.getElementById('domain').value = '';
-    
-    // Reset user data
-    this.userData = {};
-    
-    // Go back to step 1
-    this.currentStep = 1;
-    this.showStep(1);
-    this.updateProgressBar();
-    
-    // Reset validation
-    this.validateForm();
-  }
+// Restart Wizard
+function restartWizard() {
+    if (confirm('Are you sure you want to start over? All progress will be lost.')) {
+        currentStep = 1;
+        setupData = {
+            userInitials: '',
+            deviceName: '',
+            domain: '',
+            deviceId: setupData.deviceId // Keep device ID
+        };
+        
+        // Clear form fields
+        document.getElementById('userInitials').value = '';
+        document.getElementById('deviceName').value = '';
+        document.getElementById('domain').value = '';
+        
+        showStep(1);
+        updateProgress();
+    }
+}
 
-  showSuccess(message) {
-    this.showNotification(message, 'success');
-  }
-
-  showError(message) {
-    this.showNotification(message, 'error');
-  }
-
-  showNotification(message, type = 'info') {
-    // Create notification element
+// Utility functions
+function showError(message) {
+    // Create a simple error notification
     const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.textContent = message;
-    
-    // Add styles
     notification.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      padding: 1rem 1.5rem;
-      border-radius: 8px;
-      color: white;
-      font-weight: 600;
-      z-index: 1000;
-      animation: slideIn 0.3s ease;
-      ${type === 'success' ? 'background: #27ae60;' : ''}
-      ${type === 'error' ? 'background: #e74c3c;' : ''}
-      ${type === 'info' ? 'background: #3498db;' : ''}
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #f44336;
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        z-index: 1000;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     `;
-    
-    // Add animation styles
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes slideIn {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-      }
-    `;
-    document.head.appendChild(style);
-    
-    // Add to page
+    notification.textContent = message;
     document.body.appendChild(notification);
     
-    // Remove after 3 seconds
     setTimeout(() => {
-      notification.remove();
+        notification.remove();
+    }, 5000);
+}
+
+function showSuccess(message) {
+    // Create a simple success notification
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #4CAF50;
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        z-index: 1000;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    `;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.remove();
     }, 3000);
-  }
 }
 
-// Initialize wizard when page loads
-document.addEventListener('DOMContentLoaded', () => {
-  window.setupWizard = new SetupWizard();
-});
-
-// Global functions for onclick handlers
-function nextStep() {
-  window.setupWizard.nextStep();
+// Extension communication
+function setupExtensionCommunication() {
+    // Listen for extension events
+    document.addEventListener('mylzip-device-ready', (event) => {
+        console.log('Extension device ready:', event.detail);
+        if (event.detail.deviceId && !setupData.deviceId) {
+            setupData.deviceId = event.detail.deviceId;
+            document.getElementById('extension-device-id').textContent = setupData.deviceId;
+        }
+    });
+    
+    // Send device info to extension if available
+    if (typeof chrome !== 'undefined' && chrome.runtime) {
+        window.postMessage({
+            type: 'mylzip-portal-request',
+            action: 'get-device-info'
+        }, '*');
+    }
 }
 
-function prevStep() {
-  window.setupWizard.prevStep();
-}
-
-function provisionSSL() {
-  window.setupWizard.provisionSSL();
-}
-
-function generateApiKey() {
-  window.setupWizard.generateApiKey();
-}
-
-function copyApiKey() {
-  window.setupWizard.copyApiKey();
-}
-
-function downloadConfig() {
-  window.setupWizard.downloadConfig();
-}
-
-function restartWizard() {
-  window.setupWizard.restartWizard();
-}
+// Initialize extension communication
+setupExtensionCommunication();
