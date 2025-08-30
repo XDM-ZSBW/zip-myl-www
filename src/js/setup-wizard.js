@@ -7,8 +7,8 @@ let currentStep = 1;
 let setupData = {
     userInitials: '',
     deviceName: '',
-    domain: '',
-    deviceId: null
+    deviceId: null,
+    uuidSubdomain: null
 };
 
 // Initialize wizard
@@ -18,7 +18,15 @@ document.addEventListener('DOMContentLoaded', function() {
     setupData.deviceId = urlParams.get('deviceId');
     
     if (setupData.deviceId) {
+        // Generate UUID subdomain
+        setupData.uuidSubdomain = setupData.deviceId + '.myl.zip';
+        
+        // Update display elements
         document.getElementById('extension-device-id').textContent = setupData.deviceId;
+        document.getElementById('display-device-id').textContent = setupData.deviceId;
+        document.getElementById('display-ssl-domain').textContent = setupData.uuidSubdomain;
+        document.getElementById('ssl-domain').textContent = setupData.uuidSubdomain;
+        document.getElementById('summary-domain').textContent = setupData.uuidSubdomain;
     }
     
     updateProgress();
@@ -83,7 +91,6 @@ function validateCurrentStep() {
 function validateUserInfo() {
     const userInitials = document.getElementById('userInitials').value.trim();
     const deviceName = document.getElementById('deviceName').value.trim();
-    const domain = document.getElementById('domain').value.trim();
     
     if (!userInitials) {
         showError('Please enter your initials or email');
@@ -95,19 +102,14 @@ function validateUserInfo() {
         return false;
     }
     
-    if (!domain) {
-        showError('Please enter your domain');
+    if (!setupData.deviceId) {
+        showError('Device ID not found. Please use the Chrome extension to access this page.');
         return false;
     }
     
     // Store data
     setupData.userInitials = userInitials;
     setupData.deviceName = deviceName;
-    setupData.domain = domain;
-    
-    // Update SSL domain display
-    document.getElementById('ssl-domain').textContent = domain;
-    document.getElementById('summary-domain').textContent = domain;
     
     return true;
 }
@@ -130,9 +132,10 @@ async function provisionSSL() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                domain: setupData.domain,
                 deviceId: setupData.deviceId,
-                userInitials: setupData.userInitials
+                uuidSubdomain: setupData.uuidSubdomain,
+                userInitials: setupData.userInitials,
+                deviceName: setupData.deviceName
             })
         });
         
@@ -234,7 +237,7 @@ function downloadConfig() {
     const config = {
         deviceId: setupData.deviceId,
         apiKey: setupData.apiKey,
-        domain: setupData.domain,
+        uuidSubdomain: setupData.uuidSubdomain,
         deviceName: setupData.deviceName,
         userInitials: setupData.userInitials,
         setupDate: new Date().toISOString()
@@ -258,14 +261,13 @@ function restartWizard() {
         setupData = {
             userInitials: '',
             deviceName: '',
-            domain: '',
-            deviceId: setupData.deviceId // Keep device ID
+            deviceId: setupData.deviceId, // Keep device ID
+            uuidSubdomain: setupData.uuidSubdomain // Keep UUID subdomain
         };
         
         // Clear form fields
         document.getElementById('userInitials').value = '';
         document.getElementById('deviceName').value = '';
-        document.getElementById('domain').value = '';
         
         showStep(1);
         updateProgress();
