@@ -285,8 +285,16 @@
                 }
             } catch (error) {
                 console.error('❌ [DEBUG] Error checking authentication status:', error);
-                document.getElementById('authStatus').textContent = 'Connection error';
-                document.getElementById('authStatus').style.color = '#F44336';
+                
+                // Check if it's a DNS resolution error
+                if (error.message.includes('Failed to fetch') || error.message.includes('ERR_NAME_NOT_RESOLVED')) {
+                    document.getElementById('authStatus').textContent = 'Backend unavailable - DNS resolution failed';
+                    document.getElementById('authStatus').style.color = '#F44336';
+                    showStatus('Backend service is not accessible. This may be due to DNS propagation delay or deployment in progress. Please try again in a few minutes.', 'error');
+                } else {
+                    document.getElementById('authStatus').textContent = 'Connection error';
+                    document.getElementById('authStatus').style.color = '#F44336';
+                }
             }
         }
         
@@ -329,7 +337,13 @@
                 }
             } catch (error) {
                 console.error('❌ [DEBUG] Error verifying device:', error);
-                showStatus('Connection error. Please check your internet connection.', 'error');
+                
+                // Check if it's a DNS resolution error
+                if (error.message.includes('Failed to fetch') || error.message.includes('ERR_NAME_NOT_RESOLVED')) {
+                    showStatus('Backend service is not accessible. This may be due to DNS propagation delay or deployment in progress. Please try again in a few minutes.', 'error');
+                } else {
+                    showStatus('Connection error. Please check your internet connection.', 'error');
+                }
             }
         }
         
