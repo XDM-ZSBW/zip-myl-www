@@ -595,15 +595,26 @@
             }
         }
 
-        function showStep(stepNumber) {
-            // Hide all steps
-            document.querySelectorAll('.wizard-step').forEach(step => {
-                step.classList.remove('active');
-            });
-            
-            // Show current step
-            document.getElementById(`step-${stepNumber}`).classList.add('active');
-        }
+                 function showStep(stepNumber) {
+             // Hide all steps
+             document.querySelectorAll('.wizard-step').forEach(step => {
+                 step.classList.remove('active');
+             });
+             
+             // Show current step
+             document.getElementById(`step-${stepNumber}`).classList.add('active');
+             
+             // If showing completion step, ensure API key is displayed
+             if (stepNumber === 4 && setupData.apiKey) {
+                 setTimeout(() => {
+                     const apiKeyInput = document.getElementById('generated-api-key');
+                     if (apiKeyInput) {
+                         apiKeyInput.value = setupData.apiKey;
+                         console.log('🔑 [DISPLAY] API key displayed in completion step');
+                     }
+                 }, 100);
+             }
+         }
 
         function updateProgress() {
             // Update progress indicators
@@ -804,11 +815,19 @@
                          setupData.apiKey = apiKey;
                          console.log('🔑 [API] API key stored:', setupData.apiKey.substring(0, 10) + '...');
                         
-                        // Auto-advance to completion step after 2 seconds
-                        setTimeout(() => {
-                            console.log('🔄 [AUTO] Auto-advancing to completion step...');
-                            nextStep();
-                        }, 2000);
+                                                 // Auto-advance to completion step after 2 seconds
+                         setTimeout(() => {
+                             console.log('🔄 [AUTO] Auto-advancing to completion step...');
+                             nextStep();
+                             // Ensure API key is displayed in the input field
+                             setTimeout(() => {
+                                 const apiKeyInput = document.getElementById('generated-api-key');
+                                 if (apiKeyInput && setupData.apiKey) {
+                                     apiKeyInput.value = setupData.apiKey;
+                                     console.log('🔑 [DISPLAY] API key displayed in input field');
+                                 }
+                             }, 100);
+                         }, 2000);
                     } else {
                         throw new Error(data.message || 'API key generation failed');
                     }
