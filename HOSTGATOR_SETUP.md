@@ -17,8 +17,8 @@
      "password": "your-ftp-password",
      "port": 21,
      "secure": false,
-     "localPath": "./src",
-     "remotePath": "/public_html"
+     "localPath": "./staging-deploy",
+     "remotePath": "/public_html/website_1a41642e"
    }
    ```
 
@@ -34,8 +34,8 @@ deploy.bat
 ```
 
 ### **Step 5: Configure Domains**
-- **Staging**: `stage.myl.zip` → Hostgator
-- **Production**: `myl.zip` → Google Cloud Run (portal)
+- **Master Domain**: `xdmiq.com` → `~/public_html/` (root)
+- **Staging Domain**: `zaido.org` → `~/public_html/website_1a41642e/`
 
 ## 🔧 Detailed Setup
 
@@ -47,7 +47,8 @@ deploy.bat
 - **Business Plan**: $5.95/month (advanced)
 
 #### **2. Domain Registration**
-- **Register**: `myl.zip` domain
+- **Master Domain**: `xdmiq.com` (serves from root `public_html`)
+- **Staging Domain**: `zaido.org` (serves from subdirectory)
 - **DNS Settings**: Point to Hostgator nameservers
 - **SSL Certificate**: Enable free Let's Encrypt SSL
 
@@ -76,8 +77,8 @@ deploy.bat
   "password": "your-ftp-password", 
   "port": 21,
   "secure": false,
-  "localPath": "./src",
-  "remotePath": "/public_html",
+  "localPath": "./staging-deploy",
+  "remotePath": "/public_html/website_1a41642e",
   "exclude": [
     ".git",
     "node_modules",
@@ -109,7 +110,6 @@ test-connection.bat
 📁 Current directory: /
 📋 Files in current directory:
    📁 public_html
-   📁 logs
 ✅ Navigation successful!
 🎉 All tests passed!
 ```
@@ -135,56 +135,80 @@ deploy.bat
    📄 js/setup-wizard.js (394 bytes)
 ✅ index.html found - deployment looks good!
 🎉 Deployment completed successfully!
-🌐 Your staging site should be live at: https://stage.myl.zip
+🌐 Your staging site should be live at: http://zaido.org
 ```
 
 ## 🌐 Domain Configuration
 
+### **Hosting Structure**
+```
+~/public_html/                    # Master domain (xdmiq.com)
+├── index.html                   # xdmiq.com content
+├── other-files/                 # xdmiq.com files
+└── website_1a41642e/           # Staging domain (zaido.org)
+    ├── index.html              # Staging content
+    ├── css/
+    ├── js/
+    └── setup-wizard.html
+```
+
 ### **Staging Domain Setup**
-1. **Create subdomain**: `stage.myl.zip`
-2. **Point DNS** to Hostgator IP address
-3. **Enable SSL** in Hostgator control panel
-4. **Test** `https://stage.myl.zip`
+1. **Subdirectory**: `website_1a41642e` in `public_html`
+2. **Content Source**: Files from `zip-myl-www/src/`
+3. **Domain Mapping**: `zaido.org` → `/public_html/website_1a41642e/`
+4. **Test**: `http://zaido.org`
 
 ### **Production Domain Setup**
-1. **Keep existing**: `myl.zip` → Google Cloud Run
-2. **Cloud Run portal** syncs from stage.myl.zip
-3. **Auto-deployment** via GitHub integration
+1. **Keep existing**: `myl.zip` → Google Cloud Run (frontend portal)
+2. **API Service**: `api.myl.zip` → Google Cloud Run (backend API)
+3. **Cloud Run portal** syncs from zaido.org
+4. **Auto-deployment** via GitHub integration
+
+### **API Service Configuration**
+- **Service Name**: `zip-myl-api` (Google Cloud Run)
+- **Domain**: `api.myl.zip`
+- **Purpose**: Backend API for setup wizard and Chrome extension
+- **Endpoints**: SSL certificate provisioning, API key generation
+- **Authentication**: Device-based, SSL-certified
+- **Auto-deployment**: Via GitHub integration
 
 ### **DNS Configuration**
 ```
-stage.myl.zip → Hostgator (staging)
-myl.zip → Google Cloud Run (production portal)
-www.myl.zip → Google Cloud Run (production portal)
+xdmiq.com → ~/public_html/ (master domain)
+zaido.org → ~/public_html/website_1a41642e/ (staging)
+myl.zip → Google Cloud Run (production frontend portal)
+api.myl.zip → Google Cloud Run (production backend API)
 ```
 
 ## 📊 Monitoring Setup
 
 ### **Staging Monitoring (Hostgator)**
-- **Uptime monitoring**: Ping stage.myl.zip every 5 minutes
+- **Uptime monitoring**: Ping zaido.org every 5 minutes
 - **PageSpeed Insights**: Monitor load times
 - **Error logging**: Check Hostgator error logs
 
 ### **Production Monitoring (Cloud Run)**
-- **Google Cloud Console**: Monitor Cloud Run service
-- **Uptime monitoring**: Ping myl.zip every 5 minutes
+- **Google Cloud Console**: Monitor Cloud Run services
+- **Frontend Monitoring**: Ping myl.zip every 5 minutes
+- **API Monitoring**: Ping api.myl.zip every 5 minutes
 - **Portal sync status**: Monitor sync from staging
+- **API Health Checks**: Monitor backend service status
 
 ## 🔄 Deployment Workflow
 
 ### **Normal Workflow (Staging → Production)**
-1. **Make changes** locally in `src/` directory
-2. **Test locally** by opening `src/index.html`
+1. **Make changes** locally in `staging/` directory
+2. **Test locally** by opening `staging/index.html`
 3. **Deploy to staging**: `deploy.bat`
-4. **Test staging**: Check `https://stage.myl.zip`
-5. **Sync to production**: `sync-to-production.bat`
+4. **Test staging**: Check `http://zaido.org`
+5. **Sync to production**: `sync-to-portal.bat`
 6. **Verify production**: Check `https://myl.zip`
 
 ### **Direct Production Workflow**
-1. **Make changes** locally in `src/` directory
+1. **Make changes** locally in `portal/` directory
 2. **Commit and push**: `git add . && git commit -m "Update" && git push`
 3. **Cloud Run auto-deploys** (bypasses staging)
-4. **Optional**: Sync to staging: `sync-from-production.bat`
+4. **Optional**: Sync to staging: `sync-from-portal.bat`
 
 ### **Sync Workflows**
 ```bash
@@ -192,10 +216,10 @@ www.myl.zip → Google Cloud Run (production portal)
 deploy.bat
 
 # Sync staging → production
-sync-to-production.bat
+sync-to-portal.bat
 
 # Sync production → staging
-sync-from-production.bat
+sync-from-portal.bat
 
 # Test staging connection
 test-connection.bat
@@ -210,7 +234,7 @@ test-connection.bat
 4. **Recovery**: Staging auto-deploys on fix
 
 ### **Production Down**
-1. **Immediate**: Direct users to stage.myl.zip
+1. **Immediate**: Direct users to zaido.org
 2. **Investigation**: Check Cloud Run status
 3. **Recovery**: Restore Cloud Run service
 4. **Sync**: Ensure production has latest content
@@ -241,10 +265,16 @@ test-connection.bat
 - **Check domain status** in Hostgator panel
 - **Monitor propagation** at whatsmydns.net
 
+### **403 Forbidden Errors**
+- **Check domain mapping** to correct subdirectory
+- **Verify file permissions** in subdirectory
+- **Ensure content** is in correct location
+- **Test with SSL certificate domain** if needed
+
 ## 💰 Cost Breakdown
 
 ### **Hostgator Costs (Staging)**
-- **Domain**: Already covered (subdomain)
+- **Domain**: Already covered (subdirectory)
 - **Hosting**: ~$3.95/month (Baby Plan)
 - **SSL**: Free (Let's Encrypt)
 - **Total**: ~$47/year
@@ -291,12 +321,12 @@ test-connection.bat
 - [ ] Hostgator account active
 - [ ] FTP credentials configured
 - [ ] Test deployment successful
-- [ ] DNS configured for stage.myl.zip
+- [ ] DNS configured for zaido.org
 - [ ] SSL certificate installed
 
 ### **During Staging**
 - [ ] Deploy latest content to staging
-- [ ] Test all functionality at stage.myl.zip
+- [ ] Test all functionality at zaido.org
 - [ ] Verify SSL certificate is working
 - [ ] Check all pages load correctly
 - [ ] Test user workflows
@@ -309,4 +339,4 @@ test-connection.bat
 
 ---
 
-**Remember**: Stage on Hostgator, serve on Cloud Run! 🚀
+**Remember**: Master domain in root, staging in subdirectory! 🚀

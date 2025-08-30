@@ -10,7 +10,7 @@ async function deploy() {
     client.ftp.verbose = true; // Enable verbose logging
 
     try {
-        console.log('🔌 Connecting to Hostgator...');
+        console.log('[CONNECT] Connecting to Hostgator...');
         await client.access({
             host: config.host,
             user: config.username,
@@ -19,15 +19,15 @@ async function deploy() {
             secure: config.secure
         });
 
-        console.log('✅ Connected successfully!');
-        console.log('📁 Current directory:', await client.pwd());
+        console.log('[OK] Connected successfully!');
+        console.log('[DIR] Current directory:', await client.pwd());
 
         // Navigate to remote directory
-        console.log(`📂 Navigating to ${config.remotePath}...`);
+        console.log(`[NAV] Navigating to ${config.remotePath}...`);
         await client.ensureDir(config.remotePath);
 
         // Upload files
-        console.log('📤 Uploading files...');
+        console.log('[UPLOAD] Uploading files...');
         const localPath = path.resolve(config.localPath);
         
         // Upload files individually to avoid the error
@@ -37,35 +37,36 @@ async function deploy() {
             const stats = fs.statSync(localFilePath);
             
             if (stats.isFile()) {
-                console.log(`   📄 Uploading ${file}...`);
+                console.log(`   [FILE] Uploading ${file}...`);
                 await client.uploadFrom(localFilePath, file);
             } else if (stats.isDirectory()) {
-                console.log(`   📁 Uploading directory ${file}...`);
+                console.log(`   [DIR] Uploading directory ${file}...`);
+                // Upload the directory contents to the current directory
                 await client.uploadFromDir(localFilePath);
             }
         }
 
-        console.log('✅ All files uploaded successfully!');
+        console.log('[OK] All files uploaded successfully!');
 
         // List uploaded files
-        console.log('\n📋 Uploaded files:');
+        console.log('\n[LIST] Uploaded files:');
         const uploadedFiles = await client.list();
         uploadedFiles.forEach(file => {
             if (file.isFile) {
-                console.log(`   📄 ${file.name} (${file.size} bytes)`);
+                console.log(`   [FILE] ${file.name} (${file.size} bytes)`);
             }
         });
 
         // Test upload by checking if index.html exists
         const indexExists = uploadedFiles.some(file => file.name === 'index.html');
         if (indexExists) {
-            console.log('\n✅ index.html found - deployment looks good!');
+            console.log('\n[OK] index.html found - deployment looks good!');
         } else {
-            console.log('\n⚠️  Warning: index.html not found in uploaded files');
+            console.log('\n[WARN] Warning: index.html not found in uploaded files');
         }
 
     } catch (err) {
-        console.error('❌ Deployment failed:', err.message);
+        console.error('[ERROR] Deployment failed:', err.message);
         throw err;
     } finally {
         client.close();
@@ -75,11 +76,11 @@ async function deploy() {
 // Run deployment
 deploy()
     .then(() => {
-        console.log('\n🎉 Deployment completed successfully!');
-        console.log('🌐 Your staging site should be live at: https://stage.myl.zip');
+        console.log('\n[SUCCESS] Deployment completed successfully!');
+        console.log('[URL] Your staging site should be live at: https://zaido.org');
         process.exit(0);
     })
     .catch((err) => {
-        console.error('\n💥 Deployment failed:', err.message);
+        console.error('\n[FAILED] Deployment failed:', err.message);
         process.exit(1);
     });

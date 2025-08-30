@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zip MyL Setup Wizard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/setup-wizard.css">
+</head>
+<body>
+    <div class="wizard-container">
+        <header class="wizard-header">
+            <h1>🚀 Zip MyL Setup Wizard</h1>
+            <p>Let's get you set up with SSL certificates and extension access</p>
+        </header>
+
+        <div class="wizard-progress">
+            <div class="progress-step active" data-step="1">
+                <span class="step-number">1</span>
+                <span class="step-label">User Info</span>
+            </div>
+            <div class="progress-step" data-step="2">
+                <span class="step-number">2</span>
+                <span class="step-label">SSL Setup</span>
+            </div>
+            <div class="progress-step" data-step="3">
+                <span class="step-number">3</span>
+                <span class="step-label">Extension Key</span>
+            </div>
+            <div class="progress-step" data-step="4">
+                <span class="step-number">4</span>
+                <span class="step-label">Complete</span>
+            </div>
+        </div>
+
+        <div class="wizard-content">
+            <!-- Step 1: User Information -->
+            <div class="wizard-step active" id="step-1">
+                <h2>Welcome! Let's get started</h2>
+                <p>Please provide your information so we can set up your SSL certificate and extension access.</p>
+                
+                <form class="setup-form">
+                    <div class="form-group">
+                        <label for="userInitials">Your Initials (or email)</label>
+                        <input type="text" id="userInitials" name="userInitials" placeholder="e.g., JD or john@example.com" required>
+                        <small>This is how we'll identify your setup</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="deviceName">Device Name</label>
+                        <input type="text" id="deviceName" name="deviceName" placeholder="e.g., My Laptop" required>
+                        <small>What would you like to call this device?</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="domain">Your Domain</label>
+                        <input type="text" id="domain" name="domain" placeholder="e.g., example.com" required>
+                        <small>The domain for your SSL certificate</small>
+                    </div>
+                </form>
+                
+                <div class="wizard-actions">
+                    <button type="button" class="btn btn-primary" onclick="nextStep()">Continue</button>
+                </div>
+            </div>
+
+            <!-- Step 2: SSL Certificate Setup -->
+            <div class="wizard-step" id="step-2">
+                <h2>SSL Certificate Setup</h2>
+                <p>We'll provision an SSL certificate for your domain to ensure secure connections.</p>
+                
+                <div class="ssl-setup-info">
+                    <div class="info-card">
+                        <h3>🔒 SSL Certificate Details</h3>
+                        <ul>
+                            <li><strong>Domain:</strong> <span id="ssl-domain"></span></li>
+                            <li><strong>Type:</strong> Single Domain Certificate</li>
+                            <li><strong>Provider:</strong> Let's Encrypt</li>
+                            <li><strong>Auto-renewal:</strong> Enabled</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="ssl-provision-status">
+                    <div class="status-indicator" id="ssl-status">
+                        <span class="status-text">Ready to provision</span>
+                        <div class="spinner" id="ssl-spinner" style="display: none;"></div>
+                    </div>
+                </div>
+                
+                <div class="wizard-actions">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+                    <button type="button" class="btn btn-primary" onclick="provisionSSL()">Provision SSL Certificate</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Extension API Key Generation -->
+            <div class="wizard-step" id="step-3">
+                <h2>Extension API Key Generation</h2>
+                <p>Now we'll generate an API key for your Chrome extension to access the backend securely.</p>
+                
+                <div class="extension-setup-info">
+                    <div class="info-card">
+                        <h3>🔑 Extension API Key Details</h3>
+                        <ul>
+                            <li><strong>Device ID:</strong> <span id="extension-device-id"></span></li>
+                            <li><strong>Permissions:</strong> SSL Read, Device Read</li>
+                            <li><strong>Rate Limit:</strong> 1000 requests/hour</li>
+                            <li><strong>Expiration:</strong> 30 days</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="api-key-status">
+                    <div class="status-indicator" id="api-key-status">
+                        <span class="status-text">Ready to generate</span>
+                        <div class="spinner" id="api-key-spinner" style="display: none;"></div>
+                    </div>
+                </div>
+                
+                <div class="wizard-actions">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+                    <button type="button" class="btn btn-primary" onclick="generateApiKey()">Generate API Key</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Setup Complete -->
+            <div class="wizard-step" id="step-4">
+                <h2>🎉 Setup Complete!</h2>
+                <p>Your SSL certificate and extension API key have been successfully configured.</p>
+                
+                <div class="completion-summary">
+                    <div class="summary-card">
+                        <h3>✅ What's Been Set Up</h3>
+                        <ul>
+                            <li>SSL certificate for <span id="summary-domain"></span></li>
+                            <li>Extension API key generated</li>
+                            <li>Device registered and configured</li>
+                            <li>Secure access enabled</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="api-key-display">
+                        <h3>🔑 Your Extension API Key</h3>
+                        <div class="api-key-container">
+                            <input type="text" id="generated-api-key" readonly>
+                            <button type="button" class="btn btn-secondary" onclick="copyApiKey()">Copy</button>
+                        </div>
+                        <small>Store this key securely - it won't be shown again</small>
+                    </div>
+                </div>
+                
+                <div class="next-steps">
+                    <h3>📋 Next Steps</h3>
+                    <ol>
+                        <li>Install the Chrome extension</li>
+                        <li>Use the API key to configure the extension</li>
+                        <li>Start using your secure SSL-enabled setup</li>
+                    </ol>
+                </div>
+                
+                <div class="wizard-actions">
+                    <button type="button" class="btn btn-primary" onclick="downloadConfig()">Download Configuration</button>
+                    <button type="button" class="btn btn-secondary" onclick="restartWizard()">Start Over</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/setup-wizard.js"></script>
+</body>
+</html>
