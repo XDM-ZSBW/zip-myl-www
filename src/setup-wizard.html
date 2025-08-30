@@ -774,11 +774,15 @@
                 console.log('🔑 [API] Response status:', response.status);
                 console.log('🔑 [API] Response headers:', Object.fromEntries(response.headers.entries()));
                 
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log('🔑 [API] Response data:', data);
-                    
-                    if (data.success && data.data && data.data.data && data.data.data.apiKey) {
+                                 if (response.ok) {
+                     const data = await response.json();
+                     console.log('🔑 [API] Response data:', data);
+                     console.log('🔑 [DEBUG] data.success:', data.success);
+                     console.log('🔑 [DEBUG] data.data:', data.data);
+                     console.log('🔑 [DEBUG] data.data.data:', data.data?.data);
+                     console.log('🔑 [DEBUG] data.data.data.apiKey:', data.data?.data?.apiKey);
+                     
+                     if (data.success && data.data && data.data.data && data.data.data.apiKey) {
                         console.log('✅ [API] API key generated successfully!');
                         statusEl.className = 'status-indicator success';
                         statusTextEl.textContent = 'API key generated successfully!';
