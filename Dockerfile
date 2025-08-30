@@ -1,4 +1,6 @@
-# Use nginx as a transparent proxy
+# MyL.Zip Transparent Proxy Container
+# This container acts as a transparent proxy layer forwarding requests to zaido.org
+# In other deployments, this may serve unique content instead of proxying
 FROM nginx:alpine
 
 # Copy fallback index.html (in case proxy fails)
