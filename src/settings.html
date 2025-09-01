@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚙️ MyL.Zip Settings</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .settings-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .settings-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .settings-header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .settings-header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .settings-content {
+            padding: 40px;
+        }
+
+        .settings-section {
+            margin-bottom: 40px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .settings-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e1e5e9;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .info-value {
+            color: #333;
+            font-family: monospace;
+            font-size: 14px;
+            word-break: break-all;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 2px solid #e1e5e9;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-expired {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            transform: translateX(-5px);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="settings-container">
+        <div class="settings-header">
+            <h1>⚙️ MyL.Zip Settings</h1>
+            <p>Manage your device configuration and security settings</p>
+        </div>
+
+        <div class="settings-content">
+            <a href="/setup-wizard.html" class="back-link">← Back to Setup Wizard</a>
+
+            <!-- Loading State -->
+            <div class="loading" id="loadingState">
+                <div class="loading-spinner"></div>
+                <p>Loading your device settings...</p>
+            </div>
+
+            <!-- Settings Content -->
+            <div id="settingsContent" style="display: none;">
+                <!-- Device Information -->
+                <div class="settings-section">
+                    <h2>🔑 Device Information</h2>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Device ID</div>
+                            <div class="info-value" id="deviceId">Loading...</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Device Name</div>
+                            <div class="info-value" id="deviceName">Loading...</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Registration Date</div>
+                            <div class="info-value" id="registrationDate">Loading...</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Last Active</div>
+                            <div class="info-value" id="lastActive">Loading...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SSL Certificate -->
+                <div class="settings-section">
+                    <h2>🔒 SSL Certificate</h2>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Domain</div>
+                            <div class="info-value" id="sslDomain">Loading...</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Certificate Status</div>
+                            <div class="info-value">
+                                <span class="status-indicator status-active" id="sslStatus">Active</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Expiration Date</div>
+                            <div class="info-value" id="sslExpiration">Loading...</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Auto-renewal</div>
+                            <div class="info-value">Enabled</div>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="renewSSL()">🔄 Renew Certificate</button>
+                        <button class="btn btn-secondary" onclick="downloadSSL()">📥 Download Certificate</button>
+                    </div>
+                </div>
+
+                <!-- API Key Management -->
+                <div class="settings-section">
+                    <h2>🔑 API Key Management</h2>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Current API Key</div>
+                            <div class="info-value" id="apiKey">Loading...</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Key Status</div>
+                            <div class="info-value">
+                                <span class="status-indicator status-active" id="apiKeyStatus">Active</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Expiration Date</div>
+                            <div class="info-value" id="apiKeyExpiration">Loading...</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Rate Limit</div>
+                            <div class="info-value">1000 requests/hour</div>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="regenerateAPIKey()">🔄 Regenerate Key</button>
+                        <button class="btn btn-secondary" onclick="copyAPIKey()">📋 Copy Key</button>
+                        <button class="btn btn-secondary" onclick="downloadAPIKey()">📥 Download Key</button>
+                    </div>
+                </div>
+
+                <!-- Extension Settings -->
+                <div class="settings-section">
+                    <h2>🌐 Chrome Extension</h2>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Extension Status</div>
+                            <div class="info-value">
+                                <span class="status-indicator status-active" id="extensionStatus">Connected</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Last Sync</div>
+                            <div class="info-value" id="lastSync">Loading...</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Data Collection</div>
+                            <div class="info-value">Enabled</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Security Level</div>
+                            <div class="info-value">High</div>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="openExtensionSettings()">⚙️ Extension Settings</button>
+                        <button class="btn btn-secondary" onclick="syncExtension()">🔄 Sync Now</button>
+                    </div>
+                </div>
+
+                <!-- Danger Zone -->
+                <div class="settings-section">
+                    <h2>⚠️ Danger Zone</h2>
+                    <p style="color: #666; margin-bottom: 20px;">These actions cannot be undone. Please be careful.</p>
+                    <div class="action-buttons">
+                        <button class="btn btn-danger" onclick="resetDevice()">🗑️ Reset Device</button>
+                        <button class="btn btn-danger" onclick="deleteAccount()">❌ Delete Account</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class SettingsManager {
+            constructor() {
+                this.deviceId = null;
+                this.init();
+            }
+
+            async init() {
+                // Load device information
+                await this.loadDeviceInfo();
+                
+                // Hide loading, show content
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('settingsContent').style.display = 'block';
+            }
+
+            async loadDeviceInfo() {
+                try {
+                    // Get device ID from localStorage
+                    this.deviceId = localStorage.getItem('mylzip_device_id');
+                    
+                    if (!this.deviceId) {
+                        // Redirect to setup wizard if no device ID
+                        window.location.href = '/setup-wizard.html';
+                        return;
+                    }
+
+                    // Simulate loading device data from backend
+                    const deviceData = await this.fetchDeviceData();
+                    
+                    // Update UI with device information
+                    this.updateDeviceInfo(deviceData);
+                    
+                } catch (error) {
+                    console.error('Failed to load device info:', error);
+                    this.showError('Failed to load device information');
+                }
+            }
+
+            async fetchDeviceData() {
+                // Simulate API call to get device data
+                // In production, this would call the actual backend
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve({
+                            deviceId: this.deviceId,
+                            deviceName: localStorage.getItem('mylzip_device_name') || 'My Device',
+                            registrationDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toLocaleDateString(),
+                            lastActive: new Date().toLocaleDateString(),
+                            sslDomain: `${this.deviceId}.myl.zip`,
+                            sslExpiration: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toLocaleDateString(),
+                            apiKey: localStorage.getItem('mylzip_api_key') || 'myl_' + Math.random().toString(36).substr(2, 20),
+                            apiKeyExpiration: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString(),
+                            lastSync: new Date().toLocaleString()
+                        });
+                    }, 1000);
+                });
+            }
+
+            updateDeviceInfo(data) {
+                document.getElementById('deviceId').textContent = data.deviceId;
+                document.getElementById('deviceName').textContent = data.deviceName;
+                document.getElementById('registrationDate').textContent = data.registrationDate;
+                document.getElementById('lastActive').textContent = data.lastActive;
+                document.getElementById('sslDomain').textContent = data.sslDomain;
+                document.getElementById('sslExpiration').textContent = data.sslExpiration;
+                document.getElementById('apiKey').textContent = data.apiKey;
+                document.getElementById('apiKeyExpiration').textContent = data.apiKeyExpiration;
+                document.getElementById('lastSync').textContent = data.lastSync;
+            }
+
+            showError(message) {
+                alert('Error: ' + message);
+            }
+
+            showSuccess(message) {
+                alert('Success: ' + message);
+            }
+
+            // Action methods
+            async renewSSL() {
+                if (confirm('Are you sure you want to renew your SSL certificate?')) {
+                    try {
+                        // Simulate SSL renewal
+                        await this.simulateAction('Renewing SSL certificate...');
+                        this.showSuccess('SSL certificate renewed successfully!');
+                        // Refresh SSL expiration date
+                        document.getElementById('sslExpiration').textContent = 
+                            new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toLocaleDateString();
+                    } catch (error) {
+                        this.showError('Failed to renew SSL certificate');
+                    }
+                }
+            }
+
+            downloadSSL() {
+                const sslData = {
+                    domain: document.getElementById('sslDomain').textContent,
+                    expiration: document.getElementById('sslExpiration').textContent,
+                    status: 'Active'
+                };
+                
+                const blob = new Blob([JSON.stringify(sslData, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'ssl-certificate.json';
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+
+            async regenerateAPIKey() {
+                if (confirm('Are you sure you want to regenerate your API key? The old key will be invalidated.')) {
+                    try {
+                        await this.simulateAction('Regenerating API key...');
+                        const newApiKey = 'myl_' + Math.random().toString(36).substr(2, 20) + '_' + Date.now().toString(36);
+                        localStorage.setItem('mylzip_api_key', newApiKey);
+                        document.getElementById('apiKey').textContent = newApiKey;
+                        document.getElementById('apiKeyExpiration').textContent = 
+                            new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString();
+                        this.showSuccess('API key regenerated successfully!');
+                    } catch (error) {
+                        this.showError('Failed to regenerate API key');
+                    }
+                }
+            }
+
+            copyAPIKey() {
+                const apiKey = document.getElementById('apiKey').textContent;
+                navigator.clipboard.writeText(apiKey).then(() => {
+                    this.showSuccess('API key copied to clipboard!');
+                });
+            }
+
+            downloadAPIKey() {
+                const apiKeyData = {
+                    apiKey: document.getElementById('apiKey').textContent,
+                    expiration: document.getElementById('apiKeyExpiration').textContent,
+                    deviceId: this.deviceId
+                };
+                
+                const blob = new Blob([JSON.stringify(apiKeyData, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'api-key.json';
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+
+            openExtensionSettings() {
+                // Open Chrome extension settings
+                if (typeof chrome !== 'undefined' && chrome.runtime) {
+                    chrome.runtime.openOptionsPage();
+                } else {
+                    this.showError('Chrome extension not detected');
+                }
+            }
+
+            syncExtension() {
+                this.showSuccess('Extension synchronized successfully!');
+                document.getElementById('lastSync').textContent = new Date().toLocaleString();
+            }
+
+            async resetDevice() {
+                if (confirm('Are you sure you want to reset your device? This will remove all settings and require re-registration.')) {
+                    try {
+                        await this.simulateAction('Resetting device...');
+                        localStorage.removeItem('mylzip_device_id');
+                        localStorage.removeItem('mylzip_api_key');
+                        localStorage.removeItem('mylzip_device_name');
+                        this.showSuccess('Device reset successfully! Redirecting to setup wizard...');
+                        setTimeout(() => {
+                            window.location.href = '/setup-wizard.html';
+                        }, 2000);
+                    } catch (error) {
+                        this.showError('Failed to reset device');
+                    }
+                }
+            }
+
+            async deleteAccount() {
+                if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                    if (confirm('This will permanently delete all your data. Are you absolutely sure?')) {
+                        try {
+                            await this.simulateAction('Deleting account...');
+                            localStorage.clear();
+                            this.showSuccess('Account deleted successfully!');
+                            setTimeout(() => {
+                                window.location.href = '/';
+                            }, 2000);
+                        } catch (error) {
+                            this.showError('Failed to delete account');
+                        }
+                    }
+                }
+            }
+
+            async simulateAction(message) {
+                return new Promise((resolve) => {
+                    alert(message);
+                    setTimeout(resolve, 1000);
+                });
+            }
+        }
+
+        // Initialize settings manager
+        const settingsManager = new SettingsManager();
+
+        // Global functions for button clicks
+        function renewSSL() {
+            settingsManager.renewSSL();
+        }
+
+        function downloadSSL() {
+            settingsManager.downloadSSL();
+        }
+
+        function regenerateAPIKey() {
+            settingsManager.regenerateAPIKey();
+        }
+
+        function copyAPIKey() {
+            settingsManager.copyAPIKey();
+        }
+
+        function downloadAPIKey() {
+            settingsManager.downloadAPIKey();
+        }
+
+        function openExtensionSettings() {
+            settingsManager.openExtensionSettings();
+        }
+
+        function syncExtension() {
+            settingsManager.syncExtension();
+        }
+
+        function resetDevice() {
+            settingsManager.resetDevice();
+        }
+
+        function deleteAccount() {
+            settingsManager.deleteAccount();
+        }
+    </script>
+</body>
+</html>

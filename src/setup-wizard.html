@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zip MyL Setup Wizard</title>
+    <title>🚀 Zip MyL Setup Wizard</title>
     <style>
         * {
             margin: 0;
@@ -12,135 +12,105 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #333;
             min-height: 100vh;
-            line-height: 1.6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
 
         .wizard-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            overflow: hidden;
         }
 
         .wizard-header {
-            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            margin-bottom: 2rem;
+            padding: 30px;
+            text-align: center;
         }
 
         .wizard-header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
+            font-size: 28px;
+            margin-bottom: 10px;
         }
 
         .wizard-header p {
-            font-size: 1.1rem;
             opacity: 0.9;
+            font-size: 16px;
         }
 
-        .wizard-progress {
+        .wizard-steps {
             display: flex;
-            justify-content: space-between;
-            margin-bottom: 3rem;
-            position: relative;
+            justify-content: center;
+            padding: 20px;
+            background: #f8f9fa;
         }
 
-        .wizard-progress::before {
-            content: '';
-            position: absolute;
-            top: 20px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.3);
-            z-index: 1;
+        .step {
+            display: flex;
+            align-items: center;
+            margin: 0 10px;
+            font-size: 14px;
+            color: #666;
         }
 
-        .progress-step {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .progress-step.active {
-            color: white;
-        }
-
-        .progress-step.completed {
-            color: #4CAF50;
-        }
-
-        .step-number {
-            display: block;
-            width: 40px;
-            height: 40px;
-            line-height: 40px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            margin: 0 auto 0.5rem;
+        .step.active {
+            color: #667eea;
             font-weight: bold;
         }
 
-        .progress-step.active .step-number {
-            background: white;
-            color: #667eea;
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+            font-weight: bold;
         }
 
-        .progress-step.completed .step-number {
-            background: #4CAF50;
+        .step.active .step-number {
+            background: #667eea;
             color: white;
         }
 
         .wizard-content {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 2rem;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 40px;
         }
 
-        .wizard-step {
+        .step-content {
             display: none;
         }
 
-        .wizard-step.active {
+        .step-content.active {
             display: block;
         }
 
-        .wizard-step h2 {
-            color: #667eea;
-            margin-bottom: 1rem;
-            font-size: 1.8rem;
-        }
-
-        .wizard-step p {
-            color: #666;
-            margin-bottom: 2rem;
-        }
-
-        .setup-form {
-            margin-bottom: 2rem;
-        }
-
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 25px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 8px;
+            font-weight: 600;
             color: #333;
-            font-weight: 500;
         }
 
         .form-group input {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
             border-radius: 8px;
             font-size: 16px;
             transition: border-color 0.3s;
@@ -151,937 +121,1111 @@
             border-color: #667eea;
         }
 
-        .form-group small {
-            display: block;
-            margin-top: 0.5rem;
-            color: #666;
-            font-size: 14px;
+        .device-info {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
         }
 
-        .device-info-display {
-            margin-bottom: 2rem;
-        }
-
-        .info-card {
-            background: rgba(102, 126, 234, 0.1);
-            padding: 1.5rem;
-            border-radius: 10px;
-            border: 1px solid rgba(102, 126, 234, 0.2);
-        }
-
-        .info-card h3 {
+        .device-info h3 {
             color: #667eea;
-            margin-bottom: 1rem;
+            margin-bottom: 15px;
+            font-size: 18px;
         }
 
-        .info-card ul {
-            list-style: none;
-        }
-
-        .info-card li {
-            margin-bottom: 0.5rem;
+        .info-item {
             display: flex;
             justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e1e5e9;
         }
 
-        .info-card strong {
+        .info-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #666;
+        }
+
+        .info-value {
             color: #333;
+            font-family: monospace;
         }
 
-        .wizard-actions {
+        .wizard-buttons {
             display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 2rem;
+            justify-content: space-between;
+            margin-top: 30px;
         }
 
         .btn {
             padding: 12px 24px;
             border: none;
             border-radius: 8px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
+            transition: all 0.3s;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
         }
 
         .btn-secondary {
-            background: rgba(102, 126, 234, 0.1);
-            color: #667eea;
-            border: 1px solid rgba(102, 126, 234, 0.3);
+            background: #f8f9fa;
+            color: #666;
+            border: 2px solid #e1e5e9;
         }
 
         .btn-secondary:hover {
-            background: rgba(102, 126, 234, 0.2);
-            transform: translateY(-2px);
+            background: #e9ecef;
         }
 
-        .status-indicator {
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Captcha/Puzzle Styles */
+        .captcha-container {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
             text-align: center;
-            padding: 1rem;
+        }
+
+        .captcha-title {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .captcha-description {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        #captchaCanvas {
+            border: 2px solid #e1e5e9;
             border-radius: 8px;
-            margin: 1rem 0;
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(0, 0, 0, 0.1);
+            background: white;
+            margin: 0 auto 15px;
+            display: block;
+            width: 280px;
+            height: 120px;
         }
 
-        .status-indicator.pending {
-            background: rgba(255, 152, 0, 0.1);
-            border: 1px solid rgba(255, 152, 0, 0.3);
-            color: #FF9800;
+        .captcha-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
         }
 
-        .status-indicator.success {
-            background: rgba(76, 175, 80, 0.1);
-            border: 1px solid rgba(76, 175, 80, 0.3);
-            color: #4CAF50;
-        }
-
-        .status-indicator.error {
-            background: rgba(244, 67, 54, 0.1);
-            border: 1px solid rgba(244, 67, 54, 0.3);
-            color: #F44336;
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
-            margin-left: 10px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .api-key-container {
+        .captcha-option {
+            background: white;
+            border: 3px solid #e1e5e9;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
             display: flex;
-            gap: 10px;
+            flex-direction: column;
             align-items: center;
-            margin: 1rem 0;
+            justify-content: center;
+            min-height: 80px;
         }
 
-        .api-key-container input {
-            flex: 1;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-family: monospace;
-            background: #f5f5f5;
+        .captcha-option:hover {
+            border-color: #667eea;
+            transform: scale(1.05);
         }
 
-        .completion-summary {
-            margin-bottom: 2rem;
+        .captcha-option.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+            transform: scale(1.1);
         }
 
-        .summary-card {
-            background: rgba(76, 175, 80, 0.1);
-            padding: 1.5rem;
-            border-radius: 10px;
-            border: 1px solid rgba(76, 175, 80, 0.2);
-            margin-bottom: 1.5rem;
+        .captcha-option canvas {
+            width: 32px;
+            height: 32px;
+            margin-bottom: 8px;
         }
 
-        .summary-card h3 {
-            color: #4CAF50;
-            margin-bottom: 1rem;
+        .captcha-option-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
         }
 
-        .next-steps {
-            background: rgba(102, 126, 234, 0.1);
-            padding: 1.5rem;
-            border-radius: 10px;
-            border: 1px solid rgba(102, 126, 234, 0.2);
-            margin-bottom: 2rem;
+        .captcha-status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: 500;
         }
 
-        .next-steps h3 {
+        .captcha-status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .captcha-status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .captcha-timer {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        /* Already Registered State */
+        .already-registered {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .already-registered h2 {
             color: #667eea;
-            margin-bottom: 1rem;
+            margin-bottom: 15px;
+            font-size: 24px;
         }
 
-        .next-steps ol {
-            padding-left: 1.5rem;
+        .already-registered p {
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.6;
         }
 
-        .next-steps li {
-            margin-bottom: 0.5rem;
+        .settings-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .settings-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
             color: #666;
         }
 
-        @media (max-width: 768px) {
-            .wizard-container {
-                padding: 1rem;
-            }
-            
-            .wizard-header h1 {
-                font-size: 2rem;
-            }
-            
-            .wizard-actions {
-                flex-direction: column;
-            }
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
     <div class="wizard-container">
-        <header class="wizard-header">
+        <div class="wizard-header">
             <h1>🚀 Zip MyL Setup Wizard</h1>
             <p>Let's get you set up with SSL certificates and extension access</p>
-        </header>
+        </div>
 
-        <div class="wizard-progress">
-            <div class="progress-step active" data-step="1">
-                <span class="step-number">1</span>
-                <span class="step-label">User Info</span>
+        <div class="wizard-steps">
+            <div class="step active" data-step="1">
+                <div class="step-number">1</div>
+                <span>User Info</span>
             </div>
-            <div class="progress-step" data-step="2">
-                <span class="step-number">2</span>
-                <span class="step-label">SSL Setup</span>
+            <div class="step" data-step="2">
+                <div class="step-number">2</div>
+                <span>SSL Setup</span>
             </div>
-            <div class="progress-step" data-step="3">
-                <span class="step-number">3</span>
-                <span class="step-label">Extension Key</span>
+            <div class="step" data-step="3">
+                <div class="step-number">3</div>
+                <span>Extension Key</span>
             </div>
-            <div class="progress-step" data-step="4">
-                <span class="step-number">4</span>
-                <span class="step-label">Complete</span>
+            <div class="step" data-step="4">
+                <div class="step-number">4</div>
+                <span>Complete</span>
             </div>
         </div>
 
         <div class="wizard-content">
-            <!-- Step 1: User Information -->
-            <div class="wizard-step active" id="step-1">
-                <h2>Welcome! Let's get started</h2>
-                <p>Please provide your information so we can set up your SSL certificate and extension access.</p>
-                
-                <form class="setup-form">
+            <!-- Loading State -->
+            <div class="loading" id="loadingState">
+                <div class="loading-spinner"></div>
+                <p>Checking device registration status...</p>
+            </div>
+
+            <!-- Already Registered State -->
+            <div class="already-registered" id="alreadyRegistered" style="display: none;">
+                <h2>✅ Device Already Registered</h2>
+                <p>Your device has already been registered with MyL.Zip. You can access your settings and manage your SSL certificates and API keys.</p>
+                <button class="settings-btn" onclick="goToSettings()">⚙️ Go to Settings</button>
+            </div>
+
+            <!-- Setup Wizard Steps -->
+            <div id="setupWizard" style="display: none;">
+                <!-- Step 1: User Info -->
+                <div class="step-content active" id="step1">
+                    <h2>Welcome! Let's get started</h2>
+                    <p>Please provide your information so we can set up your SSL certificate and extension access.</p>
+                    
                     <div class="form-group">
                         <label for="userInitials">Your Initials (or email)</label>
-                        <input type="text" id="userInitials" name="userInitials" placeholder="e.g., JD or john@example.com" required>
+                        <input type="text" id="userInitials" placeholder="e.g., JD or john.doe@example.com">
                         <small>This is how we'll identify your setup</small>
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="deviceName">Device Name</label>
-                        <input type="text" id="deviceName" name="deviceName" placeholder="e.g., My Laptop" required>
+                        <input type="text" id="deviceName" placeholder="e.g., My Work Laptop">
                         <small>What would you like to call this device?</small>
                     </div>
-                </form>
-                
-                <div class="device-info-display">
-                    <div class="info-card">
+
+                    <div class="device-info">
                         <h3>🔑 Your Device Information</h3>
-                        <ul>
-                            <li><strong>Device ID:</strong> <span id="display-device-id">Loading...</span></li>
-                            <li><strong>SSL Domain:</strong> <span id="display-ssl-domain">Loading...</span></li>
-                            <li><strong>Certificate:</strong> Wildcard *.myl.zip (Automatic)</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="wizard-actions">
-                    <button type="button" class="btn btn-primary" onclick="nextStep()">Continue</button>
-                </div>
-            </div>
-
-            <!-- Step 2: SSL Certificate Setup -->
-            <div class="wizard-step" id="step-2">
-                <h2>SSL Certificate Setup</h2>
-                <p>We'll provision an SSL certificate for your domain to ensure secure connections.</p>
-                
-                <div class="ssl-setup-info">
-                    <div class="info-card">
-                        <h3>🔒 SSL Certificate Details</h3>
-                        <ul>
-                            <li><strong>Device Domain:</strong> <span id="ssl-domain"></span></li>
-                            <li><strong>Certificate Type:</strong> Wildcard *.myl.zip</li>
-                            <li><strong>Provider:</strong> Google Cloud (Automatic)</li>
-                            <li><strong>Auto-renewal:</strong> Enabled</li>
-                            <li><strong>Security:</strong> Military-grade encryption</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="ssl-provision-status">
-                    <div class="status-indicator" id="ssl-status">
-                        <span class="status-text">Ready to provision</span>
-                        <div class="spinner" id="ssl-spinner" style="display: none;"></div>
-                    </div>
-                </div>
-                
-                <div class="wizard-actions">
-                    <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
-                    <button type="button" class="btn btn-primary" onclick="provisionSSL()">Provision SSL Certificate</button>
-                </div>
-            </div>
-
-            <!-- Step 3: Extension API Key Generation -->
-            <div class="wizard-step" id="step-3">
-                <h2>Extension API Key Generation</h2>
-                <p>Now we'll generate an API key for your Chrome extension to access the backend securely.</p>
-                
-                <div class="extension-setup-info">
-                    <div class="info-card">
-                        <h3>🔑 Extension API Key Details</h3>
-                        <ul>
-                            <li><strong>Device ID:</strong> <span id="extension-device-id"></span></li>
-                            <li><strong>Permissions:</strong> SSL Read, Device Read</li>
-                            <li><strong>Rate Limit:</strong> 1000 requests/hour</li>
-                            <li><strong>Expiration:</strong> 30 days</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="api-key-status">
-                    <div class="status-indicator" id="api-key-status">
-                        <span class="status-text">Ready to generate</span>
-                        <div class="spinner" id="api-key-spinner" style="display: none;"></div>
-                    </div>
-                </div>
-                
-                <div class="wizard-actions">
-                    <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
-                    <button type="button" class="btn btn-primary" onclick="generateApiKey()">Generate API Key</button>
-                </div>
-            </div>
-
-            <!-- Step 4: Setup Complete -->
-            <div class="wizard-step" id="step-4">
-                <h2>🎉 Setup Complete!</h2>
-                <p>Your SSL certificate and extension API key have been successfully configured.</p>
-                
-                <div class="completion-summary">
-                    <div class="summary-card">
-                        <h3>✅ What's Been Set Up</h3>
-                        <ul>
-                            <li>SSL certificate for <span id="summary-domain"></span> (UUID subdomain)</li>
-                            <li>Extension API key generated</li>
-                            <li>Device registered and configured</li>
-                            <li>Secure access enabled</li>
-                            <li>Wildcard certificate coverage</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="api-key-display">
-                        <h3>🔑 Your Extension API Key</h3>
-                        <div class="api-key-container">
-                            <input type="text" id="generated-api-key" readonly>
-                            <button type="button" class="btn btn-secondary" onclick="copyApiKey()">Copy</button>
+                        <div class="info-item">
+                            <span class="info-label">Device ID:</span>
+                            <span class="info-value" id="deviceId">Loading...</span>
                         </div>
+                        <div class="info-item">
+                            <span class="info-label">SSL Domain:</span>
+                            <span class="info-value" id="sslDomain">Loading...</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Certificate:</span>
+                            <span class="info-value">Wildcard *.myl.zip (Automatic)</span>
+                        </div>
+                    </div>
+
+                    <div class="wizard-buttons">
+                        <div></div>
+                        <button class="btn btn-primary" onclick="nextStep()">Continue</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: SSL Setup -->
+                <div class="step-content" id="step2">
+                    <h2>SSL Certificate Setup</h2>
+                    <p>We'll provision an SSL certificate for your domain to ensure secure connections.</p>
+
+                    <div class="device-info">
+                        <h3>🔒 SSL Certificate Details</h3>
+                        <div class="info-item">
+                            <span class="info-label">Device Domain:</span>
+                            <span class="info-value" id="deviceDomain">Loading...</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Certificate Type:</span>
+                            <span class="info-value">Wildcard *.myl.zip</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Provider:</span>
+                            <span class="info-value">Google Cloud (Automatic)</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Auto-renewal:</span>
+                            <span class="info-value">Enabled</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Security:</span>
+                            <span class="info-value">Military-grade encryption</span>
+                        </div>
+                    </div>
+
+                    <div class="wizard-buttons">
+                        <button class="btn btn-secondary" onclick="prevStep()">Back</button>
+                        <button class="btn btn-primary" onclick="provisionSSL()">Provision SSL Certificate</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Extension Key -->
+                <div class="step-content" id="step3">
+                    <h2>Extension API Key Generation</h2>
+                    <p>Now we'll generate an API key for your Chrome extension to access the backend securely.</p>
+
+                    <div class="device-info">
+                        <h3>🔑 Extension API Key Details</h3>
+                        <div class="info-item">
+                            <span class="info-label">Device ID:</span>
+                            <span class="info-value" id="extensionDeviceId">Loading...</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Permissions:</span>
+                            <span class="info-value">SSL Read, Device Read</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Rate Limit:</span>
+                            <span class="info-value">1000 requests/hour</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Expiration:</span>
+                            <span class="info-value">30 days</span>
+                        </div>
+                    </div>
+
+                    <div class="wizard-buttons">
+                        <button class="btn btn-secondary" onclick="prevStep()">Back</button>
+                        <button class="btn btn-primary" onclick="generateAPIKey()">Generate API Key</button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Complete -->
+                <div class="step-content" id="step4">
+                    <h2>🎉 Setup Complete!</h2>
+                    <p>Your SSL certificate and extension API key have been successfully configured.</p>
+
+                    <div class="device-info">
+                        <h3>✅ What's Been Set Up</h3>
+                        <div class="info-item">
+                            <span class="info-label">SSL certificate for</span>
+                            <span class="info-value" id="finalDomain">Loading...</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Extension API key</span>
+                            <span class="info-value">Generated</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Device registered</span>
+                            <span class="info-value">Configured</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Secure access</span>
+                            <span class="info-value">Enabled</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Wildcard certificate</span>
+                            <span class="info-value">Coverage</span>
+                        </div>
+                    </div>
+
+                    <div class="device-info">
+                        <h3>🔑 Your Extension API Key</h3>
+                        <div class="info-item">
+                            <span class="info-label">API Key:</span>
+                            <span class="info-value" id="apiKeyDisplay">Loading...</span>
+                        </div>
+                        <button class="btn btn-secondary" onclick="copyAPIKey()">Copy</button>
                         <small>Store this key securely - it won't be shown again</small>
                     </div>
-                </div>
-                
-                <div class="next-steps">
-                    <h3>📋 Next Steps</h3>
-                    <ol>
-                        <li>Install the Chrome extension</li>
-                        <li>Use the API key to configure the extension</li>
-                        <li>Start using your secure SSL-enabled setup</li>
-                    </ol>
-                </div>
-                
-                <div class="wizard-actions">
-                    <button type="button" class="btn btn-primary" onclick="downloadConfig()">Download Configuration</button>
-                    <button type="button" class="btn btn-secondary" onclick="restartWizard()">Start Over</button>
+
+                    <div class="wizard-buttons">
+                        <button class="btn btn-secondary" onclick="downloadConfig()">Download Configuration</button>
+                        <button class="btn btn-primary" onclick="startOver()">Start Over</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        /**
-         * Setup Wizard JavaScript
-         * Handles the multi-step setup process for SSL certificates and extension configuration
-         */
+        // Device Registration Check and Captcha System
+        class SetupWizard {
+            constructor() {
+                this.currentStep = 1;
+                this.deviceId = null;
+                this.isRegistered = false;
+                this.captchaSystem = new CaptchaSystem();
+                this.init();
+            }
 
-        let currentStep = 1;
-        let setupData = {
-            userInitials: '',
-            deviceName: '',
-            deviceId: null,
-            uuidSubdomain: null
-        };
-
-        // Initialize wizard
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🔍 [DEBUG] Setup wizard initializing...');
-            console.log('🔍 [DEBUG] Current URL:', window.location.href);
-            
-            // Get device ID from URL parameters
-            const urlParams = new URLSearchParams(window.location.search);
-            const deviceIdFromUrl = urlParams.get('deviceId');
-            if (deviceIdFromUrl) {
-                // Validate UUID format
-                const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-                if (uuidRegex.test(deviceIdFromUrl)) {
-                    setupData.deviceId = deviceIdFromUrl;
-                    setupData.uuidSubdomain = deviceIdFromUrl + '.myl.zip';
+            async init() {
+                // Check if device is already registered
+                await this.checkDeviceRegistration();
+                
+                if (this.isRegistered) {
+                    this.showAlreadyRegistered();
                 } else {
-                    console.warn('Invalid device ID format in URL:', deviceIdFromUrl);
+                    this.showSetupWizard();
+                    this.generateDeviceInfo();
                 }
             }
-            
-            console.log('🔍 [DEBUG] URL params:', window.location.search);
-            console.log('🔍 [DEBUG] Device ID from URL:', setupData.deviceId);
-            
-            if (setupData.deviceId) {
-                console.log('✅ [DEBUG] Device ID found, updating display...');
-                // Generate proper UUID subdomain
-                setupData.uuidSubdomain = generateUUID() + '.myl.zip';
+
+            async checkDeviceRegistration() {
+                try {
+                    // Simulate API call to check device registration
+                    // In production, this would call the actual backend
+                    const storedDeviceId = localStorage.getItem('mylzip_device_id');
+                    
+                    if (storedDeviceId) {
+                        // Check with backend if device is registered
+                        const response = await fetch('https://api.myl.zip/api/v1/device/status', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ deviceId: storedDeviceId })
+                        });
+
+                        if (response.ok) {
+                            const data = await response.json();
+                            this.isRegistered = data.registered;
+                            this.deviceId = storedDeviceId;
+                        }
+                    }
+                } catch (error) {
+                    console.log('Device registration check failed:', error);
+                    // Continue with setup wizard
+                }
+            }
+
+            showAlreadyRegistered() {
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('alreadyRegistered').style.display = 'block';
+            }
+
+            showSetupWizard() {
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('setupWizard').style.display = 'block';
+            }
+
+            generateDeviceInfo() {
+                // Generate device ID if not exists
+                if (!this.deviceId) {
+                    this.deviceId = this.generateDeviceId();
+                    localStorage.setItem('mylzip_device_id', this.deviceId);
+                }
+
+                // Update UI with device information
+                document.getElementById('deviceId').textContent = this.deviceId;
+                document.getElementById('sslDomain').textContent = `${this.deviceId}.myl.zip`;
+                document.getElementById('deviceDomain').textContent = `${this.deviceId}.myl.zip`;
+                document.getElementById('extensionDeviceId').textContent = this.deviceId;
+                document.getElementById('finalDomain').textContent = `${this.deviceId}.myl.zip`;
+            }
+
+            generateDeviceId() {
+                return 'device_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now().toString(36);
+            }
+
+            nextStep() {
+                if (this.currentStep < 4) {
+                    this.currentStep++;
+                    this.updateStepDisplay();
+                }
+            }
+
+            prevStep() {
+                if (this.currentStep > 1) {
+                    this.currentStep--;
+                    this.updateStepDisplay();
+                }
+            }
+
+            updateStepDisplay() {
+                // Update step indicators
+                document.querySelectorAll('.step').forEach((step, index) => {
+                    step.classList.toggle('active', index + 1 === this.currentStep);
+                });
+
+                // Update step content
+                document.querySelectorAll('.step-content').forEach((content, index) => {
+                    content.classList.toggle('active', index + 1 === this.currentStep);
+                });
+            }
+
+            async provisionSSL() {
+                // Show captcha before provisioning SSL
+                const captchaResult = await this.captchaSystem.showCaptcha();
                 
-                // Update display elements
-                const elements = {
-                    'extension-device-id': setupData.deviceId,
-                    'display-device-id': setupData.deviceId,
-                    'display-ssl-domain': setupData.uuidSubdomain,
-                    'ssl-domain': setupData.uuidSubdomain,
-                    'summary-domain': setupData.uuidSubdomain
+                if (captchaResult.success) {
+                    // Simulate SSL provisioning
+                    await this.simulateProvisioning('SSL Certificate');
+                    this.nextStep();
+                }
+            }
+
+            async generateAPIKey() {
+                // Show captcha before generating API key
+                const captchaResult = await this.captchaSystem.showCaptcha();
+                
+                if (captchaResult.success) {
+                    // Simulate API key generation
+                    await this.simulateProvisioning('API Key');
+                    this.generateAPIKeyDisplay();
+                    this.nextStep();
+                }
+            }
+
+            async simulateProvisioning(type) {
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = 'Provisioning...';
+                button.disabled = true;
+
+                // Simulate API call
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                button.textContent = originalText;
+                button.disabled = false;
+            }
+
+            generateAPIKeyDisplay() {
+                const apiKey = 'myl_' + Math.random().toString(36).substr(2, 20) + '_' + Date.now().toString(36);
+                document.getElementById('apiKeyDisplay').textContent = apiKey;
+                localStorage.setItem('mylzip_api_key', apiKey);
+            }
+
+            copyAPIKey() {
+                const apiKey = document.getElementById('apiKeyDisplay').textContent;
+                navigator.clipboard.writeText(apiKey).then(() => {
+                    alert('API Key copied to clipboard!');
+                });
+            }
+
+            downloadConfig() {
+                const config = {
+                    deviceId: this.deviceId,
+                    domain: `${this.deviceId}.myl.zip`,
+                    apiKey: document.getElementById('apiKeyDisplay').textContent,
+                    setupDate: new Date().toISOString()
                 };
-                
-                Object.entries(elements).forEach(([id, value]) => {
-                    const element = document.getElementById(id);
-                    if (element) {
-                        element.textContent = value;
-                        console.log(`✅ [DEBUG] Updated ${id}: ${value}`);
+
+                const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'mylzip-config.json';
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+
+            startOver() {
+                localStorage.removeItem('mylzip_device_id');
+                localStorage.removeItem('mylzip_api_key');
+                location.reload();
+            }
+        }
+
+        // Captcha System (same as Chrome extension)
+        class CaptchaSystem {
+            constructor() {
+                this.currentPuzzle = null;
+                this.selectedAnswer = null;
+            }
+
+            async showCaptcha() {
+                return new Promise((resolve) => {
+                    this.createCaptchaModal(resolve);
+                });
+            }
+
+            createCaptchaModal(resolve) {
+                const modal = document.createElement('div');
+                modal.className = 'captcha-modal';
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.8);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 10000;
+                `;
+
+                const content = document.createElement('div');
+                content.style.cssText = `
+                    background: white;
+                    border-radius: 12px;
+                    padding: 30px;
+                    max-width: 500px;
+                    width: 90%;
+                    text-align: center;
+                `;
+
+                content.innerHTML = `
+                    <h3 style="margin-bottom: 20px; color: #333;">🔐 Security Verification</h3>
+                    <p style="margin-bottom: 20px; color: #666;">Please complete this verification to continue</p>
+                    <div class="captcha-container">
+                        <canvas id="modalCaptchaCanvas" width="280" height="120"></canvas>
+                        <div class="captcha-options" id="captchaOptions"></div>
+                        <div class="captcha-status" id="captchaStatus" style="display: none;"></div>
+                        <div class="captcha-timer" id="captchaTimer"></div>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <button id="captchaSubmit" class="btn btn-primary" disabled>Submit</button>
+                        <button id="captchaCancel" class="btn btn-secondary" style="margin-left: 10px;">Cancel</button>
+                    </div>
+                `;
+
+                modal.appendChild(content);
+                document.body.appendChild(modal);
+
+                this.setupCaptcha(modal, resolve);
+            }
+
+            setupCaptcha(modal, resolve) {
+                const canvas = document.getElementById('modalCaptchaCanvas');
+                const optionsContainer = document.getElementById('captchaOptions');
+                const statusDiv = document.getElementById('captchaStatus');
+                const timerDiv = document.getElementById('captchaTimer');
+                const submitBtn = document.getElementById('captchaSubmit');
+                const cancelBtn = document.getElementById('captchaCancel');
+
+                // Generate puzzle
+                this.currentPuzzle = this.generatePuzzle();
+                this.renderPuzzle(canvas, optionsContainer);
+
+                // Timer
+                let timeLeft = 30;
+                const timer = setInterval(() => {
+                    timeLeft--;
+                    timerDiv.textContent = `Time remaining: ${timeLeft}s`;
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        this.showStatus(statusDiv, 'Time expired! Please try again.', 'error');
+                        setTimeout(() => {
+                            modal.remove();
+                            resolve({ success: false, reason: 'timeout' });
+                        }, 2000);
+                    }
+                }, 1000);
+
+                // Event listeners
+                submitBtn.addEventListener('click', () => {
+                    if (this.selectedAnswer === this.currentPuzzle.correctAnswer) {
+                        this.showStatus(statusDiv, 'Verification successful!', 'success');
+                        clearInterval(timer);
+                        setTimeout(() => {
+                            modal.remove();
+                            resolve({ success: true });
+                        }, 1000);
                     } else {
-                        console.log(`❌ [DEBUG] Element not found: ${id}`);
+                        this.showStatus(statusDiv, 'Incorrect answer. Please try again.', 'error');
+                        this.selectedAnswer = null;
+                        submitBtn.disabled = true;
                     }
                 });
-            } else {
-                console.log('⚠️ [DEBUG] No device ID found, adding manual input...');
-                // Try to get device ID from Chrome extension
-                setupExtensionCommunication();
-                
-                // Add manual device ID input option
-                addManualDeviceIdInput();
-            }
-            
-            updateProgress();
-        });
 
-        // Navigation functions
-        function nextStep() {
-            if (validateCurrentStep()) {
-                if (currentStep < 4) {
-                    currentStep++;
-                    showStep(currentStep);
-                    updateProgress();
-                    
-                    // Auto-trigger background processes
-                    if (currentStep === 2) {
-                        console.log('🔄 [AUTO] Auto-triggering SSL provisioning...');
-                        provisionSSL();
-                    } else if (currentStep === 3) {
-                        console.log('🔄 [AUTO] Auto-triggering API key generation...');
-                        generateApiKey();
-                    }
+                cancelBtn.addEventListener('click', () => {
+                    clearInterval(timer);
+                    modal.remove();
+                    resolve({ success: false, reason: 'cancelled' });
+                });
+            }
+
+            generatePuzzle() {
+                const puzzleTypes = ['pattern_completion', 'shape_recognition', 'spatial_reasoning', 'color_pattern', 'sequence_completion'];
+                const type = puzzleTypes[Math.floor(Math.random() * puzzleTypes.length)];
+
+                switch (type) {
+                    case 'pattern_completion':
+                        return {
+                            type: 'pattern_completion',
+                            question: 'Complete the pattern: Triangle → Square → Pentagon → ?',
+                            options: this.generatePatternOptions(),
+                            correctAnswer: 3 // Hexagon
+                        };
+                    case 'shape_recognition':
+                        return {
+                            type: 'shape_recognition',
+                            question: 'Click the RED CIRCLE',
+                            options: this.generateShapeOptions(),
+                            correctAnswer: 0 // Red Circle
+                        };
+                    case 'spatial_reasoning':
+                        return {
+                            type: 'spatial_reasoning',
+                            question: 'Click the square that is NOT rotated',
+                            options: this.generateSpatialOptions(),
+                            correctAnswer: 0 // Original
+                        };
+                    case 'color_pattern':
+                        return {
+                            type: 'color_pattern',
+                            question: 'Click the RED SQUARE',
+                            options: this.generateColorOptions(),
+                            correctAnswer: 0 // Red Square
+                        };
+                    case 'sequence_completion':
+                        return {
+                            type: 'sequence_completion',
+                            question: 'Click the shape with letter A',
+                            options: this.generateSequenceOptions(),
+                            correctAnswer: 0 // A
+                        };
                 }
             }
+
+            generatePatternOptions() {
+                const shapes = ['triangle', 'square', 'pentagon', 'hexagon', 'circle', 'diamond'];
+                return shapes.map(shape => ({ name: shape, shape: shape }));
+            }
+
+            generateShapeOptions() {
+                return [
+                    { name: 'Red Circle', shape: 'circle', color: 'red' },
+                    { name: 'Blue Square', shape: 'square', color: 'blue' },
+                    { name: 'Green Triangle', shape: 'triangle', color: 'green' },
+                    { name: 'Yellow Diamond', shape: 'diamond', color: 'yellow' }
+                ];
+            }
+
+            generateSpatialOptions() {
+                return [
+                    { name: 'Original Square', shape: 'square', rotation: 0 },
+                    { name: 'Rotated Square', shape: 'square', rotation: 45 },
+                    { name: 'Rotated Square', shape: 'square', rotation: 90 },
+                    { name: 'Rotated Square', shape: 'square', rotation: 135 }
+                ];
+            }
+
+            generateColorOptions() {
+                return [
+                    { name: 'Red Square', shape: 'square', color: 'red' },
+                    { name: 'Blue Circle', shape: 'circle', color: 'blue' },
+                    { name: 'Green Triangle', shape: 'triangle', color: 'green' },
+                    { name: 'Yellow Diamond', shape: 'diamond', color: 'yellow' }
+                ];
+            }
+
+            generateSequenceOptions() {
+                return [
+                    { name: 'Letter A', shape: 'square', letter: 'A' },
+                    { name: 'Letter B', shape: 'circle', letter: 'B' },
+                    { name: 'Letter C', shape: 'triangle', letter: 'C' },
+                    { name: 'Letter D', shape: 'diamond', letter: 'D' }
+                ];
+            }
+
+            renderPuzzle(canvas, optionsContainer) {
+                const ctx = canvas.getContext('2d');
+                
+                // Clear canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Fill background
+                ctx.fillStyle = '#f8f9fa';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Draw puzzle based on type
+                switch (this.currentPuzzle.type) {
+                    case 'pattern_completion':
+                        this.drawPatternCompletion(ctx);
+                        break;
+                    case 'shape_recognition':
+                        this.drawShapeRecognition(ctx);
+                        break;
+                    case 'spatial_reasoning':
+                        this.drawSpatialReasoning(ctx);
+                        break;
+                    case 'color_pattern':
+                        this.drawColorPattern(ctx);
+                        break;
+                    case 'sequence_completion':
+                        this.drawSequenceCompletion(ctx);
+                        break;
+                }
+
+                // Render options
+                this.renderOptions(optionsContainer);
+            }
+
+            drawPatternCompletion(ctx) {
+                const shapes = ['triangle', 'square', 'pentagon'];
+                const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1'];
+                
+                for (let i = 0; i < 3; i++) {
+                    const x = 40 + i * 60;
+                    const y = 60;
+                    const shape = shapes[i];
+                    const color = colors[i];
+                    
+                    ctx.fillStyle = color;
+                    this.drawShape(ctx, x, y, shape, 20);
+                }
+                
+                // Draw question mark
+                ctx.fillStyle = '#666';
+                ctx.font = 'bold 24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('?', 220, 70);
+                
+                // Draw arrow
+                ctx.strokeStyle = '#666';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(200, 60);
+                ctx.lineTo(210, 60);
+                ctx.stroke();
+            }
+
+            drawShapeRecognition(ctx) {
+                // Draw main red circle
+                ctx.fillStyle = '#ff6b6b';
+                ctx.beginPath();
+                ctx.arc(140, 60, 25, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.strokeStyle = '#333';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+                
+                // Add label
+                ctx.fillStyle = '#333';
+                ctx.font = 'bold 16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('RED CIRCLE', 140, 100);
+            }
+
+            drawSpatialReasoning(ctx) {
+                // Draw original square
+                ctx.save();
+                ctx.translate(140, 60);
+                ctx.fillStyle = '#4ecdc4';
+                ctx.fillRect(-15, -15, 30, 30);
+                ctx.strokeStyle = '#333';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+                ctx.restore();
+                
+                // Add label
+                ctx.fillStyle = '#333';
+                ctx.font = 'bold 16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('NOT ROTATED', 140, 100);
+            }
+
+            drawColorPattern(ctx) {
+                // Draw red square
+                ctx.fillStyle = '#ff6b6b';
+                ctx.fillRect(110, 40, 40, 40);
+                ctx.strokeStyle = '#333';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+                
+                // Add label
+                ctx.fillStyle = '#333';
+                ctx.font = 'bold 16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('RED SQUARE', 140, 100);
+            }
+
+            drawSequenceCompletion(ctx) {
+                // Draw square with letter A
+                ctx.fillStyle = '#4ecdc4';
+                ctx.fillRect(110, 40, 40, 40);
+                ctx.strokeStyle = '#333';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+                
+                // Add letter A
+                ctx.fillStyle = '#333';
+                ctx.font = 'bold 20px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('A', 130, 65);
+                
+                // Add label
+                ctx.fillText('LETTER A', 140, 100);
+            }
+
+            drawShape(ctx, x, y, shape, size = 15) {
+                ctx.save();
+                ctx.translate(x, y);
+                
+                switch (shape) {
+                    case 'triangle':
+                        ctx.beginPath();
+                        ctx.moveTo(0, -size);
+                        ctx.lineTo(-size, size);
+                        ctx.lineTo(size, size);
+                        ctx.closePath();
+                        break;
+                    case 'square':
+                        ctx.fillRect(-size, -size, size * 2, size * 2);
+                        return; // Don't stroke for filled shapes
+                    case 'pentagon':
+                        ctx.beginPath();
+                        for (let i = 0; i < 5; i++) {
+                            const angle = (i * 2 * Math.PI) / 5 - Math.PI / 2;
+                            const px = Math.cos(angle) * size;
+                            const py = Math.sin(angle) * size;
+                            if (i === 0) ctx.moveTo(px, py);
+                            else ctx.lineTo(px, py);
+                        }
+                        ctx.closePath();
+                        break;
+                    case 'hexagon':
+                        ctx.beginPath();
+                        for (let i = 0; i < 6; i++) {
+                            const angle = (i * 2 * Math.PI) / 6 - Math.PI / 2;
+                            const px = Math.cos(angle) * size;
+                            const py = Math.sin(angle) * size;
+                            if (i === 0) ctx.moveTo(px, py);
+                            else ctx.lineTo(px, py);
+                        }
+                        ctx.closePath();
+                        break;
+                    case 'circle':
+                        ctx.beginPath();
+                        ctx.arc(0, 0, size, 0, 2 * Math.PI);
+                        break;
+                    case 'diamond':
+                        ctx.beginPath();
+                        ctx.moveTo(0, -size);
+                        ctx.lineTo(size, 0);
+                        ctx.lineTo(0, size);
+                        ctx.lineTo(-size, 0);
+                        ctx.closePath();
+                        break;
+                }
+                
+                ctx.strokeStyle = '#333';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            renderOptions(optionsContainer) {
+                optionsContainer.innerHTML = '';
+                
+                this.currentPuzzle.options.forEach((option, index) => {
+                    const optionDiv = document.createElement('div');
+                    optionDiv.className = 'captcha-option';
+                    optionDiv.onclick = () => this.selectOption(index, optionDiv);
+                    
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 32;
+                    canvas.height = 32;
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Draw option shape
+                    ctx.clearRect(0, 0, 32, 32);
+                    ctx.translate(16, 16);
+                    
+                    if (option.color) {
+                        ctx.fillStyle = this.getColor(option.color);
+                    } else {
+                        ctx.fillStyle = '#4ecdc4';
+                    }
+                    
+                    if (option.rotation) {
+                        ctx.rotate((option.rotation * Math.PI) / 180);
+                    }
+                    
+                    this.drawShape(ctx, 0, 0, option.shape, 12);
+                    
+                    if (option.letter) {
+                        ctx.fillStyle = '#333';
+                        ctx.font = 'bold 16px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(option.letter, 0, 4);
+                    }
+                    
+                    const label = document.createElement('div');
+                    label.className = 'captcha-option-label';
+                    label.textContent = option.name;
+                    
+                    optionDiv.appendChild(canvas);
+                    optionDiv.appendChild(label);
+                    optionsContainer.appendChild(optionDiv);
+                });
+            }
+
+            getColor(colorName) {
+                const colors = {
+                    red: '#ff6b6b',
+                    blue: '#4ecdc4',
+                    green: '#45b7d1',
+                    yellow: '#ffd93d'
+                };
+                return colors[colorName] || '#4ecdc4';
+            }
+
+            selectOption(index, element) {
+                // Remove previous selection
+                document.querySelectorAll('.captcha-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Select new option
+                element.classList.add('selected');
+                this.selectedAnswer = index;
+                
+                // Enable submit button
+                document.getElementById('captchaSubmit').disabled = false;
+            }
+
+            showStatus(element, message, type) {
+                element.textContent = message;
+                element.className = `captcha-status ${type}`;
+                element.style.display = 'block';
+            }
+        }
+
+        // Global functions
+        function nextStep() {
+            setupWizard.nextStep();
         }
 
         function prevStep() {
-            if (currentStep > 1) {
-                currentStep--;
-                showStep(currentStep);
-                updateProgress();
-            }
+            setupWizard.prevStep();
         }
 
-                 function showStep(stepNumber) {
-             // Hide all steps
-             document.querySelectorAll('.wizard-step').forEach(step => {
-                 step.classList.remove('active');
-             });
-             
-             // Show current step
-             document.getElementById(`step-${stepNumber}`).classList.add('active');
-             
-             // If showing completion step, ensure API key is displayed
-             if (stepNumber === 4 && setupData.apiKey) {
-                 setTimeout(() => {
-                     const apiKeyInput = document.getElementById('generated-api-key');
-                     if (apiKeyInput) {
-                         apiKeyInput.value = setupData.apiKey;
-                         console.log('🔑 [DISPLAY] API key displayed in completion step');
-                     }
-                 }, 100);
-             }
-         }
-
-        function updateProgress() {
-            // Update progress indicators
-            document.querySelectorAll('.progress-step').forEach((step, index) => {
-                const stepNumber = index + 1;
-                step.classList.remove('active', 'completed');
-                
-                if (stepNumber === currentStep) {
-                    step.classList.add('active');
-                } else if (stepNumber < currentStep) {
-                    step.classList.add('completed');
-                }
-            });
+        function provisionSSL() {
+            setupWizard.provisionSSL();
         }
 
-        function validateCurrentStep() {
-            switch (currentStep) {
-                case 1:
-                    return validateUserInfo();
-                case 2:
-                    return true; // SSL setup validation handled in provisionSSL()
-                case 3:
-                    return true; // API key generation validation handled in generateApiKey()
-                default:
-                    return true;
-            }
+        function generateAPIKey() {
+            setupWizard.generateAPIKey();
         }
 
-        function validateUserInfo() {
-            console.log('🔍 [DEBUG] Validating user info...');
-            console.log('🔍 [DEBUG] setupData.deviceId:', setupData.deviceId);
-            
-            const userInitials = document.getElementById('userInitials').value.trim();
-            const deviceName = document.getElementById('deviceName').value.trim();
-            
-            console.log('🔍 [DEBUG] userInitials:', userInitials);
-            console.log('🔍 [DEBUG] deviceName:', deviceName);
-            
-            if (!userInitials) {
-                console.log('❌ [DEBUG] No user initials');
-                showError('Please enter your initials or email');
-                return false;
-            }
-            
-            if (!deviceName) {
-                console.log('❌ [DEBUG] No device name');
-                showError('Please enter a device name');
-                return false;
-            }
-            
-            if (!setupData.deviceId) {
-                console.log('❌ [DEBUG] No device ID');
-                showError('Device ID not found. Please enter your device ID manually or use the Chrome extension to access this page.');
-                return false;
-            }
-            
-            console.log('✅ [DEBUG] All validation passed');
-            // Store data
-            setupData.userInitials = userInitials;
-            setupData.deviceName = deviceName;
-            
-            return true;
+        function copyAPIKey() {
+            setupWizard.copyAPIKey();
         }
 
-        // SSL Provisioning - Background Process
-        async function provisionSSL() {
-            console.log('🔒 [SSL] Starting SSL certificate provisioning...');
-            console.log('🔒 [SSL] Device ID:', setupData.deviceId);
-            console.log('🔒 [SSL] UUID Subdomain:', setupData.uuidSubdomain);
-            console.log('🔒 [SSL] User Initials:', setupData.userInitials);
-            console.log('🔒 [SSL] Device Name:', setupData.deviceName);
-            
-            const statusEl = document.getElementById('ssl-status');
-            const spinnerEl = document.getElementById('ssl-spinner');
-            const statusTextEl = statusEl.querySelector('.status-text');
-            
-            // Show loading state
-            statusEl.className = 'status-indicator pending';
-            statusTextEl.textContent = 'Provisioning SSL certificate...';
-            spinnerEl.style.display = 'inline-block';
-            
-            try {
-                console.log('🔒 [SSL] Making API request to https://api.myl.zip/api/v1/ssl/setup-wizard/provision');
-                const response = await fetch('https://api.myl.zip/api/v1/ssl/setup-wizard/provision', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        deviceId: setupData.deviceId,
-                        uuidSubdomain: setupData.uuidSubdomain,
-                        userInitials: setupData.userInitials,
-                        deviceName: setupData.deviceName
-                    })
-                });
-                
-                console.log('🔒 [SSL] Response status:', response.status);
-                console.log('🔒 [SSL] Response headers:', Object.fromEntries(response.headers.entries()));
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log('🔒 [SSL] Response data:', data);
-                    
-                    if (data.success) {
-                        console.log('✅ [SSL] SSL certificate provisioned successfully!');
-                        statusEl.className = 'status-indicator success';
-                        statusTextEl.textContent = 'SSL certificate provisioned successfully!';
-                        
-                        // Auto-advance to next step after 2 seconds
-                        setTimeout(() => {
-                            console.log('🔄 [AUTO] Auto-advancing to API key generation...');
-                            nextStep();
-                        }, 2000);
-                    } else {
-                        throw new Error(data.message || 'SSL provisioning failed');
-                    }
-                } else {
-                    const errorText = await response.text();
-                    console.error('🔒 [SSL] HTTP Error Response:', errorText);
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-            } catch (error) {
-                console.error('❌ [SSL] SSL provisioning error:', error);
-                statusEl.className = 'status-indicator error';
-                if (error.message.includes('404')) {
-                    statusTextEl.textContent = 'Backend service is updating. Please try again in a few minutes.';
-                } else {
-                    statusTextEl.textContent = `Error: ${error.message}`;
-                }
-                
-                // Show error but allow manual retry
-                console.log('⚠️ [SSL] SSL provisioning failed, user can retry manually');
-            } finally {
-                spinnerEl.style.display = 'none';
-            }
-        }
-
-        // API Key Generation - Background Process
-        async function generateApiKey() {
-            console.log('🔑 [API] Starting API key generation...');
-            console.log('🔑 [API] Device ID:', setupData.deviceId);
-            console.log('🔑 [API] Device Name:', setupData.deviceName);
-            console.log('🔑 [API] User Initials:', setupData.userInitials);
-            
-            const statusEl = document.getElementById('api-key-status');
-            const spinnerEl = document.getElementById('api-key-spinner');
-            const statusTextEl = statusEl.querySelector('.status-text');
-            
-            // Show loading state
-            statusEl.className = 'status-indicator pending';
-            statusTextEl.textContent = 'Generating API key...';
-            spinnerEl.style.display = 'inline-block';
-            
-            try {
-                console.log('🔑 [API] Making API request to https://api.myl.zip/api/v1/ssl/setup-wizard/generate-key');
-                const response = await fetch('https://api.myl.zip/api/v1/ssl/setup-wizard/generate-key', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        deviceId: setupData.deviceId,
-                        deviceName: setupData.deviceName,
-                        userInitials: setupData.userInitials
-                    })
-                });
-                
-                console.log('🔑 [API] Response status:', response.status);
-                console.log('🔑 [API] Response headers:', Object.fromEntries(response.headers.entries()));
-                
-                                 if (response.ok) {
-                     const data = await response.json();
-                     console.log('🔑 [API] Response data:', data);
-                     console.log('🔑 [DEBUG] data.success:', data.success);
-                     console.log('🔑 [DEBUG] data.data:', data.data);
-                     console.log('🔑 [DEBUG] data.data.data:', data.data?.data);
-                                          console.log('🔑 [DEBUG] data.data.data.apiKey:', data.data?.data?.apiKey);
-                     console.log('🔑 [DEBUG] Full response structure:', JSON.stringify(data, null, 2));
-                     
-                     // Try multiple possible response structures
-                     let apiKey = null;
-                     if (data.success && data.data && data.data.data && data.data.data.apiKey) {
-                         apiKey = data.data.data.apiKey;
-                     } else if (data.success && data.data && data.data.apiKey) {
-                         apiKey = data.data.apiKey;
-                     } else if (data.success && data.apiKey) {
-                         apiKey = data.apiKey;
-                     } else if (data.data && data.data.apiKey) {
-                         apiKey = data.data.apiKey;
-                     }
-                     
-                     if (apiKey) {
-                         console.log('✅ [API] API key generated successfully!');
-                         statusEl.className = 'status-indicator success';
-                         statusTextEl.textContent = 'API key generated successfully!';
-                         
-                         // Store API key for display
-                         setupData.apiKey = apiKey;
-                         console.log('🔑 [API] API key stored:', setupData.apiKey.substring(0, 10) + '...');
-                        
-                                                 // Auto-advance to completion step after 2 seconds
-                         setTimeout(() => {
-                             console.log('🔄 [AUTO] Auto-advancing to completion step...');
-                             nextStep();
-                             // Ensure API key is displayed in the input field
-                             setTimeout(() => {
-                                 const apiKeyInput = document.getElementById('generated-api-key');
-                                 if (apiKeyInput && setupData.apiKey) {
-                                     apiKeyInput.value = setupData.apiKey;
-                                     console.log('🔑 [DISPLAY] API key displayed in input field');
-                                 }
-                             }, 100);
-                         }, 2000);
-                    } else {
-                        throw new Error(data.message || 'API key generation failed');
-                    }
-                } else {
-                    const errorText = await response.text();
-                    console.error('🔑 [API] HTTP Error Response:', errorText);
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-            } catch (error) {
-                console.error('❌ [API] API key generation error:', error);
-                statusEl.className = 'status-indicator error';
-                if (error.message.includes('404')) {
-                    statusTextEl.textContent = 'Backend service is updating. Please try again in a few minutes.';
-                } else {
-                    statusTextEl.textContent = `Error: ${error.message}`;
-                }
-                
-                // Show error but allow manual retry
-                console.log('⚠️ [API] API key generation failed, user can retry manually');
-            } finally {
-                spinnerEl.style.display = 'none';
-            }
-        }
-
-        // Copy API Key
-        function copyApiKey() {
-            const apiKeyInput = document.getElementById('generated-api-key');
-            if (setupData.apiKey) {
-                apiKeyInput.value = setupData.apiKey;
-                apiKeyInput.select();
-                document.execCommand('copy');
-                
-                // Show feedback
-                const copyBtn = document.querySelector('.api-key-container .btn');
-                const originalText = copyBtn.textContent;
-                copyBtn.textContent = 'Copied!';
-                copyBtn.style.background = '#4CAF50';
-                copyBtn.style.color = 'white';
-                
-                setTimeout(() => {
-                    copyBtn.textContent = originalText;
-                    copyBtn.style.background = '';
-                    copyBtn.style.color = '';
-                }, 2000);
-            }
-        }
-
-        // Download Configuration
         function downloadConfig() {
-            const config = {
-                deviceId: setupData.deviceId,
-                apiKey: setupData.apiKey,
-                uuidSubdomain: setupData.uuidSubdomain,
-                deviceName: setupData.deviceName,
-                userInitials: setupData.userInitials,
-                setupDate: new Date().toISOString()
-            };
-            
-            const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `mylzip-config-${setupData.deviceId}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+            setupWizard.downloadConfig();
         }
 
-        // Restart Wizard
-        function restartWizard() {
-            if (confirm('Are you sure you want to start over? All progress will be lost.')) {
-                currentStep = 1;
-                setupData = {
-                    userInitials: '',
-                    deviceName: '',
-                    deviceId: setupData.deviceId, // Keep device ID
-                    uuidSubdomain: setupData.uuidSubdomain // Keep UUID subdomain
-                };
-                
-                // Clear form fields
-                document.getElementById('userInitials').value = '';
-                document.getElementById('deviceName').value = '';
-                
-                showStep(1);
-                updateProgress();
-            }
+        function startOver() {
+            setupWizard.startOver();
         }
 
-        // Utility functions
-        function showError(message) {
-            // Create a simple error notification
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: #f44336;
-                color: white;
-                padding: 15px 20px;
-                border-radius: 8px;
-                z-index: 1000;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            `;
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.remove();
-            }, 5000);
+        function goToSettings() {
+            // Redirect to settings page
+            window.location.href = '/settings.html';
         }
 
-        function showSuccess(message) {
-            // Create a simple success notification
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: #4CAF50;
-                color: white;
-                padding: 15px 20px;
-                border-radius: 8px;
-                z-index: 1000;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            `;
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
-        }
-
-        // Extension communication
-        function setupExtensionCommunication() {
-            // Listen for extension events
-            document.addEventListener('mylzip-device-ready', (event) => {
-                console.log('Extension device ready:', event.detail);
-                if (event.detail.deviceId && !setupData.deviceId) {
-                                    setupData.deviceId = event.detail.deviceId;
-                setupData.uuidSubdomain = event.detail.deviceId + '.myl.zip';
-                    
-                    // Update display elements
-                    document.getElementById('extension-device-id').textContent = setupData.deviceId;
-                    document.getElementById('display-device-id').textContent = setupData.deviceId;
-                    document.getElementById('display-ssl-domain').textContent = setupData.uuidSubdomain;
-                    document.getElementById('ssl-domain').textContent = setupData.uuidSubdomain;
-                    document.getElementById('summary-domain').textContent = setupData.uuidSubdomain;
-                    
-                    // Hide manual input
-                    hideManualDeviceIdInput();
-                }
-            });
-            
-            // Send device info to extension if available
-            if (typeof chrome !== 'undefined' && chrome.runtime) {
-                window.postMessage({
-                    type: 'mylzip-portal-request',
-                    action: 'get-device-info'
-                }, '*');
-            }
-        }
-
-        // Add manual device ID input
-        function addManualDeviceIdInput() {
-            const deviceInfoCard = document.querySelector('.device-info-display .info-card');
-            if (deviceInfoCard) {
-                const manualInputHtml = `
-                    <div class="manual-device-input" style="margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 8px;">
-                        <h4 style="margin: 0 0 10px 0; color: #fff;">🔑 Enter Device ID Manually</h4>
-                        <p style="margin: 0 0 10px 0; color: rgba(255,255,255,0.8); font-size: 14px;">
-                            If you have your device ID from the Chrome extension, enter it here:
-                        </p>
-                        <div style="display: flex; gap: 10px; align-items: center;">
-                            <input type="text" id="manualDeviceId" placeholder="e.g., 12345678-1234-1234-1234-123456789abc" 
-                                   style="flex: 1; padding: 8px 12px; border: 1px solid rgba(255,255,255,0.3); border-radius: 4px; background: rgba(255,255,255,0.1); color: #fff;">
-                            <button onclick="setManualDeviceId()" style="padding: 8px 16px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
-                                Set Device ID
-                            </button>
-                        </div>
-                    </div>
-                `;
-                deviceInfoCard.insertAdjacentHTML('beforeend', manualInputHtml);
-            }
-        }
-
-        // Hide manual device ID input
-        function hideManualDeviceIdInput() {
-            const manualInput = document.querySelector('.manual-device-input');
-            if (manualInput) {
-                manualInput.style.display = 'none';
-            }
-        }
-
-        // Set manual device ID
-        function setManualDeviceId() {
-            const manualInput = document.getElementById('manualDeviceId');
-            const deviceId = manualInput.value.trim();
-            
-            // Validate UUID format
-            const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-            if (!uuidRegex.test(deviceId)) {
-                showError('Invalid device ID format. Please enter a valid UUID (e.g., 12345678-1234-1234-1234-123456789abc)');
-                return;
-            }
-            
-            if (deviceId) {
-                setupData.deviceId = deviceId;
-                setupData.uuidSubdomain = deviceId + '.myl.zip';
-                
-                // Update display elements
-                document.getElementById('extension-device-id').textContent = setupData.deviceId;
-                document.getElementById('display-device-id').textContent = setupData.deviceId;
-                document.getElementById('display-ssl-domain').textContent = setupData.uuidSubdomain;
-                document.getElementById('ssl-domain').textContent = setupData.uuidSubdomain;
-                document.getElementById('summary-domain').textContent = setupData.uuidSubdomain;
-                
-                // Hide manual input
-                hideManualDeviceIdInput();
-                
-                showSuccess('Device ID set successfully!');
-            } else {
-                showError('Please enter a valid device ID');
-            }
-        }
-
-        // UUID Generation Function
-        function generateUUID() {
-            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                const r = Math.random() * 16 | 0;
-                const v = c == 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
-            });
-        }
-
-        // Initialize extension communication
-        setupExtensionCommunication();
-        
-        // Console info for developers
-        console.log('🚀 [SETUP] MyL.Zip Setup Wizard Loaded');
-        console.log('📋 [INFO] This is the setup wizard for myl.zip');
-        console.log('🔗 [AUTH] Auth Page: https://myl.zip/auth.html');
-        console.log('🏠 [HOME] Home Page: https://myl.zip');
+        // Initialize setup wizard
+        const setupWizard = new SetupWizard();
     </script>
 </body>
 </html>

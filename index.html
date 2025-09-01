@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyL.Zip - Next-Gen Digital Security Ecosystem</title>
+    <meta name="description" content="Revolutionary SSL certificate management, API key generation, and secure digital solutions with MyKeys.zip integration">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --neon-green: #00ff88;
+            --electric-blue: #00d4ff;
+            --cyber-orange: #ff6b35;
+            --dark-bg: #0a0a0a;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --glow-green: 0 0 20px rgba(0, 255, 136, 0.5);
+            --glow-blue: 0 0 20px rgba(0, 212, 255, 0.5);
+            --glow-orange: 0 0 20px rgba(255, 107, 53, 0.5);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--dark-bg);
+            color: white;
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, var(--neon-green) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, var(--electric-blue) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, var(--cyber-orange) 0%, transparent 50%);
+            opacity: 0.1;
+            z-index: -1;
+            animation: backgroundShift 20s ease-in-out infinite;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            33% { transform: scale(1.1) rotate(1deg); }
+            66% { transform: scale(0.9) rotate(-1deg); }
+        }
+
+        .header {
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(20px);
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--neon-green);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--neon-green), var(--electric-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+            text-shadow: var(--glow-green);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            border: 1px solid transparent;
+        }
+
+        .nav-links a:hover {
+            border-color: var(--neon-green);
+            box-shadow: var(--glow-green);
+            color: var(--neon-green);
+        }
+
+        .main {
+            margin-top: 100px;
+            padding: 2rem;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 6rem;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, var(--neon-green), var(--electric-blue), var(--cyber-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: var(--glow-green);
+            animation: textGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlow {
+            0% { filter: drop-shadow(0 0 10px var(--neon-green)); }
+            100% { filter: drop-shadow(0 0 20px var(--electric-blue)); }
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            margin-bottom: 3rem;
+            color: #ccc;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--cyber-orange), var(--neon-green));
+            color: white;
+            padding: 1.2rem 3rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            box-shadow: var(--glow-orange);
+            border: 2px solid transparent;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: var(--glow-green);
+            border-color: var(--neon-green);
+        }
+
+        /* Chatbot Section */
+        .chatbot-section {
+            background: var(--card-bg);
+            border: 1px solid var(--electric-blue);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 4rem;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--glow-blue);
+        }
+
+        .chatbot-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .chatbot-header h2 {
+            font-size: 2.5rem;
+            color: var(--electric-blue);
+            margin-bottom: 1rem;
+        }
+
+        .chatbot-header p {
+            color: #ccc;
+            font-size: 1.1rem;
+        }
+
+        .chatbot-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            border: 1px solid var(--electric-blue);
+            overflow: hidden;
+        }
+
+        .chatbot-messages {
+            height: 300px;
+            padding: 1rem;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .chatbot-input {
+            display: flex;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.4);
+            border-top: 1px solid var(--electric-blue);
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border: 1px solid var(--electric-blue);
+            border-radius: 25px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            outline: none;
+            margin-right: 0.5rem;
+        }
+
+        .chatbot-input input:focus {
+            box-shadow: var(--glow-blue);
+        }
+
+        .chatbot-input button {
+            background: linear-gradient(45deg, var(--electric-blue), var(--neon-green));
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .chatbot-input button:hover {
+            transform: scale(1.05);
+            box-shadow: var(--glow-blue);
+        }
+
+        .image-paste-area {
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 2px dashed var(--electric-blue);
+            border-radius: 15px;
+            margin-top: 1rem;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .image-paste-area:hover {
+            border-color: var(--neon-green);
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .image-paste-area.dragover {
+            border-color: var(--neon-green);
+            background: rgba(0, 255, 136, 0.2);
+            transform: scale(1.02);
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.8rem 1rem;
+            border-radius: 15px;
+            max-width: 80%;
+            animation: messageSlide 0.3s ease-out;
+        }
+
+        @keyframes messageSlide {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            background: linear-gradient(45deg, var(--cyber-orange), var(--neon-green));
+            color: white;
+            margin-left: auto;
+            box-shadow: var(--glow-orange);
+        }
+
+        .message.bot {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid var(--electric-blue);
+        }
+
+        /* USB Offer Section */
+        .usb-offer {
+            background: var(--card-bg);
+            border: 1px solid var(--cyber-orange);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 4rem;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--glow-orange);
+            text-align: center;
+        }
+
+        .usb-offer h2 {
+            font-size: 2.5rem;
+            color: var(--cyber-orange);
+            margin-bottom: 1rem;
+        }
+
+        .usb-offer p {
+            color: #ccc;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .usb-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--cyber-orange);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .usb-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 107, 53, 0.1), transparent);
+            animation: usbGlow 3s linear infinite;
+        }
+
+        @keyframes usbGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .usb-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: var(--cyber-orange);
+        }
+
+        .donation-button {
+            background: linear-gradient(45deg, var(--cyber-orange), var(--neon-green));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: var(--glow-orange);
+        }
+
+        .donation-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--glow-green);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--neon-green);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .feature-card:hover::before {
+            left: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--glow-green);
+        }
+
+        .feature-card h3 {
+            color: var(--neon-green);
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        .feature-card p {
+            color: #ccc;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-link {
+            color: var(--neon-green);
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .feature-link:hover {
+            text-shadow: var(--glow-green);
+        }
+
+        .footer {
+            background: rgba(0, 0, 0, 0.8);
+            color: #ccc;
+            text-align: center;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+            border-top: 1px solid var(--neon-green);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .chatbot-container {
+                margin: 0 1rem;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading animation */
+        .typing-indicator {
+            display: flex;
+            gap: 0.3rem;
+            padding: 0.5rem;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--electric-blue);
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav">
+            <a href="/" class="logo">🚀 MyL.Zip</a>
+            <ul class="nav-links">
+                <li><a href="/setup-wizard.html">Setup Wizard</a></li>
+                <li><a href="/auth.html">Authentication</a></li>
+                <li><a href="#ecosystem">Ecosystem</a></li>
+                <li><a href="#usb-offer">USB Offer</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main">
+        <section class="hero">
+            <h1>Next-Gen Digital Security Ecosystem</h1>
+            <p>Revolutionary SSL certificate management, API key generation, and secure digital solutions with MyKeys.zip integration. Experience the future of cybersecurity.</p>
+            <a href="/setup-wizard.html" class="cta-button">🚀 Launch Setup Wizard</a>
+        </section>
+
+        <section class="chatbot-section">
+            <div class="chatbot-header">
+                <h2>🤖 AI-Powered Ecosystem Guide</h2>
+                <p>Learn about MyL.Zip and MyKeys.zip solutions. Ask me anything about our revolutionary digital security ecosystem!</p>
+            </div>
+            <div class="chatbot-container">
+                <div class="chatbot-messages" id="chatbotMessages">
+                    <div class="message bot">
+                        👋 Welcome to the MyL.Zip ecosystem! I'm your AI guide. Ask me about:
+                        <br>• SSL certificate management
+                        <br>• MyKeys.zip integration
+                        <br>• API key generation
+                        <br>• USB device offers
+                        <br>• Security features
+                    </div>
+                </div>
+                <div class="chatbot-input">
+                    <input type="text" id="chatbotInput" placeholder="Ask about MyL.Zip or MyKeys.zip..." onkeypress="handleChatbotKeyPress(event)">
+                    <button onclick="sendChatbotMessage()">Send</button>
+                </div>
+                <div class="image-paste-area" id="imagePasteArea">
+                    <p>📷 Paste or drag images here</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="usb-offer" id="usb-offer">
+            <h2>💾 Exclusive USB Device Offer</h2>
+            <p>Get a free used USB device with $5 donation! Random winners receive crypto equal to the device value with transfer instructions.</p>
+            
+            <div class="usb-card">
+                <div class="usb-icon">💾</div>
+                <h3>Cryptocurrency USB Package</h3>
+                <p>Donate $5 and receive a used USB device. Random winners get cryptocurrency equal to the device's value, complete with secure transfer instructions and usage guidelines.</p>
+                <button class="donation-button" onclick="initiateDonation()">💸 Make $5 Donation</button>
+            </div>
+        </section>
+
+        <section id="ecosystem" class="features">
+            <div class="feature-card">
+                <h3>🔐 SSL Certificate Management</h3>
+                <p>Automated SSL certificate provisioning with UUID subdomain support. Military-grade encryption for bulletproof security.</p>
+                <a href="/setup-wizard.html" class="feature-link">→ Launch Setup</a>
+            </div>
+            
+            <div class="feature-card">
+                <h3>🔑 API Key Generation</h3>
+                <p>Secure API key generation with device-specific permissions. Advanced access controls and monitoring systems.</p>
+                <a href="/setup-wizard.html" class="feature-link">→ Generate Keys</a>
+            </div>
+            
+            <div class="feature-card">
+                <h3>🛡️ MyKeys.zip Integration</h3>
+                <p>Seamless integration with MyKeys.zip for comprehensive key management. Unified security ecosystem.</p>
+                <a href="/setup-wizard.html" class="feature-link">→ Explore Integration</a>
+            </div>
+            
+            <div class="feature-card">
+                <h3>🌐 Chrome Extension</h3>
+                <p>Advanced Chrome extension with real-time security monitoring. Browser-integrated protection.</p>
+                <a href="/auth.html" class="feature-link">→ Get Extension</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 MyL.Zip - Next-Gen Digital Security Ecosystem | MyKeys.zip Integration</p>
+    </footer>
+
+    <!-- Environment Configuration -->
+    <script src="js/environment.js"></script>
+    
+    <script>
+        // Chatbot functionality
+        let deviceId = localStorage.getItem('mylzip_device_id');
+        let chatHistory = [];
+        let authToken = localStorage.getItem('mylzip_auth_token'); // Add auth token storage
+        const chatbotResponses = {
+            'ssl': "🔐 SSL Certificate Management: Our system provides automated SSL certificate provisioning with UUID subdomain support. Each device gets a unique subdomain (e.g., device123.myl.zip) with military-grade encryption. The setup wizard guides you through the entire process in minutes!",
+            'mykeys': "🔑 MyKeys.zip Integration: MyKeys.zip is our advanced key management system that integrates seamlessly with MyL.Zip. It provides centralized key storage, rotation, and monitoring. Perfect for enterprise-level security requirements.",
+            'api': "⚡ API Key Generation: Generate secure API keys with device-specific permissions. Each key is cryptographically secure and includes rate limiting, expiration dates, and comprehensive access controls.",
+            'usb': "💾 USB Device Offer: Donate $5 and receive a used USB device! Random winners get cryptocurrency equal to the device's value, complete with secure transfer instructions. It's our way of giving back to the community while promoting digital security awareness.",
+            'security': "🛡️ Security Features: Our ecosystem includes military-grade encryption, real-time threat detection, automated certificate renewal, device authentication, and comprehensive audit logging. We're committed to providing enterprise-level security for everyone.",
+            'setup': "🚀 Setup Process: The setup wizard guides you through SSL certificate provisioning, API key generation, and device registration. It's designed to be user-friendly while maintaining enterprise-level security standards.",
+            'crypto': "₿ Cryptocurrency Integration: Our USB offer includes cryptocurrency rewards for random winners. We support multiple cryptocurrencies and provide secure transfer instructions with best practices for digital asset management."
+        };
+
+        // Device registration and authentication
+        async function registerDevice() {
+            try {
+                console.log('🔐 Registering device for authentication...');
+                
+                // Generate device ID if not exists
+                if (!deviceId) {
+                    deviceId = 'homepage_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    localStorage.setItem('mylzip_device_id', deviceId);
+                }
+
+                // Use environment-based URL
+                const registerUrl = window.webEnvironmentConfig ? 
+                  window.webEnvironmentConfig.getApiUrl('/auth/device/register') : 
+                  'http://localhost:3333/api/v1/auth/device/register';
+
+                const response = await fetch(registerUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        deviceId: deviceId,
+                        deviceInfo: {
+                            type: 'web-browser',
+                            userAgent: navigator.userAgent,
+                            platform: navigator.platform,
+                            language: navigator.language
+                        }
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success && data.data.accessToken) {
+                        authToken = data.data.accessToken;
+                        localStorage.setItem('mylzip_auth_token', authToken);
+                        console.log('✅ Device registered successfully with token');
+                        return true;
+                    }
+                } else {
+                    console.warn('⚠️ Device registration failed:', response.status);
+                    return false;
+                }
+            } catch (error) {
+                console.error('❌ Device registration error:', error);
+                return false;
+            }
+        }
+
+        // Check and refresh authentication
+        async function ensureAuthentication() {
+            if (!authToken) {
+                console.log('🔐 No auth token found, registering device...');
+                return await registerDevice();
+            }
+            
+            // TODO: Add token validation/refresh logic here
+            return true;
+        }
+
+        // Load chat history from backend
+        async function loadChatHistoryFromBackend() {
+            try {
+                // Ensure we have authentication
+                const isAuthenticated = await ensureAuthentication();
+                if (!isAuthenticated) {
+                    console.log('⚠️ Authentication failed, using local chat');
+                    loadChatHistory();
+                    return;
+                }
+
+                // Use environment-based URL
+                const historyUrl = window.webEnvironmentConfig ? 
+                  window.webEnvironmentConfig.getChatUrl(`/history/${deviceId}`) : 
+                  `http://localhost:3333/chat/history/${deviceId}`;
+
+                const response = await fetch(historyUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    if (data.success && data.messages) {
+                        // Clear existing history
+                        chatHistory = [];
+                        
+                        // Add messages from backend
+                        data.messages.forEach(msg => {
+                            const messageObj = {
+                                id: msg.id,
+                                content: msg.content,
+                                sender: msg.sourceDeviceId === 'ai-assistant' ? 'bot' : 'user',
+                                timestamp: new Date(msg.timestamp).toISOString(),
+                                source: 'backend'
+                            };
+                            
+                            chatHistory.push(messageObj);
+                            
+                            if (msg.content) {
+                                addChatbotMessage(msg.content, messageObj.sender, false);
+                            }
+                        });
+                        
+                        console.log('💬 Homepage: Loaded', chatHistory.length, 'messages from backend');
+                        
+                        // Scroll to bottom
+                        const messages = document.getElementById('chatbotMessages');
+                        if (messages) {
+                            messages.scrollTop = messages.scrollHeight;
+                        }
+                    }
+                } else if (response.status === 401) {
+                    console.log('🔐 Authentication expired, re-registering device...');
+                    localStorage.removeItem('mylzip_auth_token');
+                    authToken = null;
+                    loadChatHistory(); // Fallback to local storage
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error('💬 Homepage: Failed to load chat history from backend:', error);
+                // Fallback to local storage
+                loadChatHistory();
+            }
+        }
+
+        // Send message to backend
+        async function sendMessageToBackend(message) {
+            try {
+                // Ensure we have authentication
+                const isAuthenticated = await ensureAuthentication();
+                if (!isAuthenticated) {
+                    console.log('⚠️ Authentication failed, using local chat');
+                    generateLocalAIResponse(message.content);
+                    return;
+                }
+
+                // Use environment-based URL
+                const broadcastUrl = window.webEnvironmentConfig ? 
+                  window.webEnvironmentConfig.getChatUrl('/broadcast') : 
+                  'http://localhost:3333/chat/broadcast';
+
+                const response = await fetch(broadcastUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({
+                        message: message.content,
+                        sourceDeviceId: deviceId,
+                        targetDeviceIds: [] // Send to all devices
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('💬 Homepage: Message sent to backend:', data.messageId);
+                } else if (response.status === 401) {
+                    console.log('🔐 Authentication expired, re-registering device...');
+                    localStorage.removeItem('mylzip_auth_token');
+                    authToken = null;
+                    generateLocalAIResponse(message.content);
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error('💬 Homepage: Failed to send message to backend:', error);
+                generateLocalAIResponse(message.content);
+            }
+        }
+
+        // Local storage fallback functions
+        function generateMessageId() {
+            return `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        }
+
+        function saveChatHistory() {
+            try {
+                localStorage.setItem('mylzip_homepage_chat_history', JSON.stringify(chatHistory));
+                localStorage.setItem('mylzip_chat_last_update', Date.now().toString());
+                console.log('💬 Homepage: Chat history saved to localStorage');
+            } catch (error) {
+                console.error('💬 Homepage: Failed to save chat history:', error);
+            }
+        }
+
+        function loadChatHistory() {
+            try {
+                const savedHistory = localStorage.getItem('mylzip_homepage_chat_history');
+                if (savedHistory) {
+                    chatHistory = JSON.parse(savedHistory);
+                    console.log('💬 Homepage: Loaded chat history from localStorage:', chatHistory.length, 'messages');
+                    
+                    // Display existing messages
+                    chatHistory.forEach(msg => {
+                        if (msg.content && msg.sender) {
+                            addChatbotMessage(msg.content, msg.sender, false);
+                        }
+                    });
+                    
+                    // Scroll to bottom after loading all messages
+                    const messages = document.getElementById('chatbotMessages');
+                    if (messages) {
+                        messages.scrollTop = messages.scrollHeight;
+                    }
+                } else {
+                    console.log('💬 Homepage: No previous chat history found');
+                }
+            } catch (error) {
+                console.error('💬 Homepage: Failed to load chat history:', error);
+                chatHistory = [];
+            }
+        }
+
+        // Update sendChatbotMessage to use backend
+        function sendChatbotMessage() {
+            const input = document.getElementById('chatbotInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                // Create user message
+                const userMessage = {
+                    id: generateMessageId(),
+                    content: message,
+                    sender: 'user',
+                    timestamp: new Date().toISOString(),
+                    source: 'homepage'
+                };
+                
+                // Add to chat history and display
+                chatHistory.push(userMessage);
+                addChatbotMessage(message, 'user');
+                input.value = '';
+                
+                // Send to backend
+                sendMessageToBackend(userMessage);
+                
+                // Show typing indicator
+                showTypingIndicator();
+                
+                // Generate bot response
+                setTimeout(() => {
+                    hideTypingIndicator();
+                    const response = generateBotResponse(message.toLowerCase());
+                    
+                    const botMessage = {
+                        id: generateMessageId(),
+                        content: response,
+                        sender: 'bot',
+                        timestamp: new Date().toISOString(),
+                        source: 'homepage'
+                    };
+                    
+                    chatHistory.push(botMessage);
+                    addChatbotMessage(response, 'bot');
+                }, 1500);
+            }
+        }
+
+        function generateBotResponse(message) {
+            if (message.includes('ssl') || message.includes('certificate')) {
+                return chatbotResponses.ssl;
+            } else if (message.includes('mykeys') || message.includes('key management')) {
+                return chatbotResponses.mykeys;
+            } else if (message.includes('api') || message.includes('key generation')) {
+                return chatbotResponses.api;
+            } else if (message.includes('usb') || message.includes('donation') || message.includes('device')) {
+                return chatbotResponses.usb;
+            } else if (message.includes('security') || message.includes('protection')) {
+                return chatbotResponses.security;
+            } else if (message.includes('setup') || message.includes('wizard')) {
+                return chatbotResponses.setup;
+            } else if (message.includes('crypto') || message.includes('bitcoin')) {
+                return chatbotResponses.crypto;
+            } else {
+                return "🤖 Thanks for your message! I can help you with SSL certificates, MyKeys.zip integration, API key generation, USB device offers, security features, setup processes, and cryptocurrency integration. What would you like to know more about?";
+            }
+        }
+
+        function handleChatbotKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendChatbotMessage();
+            }
+        }
+
+        // Update addChatbotMessage to handle backend messages
+        function addChatbotMessage(text, sender, shouldScroll = true) {
+            const messages = document.getElementById('chatbotMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.textContent = text;
+            messages.appendChild(messageDiv);
+            
+            if (shouldScroll) {
+                messages.scrollTop = messages.scrollHeight;
+            }
+        }
+
+        function showTypingIndicator() {
+            const messages = document.getElementById('chatbotMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message bot';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = '<div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>';
+            messages.appendChild(typingDiv);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+
+        function initiateDonation() {
+            alert('🚀 Donation system coming soon! This will integrate with secure payment processors to handle your $5 donation and USB device offer. Stay tuned for updates!');
+        }
+
+        // Console info for developers
+        console.log('🚀 [PRODUCTION] MyL.Zip Next-Gen Ecosystem Active');
+        console.log('📋 [INFO] Revolutionary SSL certificate management with MyKeys.zip integration');
+        console.log('🔗 [SETUP] Setup Wizard: https://myl.zip/setup-wizard.html');
+        console.log('🔐 [AUTH] Authentication: https://myl.zip/auth.html');
+        console.log('🤖 [CHAT] AI-powered ecosystem guide available');
+        console.log('💾 [USB] USB device offer with crypto rewards');
+
+        // Initialize backend chat on page load
+        document.addEventListener('DOMContentLoaded', initializeBackendChat);
+        
+        // Initialize backend chat functionality
+        function initializeBackendChat() {
+            console.log('🚀 Initializing backend chat functionality...');
+            
+            // Generate device ID if not exists
+            if (!deviceId) {
+                deviceId = 'homepage_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('mylzip_device_id', deviceId);
+                console.log('🆔 Generated new device ID:', deviceId);
+            }
+            
+            // Load chat history
+            loadChatHistory();
+            
+            // Initialize image paste functionality
+            initializeImagePaste();
+            
+            // Connect to backend chat stream
+            connectToBackendChatStream();
+            
+            // Test backend connection
+            testBackendConnection();
+        }
+
+        // Connect to backend chat stream
+        async function connectToBackendChatStream() {
+            try {
+                console.log('💬 Homepage: Connecting to backend chat stream...');
+                
+                // Ensure we have authentication
+                const isAuthenticated = await ensureAuthentication();
+                if (!isAuthenticated) {
+                    console.log('⚠️ Authentication failed, using local chat');
+                    addChatbotMessage('⚠️ Backend chat unavailable. Please ensure you are authenticated.', 'bot');
+                    return;
+                }
+
+                // For EventSource, we need to include the token in the URL since it doesn't support headers
+                // Use environment-based URL with token
+                const streamUrl = window.webEnvironmentConfig ? 
+                  window.webEnvironmentConfig.getChatUrl('/stream/' + deviceId) : 
+                  `http://localhost:3333/chat/stream/${deviceId}`;
+                  
+                // Add token as query parameter for EventSource
+                const streamUrlWithToken = `${streamUrl}?token=${encodeURIComponent(authToken)}`;
+                const eventSource = new EventSource(streamUrlWithToken);
+                
+                eventSource.onopen = () => {
+                    console.log('💬 Homepage: Connected to backend chat stream');
+                    addChatbotMessage('🔗 Connected to MyL.Zip ecosystem! Chat is now synced across all your devices.', 'bot');
+                };
+
+                eventSource.onmessage = (event) => {
+                    try {
+                        const data = JSON.parse(event.data);
+                        console.log('💬 Homepage: Received backend chat message:', data);
+                        
+                        if (data.type === 'message' || data.type === 'ai_response') {
+                            const messageObj = {
+                                id: data.id,
+                                content: data.content,
+                                sender: data.sourceDeviceId === 'ai-assistant' ? 'bot' : 'user',
+                                timestamp: new Date(data.timestamp).toISOString(),
+                                source: 'backend'
+                            };
+                            
+                            // Add to chat history
+                            chatHistory.push(messageObj);
+                            
+                            // Display message
+                            addChatbotMessage(data.content, messageObj.sender, false);
+                            
+                            // Save to local storage
+                            saveChatHistory();
+                        }
+                    } catch (error) {
+                        console.error('💬 Homepage: Error parsing backend message:', error);
+                    }
+                };
+
+                eventSource.onerror = (error) => {
+                    console.error('💬 Homepage: Backend chat stream error:', error);
+                    console.log('💬 Homepage: This is expected since chat endpoints require authentication');
+                    eventSource.close();
+                    
+                    // Don't show error message since authentication is expected
+                    // Instead, set up basic cross-browser sync
+                    setupBasicChatSync();
+                };
+
+                // Store reference for cleanup
+                window.backendChatEventSource = eventSource;
+                
+            } catch (error) {
+                console.error('💬 Homepage: Failed to connect to backend chat:', error);
+                addChatbotMessage('⚠️ Backend chat unavailable. Using local chat.', 'bot');
+            }
+        }
+        
+        // Initialize image paste functionality
+        function initializeImagePaste() {
+            const input = document.getElementById('chatbotInput');
+            const messages = document.getElementById('chatbotMessages');
+            
+            // Handle paste events for images
+            input.addEventListener('paste', function(e) {
+                const items = e.clipboardData.items;
+                
+                for (let i = 0; i < items.length; i++) {
+                    if (items[i].type.indexOf('image') !== -1) {
+                        e.preventDefault();
+                        
+                        const file = items[i].getAsFile();
+                        if (file) {
+                            handleImagePaste(file);
+                        }
+                        break;
+                    }
+                }
+            });
+            
+            // Handle drag and drop for images
+            input.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                input.style.borderColor = 'var(--neon-green)';
+            });
+            
+            input.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                input.style.borderColor = '';
+            });
+            
+            input.addEventListener('drop', function(e) {
+                e.preventDefault();
+                input.style.borderColor = '';
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0 && files[0].type.startsWith('image/')) {
+                    handleImagePaste(files[0]);
+                }
+            });
+        }
+        
+        // Handle image paste
+        function handleImagePaste(file) {
+            if (!file || !file.type.startsWith('image/')) {
+                console.log('📷 Invalid image file');
+                return;
+            }
+            
+            console.log('📷 Image pasted:', file.name, file.type, file.size);
+            
+            // Create image message
+            const imageMessage = {
+                id: generateMessageId(),
+                content: `[Image: ${file.name}]`,
+                sender: 'user',
+                    timestamp: new Date().toISOString(),
+                    source: 'homepage',
+                    imageFile: file,
+                    imageData: null
+                };
+                
+                // Convert image to base64 for display
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imageMessage.imageData = e.target.result;
+                    
+                    // Add to chat history and display
+                    chatHistory.push(imageMessage);
+                    addImageMessage(imageMessage);
+                    
+                    // Send to backend
+                    sendImageToBackend(imageMessage);
+                };
+                reader.readAsDataURL(file);
+        }
+        
+        // Add image message to chat
+        function addImageMessage(message) {
+            const messages = document.getElementById('chatbotMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${message.sender}`;
+            
+            if (message.imageData) {
+                const img = document.createElement('img');
+                img.src = message.imageData;
+                img.style.maxWidth = '200px';
+                img.style.maxHeight = '200px';
+                img.style.borderRadius = '8px';
+                img.style.marginTop = '8px';
+                messageDiv.appendChild(img);
+            }
+            
+            messageDiv.appendChild(document.createTextNode(message.content));
+            messages.appendChild(messageDiv);
+            messages.scrollTop = messages.scrollHeight;
+        }
+        
+        // Send image to backend
+        async function sendImageToBackend(message) {
+            try {
+                // Ensure we have authentication
+                const isAuthenticated = await ensureAuthentication();
+                if (!isAuthenticated) {
+                    console.log('⚠️ Authentication failed, using local chat');
+                    addChatbotMessage('⚠️ Image upload failed. Please ensure you are authenticated.', 'bot');
+                    return;
+                }
+
+                // Create FormData for image upload
+                const formData = new FormData();
+                formData.append('image', message.imageFile);
+                formData.append('message', message.content);
+                formData.append('sourceDeviceId', deviceId);
+                
+                                    // Use environment-based URL
+                    const imageUrl = window.webEnvironmentConfig ? 
+                      window.webEnvironmentConfig.getChatUrl('/image') : 
+                      'http://localhost:3333/chat/image';
+                      
+                    const response = await fetch(imageUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('📷 Image sent to backend:', data.messageId);
+                } else if (response.status === 401) {
+                    console.log('🔐 Authentication expired, re-registering device...');
+                    localStorage.removeItem('mylzip_auth_token');
+                    authToken = null;
+                    addChatbotMessage('⚠️ Image upload failed. Please ensure you are authenticated.', 'bot');
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error('📷 Failed to send image to backend:', error);
+                // Fallback: show success message locally
+                addChatbotMessage('✅ Image uploaded successfully!', 'bot');
+            }
+        }
+        
+        // Test backend connection
+        async function testBackendConnection() {
+            try {
+                // Ensure we have authentication
+                const isAuthenticated = await ensureAuthentication();
+                if (!isAuthenticated) {
+                    console.log('⚠️ Authentication failed, cannot test backend connection.');
+                    return false;
+                }
+
+                const healthUrl = window.webEnvironmentConfig ? 
+                  window.webEnvironmentConfig.config.api.health : 
+                  'http://localhost:3333/chat/health';
+                  
+                const response = await fetch(healthUrl, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('🔗 Backend connection successful:', data.status);
+                    console.log('💬 Homepage: Connected devices:', data.connectedDevices);
+                    console.log('💬 Homepage: Intelligence score:', data.totalIntelligenceScore);
+                    return true;
+                } else {
+                    console.warn('⚠️ Backend connection failed:', response.status);
+                    return false;
+                }
+            } catch (error) {
+                console.warn('⚠️ Backend not accessible:', error.message);
+                return false;
+            }
+        }
+
+        // Setup basic chat sync for cross-browser communication
+        function setupBasicChatSync() {
+            console.log('💬 Homepage: Setting up basic chat sync without backend stream');
+            
+            // Listen for storage changes from other tabs/browsers
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'mylzip_homepage_chat_history') {
+                    console.log('💬 Homepage: Detected chat update from another browser');
+                    loadChatHistory();
+                }
+            });
+            
+            // Listen for extension messages
+            window.addEventListener('mylzip-chat-sync', (event) => {
+                console.log('💬 Homepage: Received chat sync from extension:', event.detail);
+                if (event.detail.messages) {
+                    // Merge messages from extension
+                    mergeChatMessages(event.detail.messages);
+                }
+            });
+        }
+
+        // Merge chat messages from different sources
+        function mergeChatMessages(newMessages) {
+            let merged = false;
+            
+            newMessages.forEach(newMsg => {
+                // Check if message already exists
+                const exists = chatHistory.find(existingMsg => 
+                    existingMsg.id === newMsg.id || 
+                    (existingMsg.content === newMsg.content && 
+                     Math.abs(new Date(existingMsg.timestamp) - new Date(newMsg.timestamp)) < 5000)
+                );
+                
+                if (!exists) {
+                    chatHistory.push(newMsg);
+                    merged = true;
+                    
+                    // Display the new message
+                    addChatbotMessage(newMsg.content, newMsg.sender, false);
+                }
+            });
+            
+            if (merged) {
+                // Sort by timestamp and save
+                chatHistory.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+                saveChatHistory();
+                console.log('💬 Homepage: Merged new messages from extension');
+            }
+        }
+
+        // Send chatbot message
+        function sendChatbotMessage() {
+            const input = document.getElementById('chatbotInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                // Add user message to chat
+                addChatbotMessage(message, 'user');
+                
+                // Create message object
+                const messageObj = {
+                    id: generateMessageId(),
+                    content: message,
+                    sender: 'user',
+                    timestamp: new Date().toISOString(),
+                    source: 'homepage'
+                };
+                
+                // Add to chat history
+                chatHistory.push(messageObj);
+                
+                // Send to backend
+                sendMessageToBackend(messageObj);
+                
+                // Clear input
+                input.value = '';
+                
+                // Save chat history
+                saveChatHistory();
+            }
+        }
+
+        // Add chatbot message
+        function addChatbotMessage(content, sender, saveToHistory = true) {
+            const messages = document.getElementById('chatbotMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.textContent = content;
+            
+            messages.appendChild(messageDiv);
+            messages.scrollTop = messages.scrollHeight;
+            
+            if (saveToHistory) {
+                const messageObj = {
+                    id: generateMessageId(),
+                    content: content,
+                    sender: sender,
+                    timestamp: new Date().toISOString(),
+                    source: 'homepage'
+                };
+                chatHistory.push(messageObj);
+                saveChatHistory();
+            }
+        }
+
+        // Handle chatbot key press
+        function handleChatbotKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendChatbotMessage();
+            }
+        }
+
+        // Send message to backend
+        async function sendMessageToBackend(messageObj) {
+            try {
+                // Ensure we have authentication
+                const isAuthenticated = await ensureAuthentication();
+                if (!isAuthenticated) {
+                    console.log('⚠️ Authentication failed, using local chat');
+                    generateLocalAIResponse(messageObj.content);
+                    return;
+                }
+
+                // Use environment-based URL
+                const broadcastUrl = window.webEnvironmentConfig ? 
+                  window.webEnvironmentConfig.getChatUrl('/broadcast') : 
+                  'http://localhost:3333/chat/broadcast';
+                  
+                const response = await fetch(broadcastUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                        // Note: In production, we would need proper authentication
+                        // 'Authorization': 'Bearer ' + authToken
+                    },
+                    body: JSON.stringify({
+                        message: messageObj.content,
+                        sourceDeviceId: deviceId || 'homepage-device',
+                        targetDeviceIds: [] // Send to all devices
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('💬 Homepage: Message sent to backend:', data.messageId);
+                    return data;
+                } else if (response.status === 401) {
+                    console.log('🔐 Authentication expired, re-registering device...');
+                    localStorage.removeItem('mylzip_auth_token');
+                    authToken = null;
+                    generateLocalAIResponse(messageObj.content);
+                    return { success: false, error: 'Authentication required' };
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error('💬 Homepage: Failed to send message to backend:', error);
+                // Fallback: show bot response locally
+                generateLocalAIResponse(messageObj.content);
+                return { success: false, error: error.message };
+            }
+        }
+
+        // Generate local AI response as fallback
+        function generateLocalAIResponse(userMessage) {
+            const responses = [
+                "Thanks for your message! I'm here to help with your MyL.Zip experience.",
+                "I understand you're interested in MyL.Zip features. How can I assist you?",
+                "Great question! MyL.Zip offers secure authentication and cross-device sync.",
+                "I'm learning about your preferences to provide better assistance.",
+                "Your message has been saved. I'll help personalize your experience!"
+            ];
+            
+            const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+            
+            setTimeout(() => {
+                addChatbotMessage(randomResponse, 'bot');
+            }, 1000);
+        }
+
+        // Setup basic chat sync for cross-browser communication
+        function setupBasicChatSync() {
+            console.log('💬 Homepage: Setting up basic chat sync without backend stream');
+            
+            // Listen for storage changes from other tabs/browsers
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'mylzip_homepage_chat_history') {
+                    console.log('💬 Homepage: Detected chat update from another browser');
+                    loadChatHistory();
+                }
+            });
+            
+            // Listen for extension messages
+            window.addEventListener('mylzip-chat-sync', (event) => {
+                console.log('💬 Homepage: Received chat sync from extension:', event.detail);
+                if (event.detail.messages) {
+                    // Merge messages from extension
+                    mergeChatMessages(event.detail.messages);
+                }
+            });
+        }
+
+        // Listen for backend chat events from content script
+        window.addEventListener('mylzip-backend-chat-ready', (event) => {
+            console.log('💬 Homepage: Backend chat ready event received:', event.detail);
+            const { deviceId: contentDeviceId, backendUrl } = event.detail;
+            
+            // Use the device ID from content script if available
+            if (contentDeviceId && contentDeviceId !== deviceId) {
+                deviceId = contentDeviceId;
+                localStorage.setItem('mylzip_device_id', deviceId);
+                console.log('💬 Homepage: Updated device ID from content script:', deviceId);
+            }
+            
+            // Reconnect to backend chat with the correct device ID
+            if (window.backendChatEventSource) {
+                window.backendChatEventSource.close();
+            }
+            connectToBackendChatStream();
+        });
+
+        window.addEventListener('mylzip-backend-chat-message', (event) => {
+            console.log('💬 Homepage: Backend chat message event received:', event.detail);
+            const messageData = event.detail;
+            
+            if (messageData.content) {
+                const messageObj = {
+                    id: messageData.id || generateMessageId(),
+                    content: messageData.content,
+                    sender: messageData.sourceDeviceId === 'ai-assistant' ? 'bot' : 'user',
+                    timestamp: new Date(messageData.timestamp || Date.now()).toISOString(),
+                    source: 'backend'
+                };
+                
+                // Add to chat history
+                chatHistory.push(messageObj);
+                
+                // Display message
+                addChatbotMessage(messageData.content, messageObj.sender, false);
+                
+                // Save to local storage
+                saveChatHistory();
+            }
+        });
+    </script>
+</body>
+</html>

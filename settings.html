@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚙️ MyL.Zip Settings</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .settings-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .settings-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .settings-header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .settings-header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .settings-content {
+            padding: 40px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            transform: translateX(-5px);
+        }
+
+        .settings-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+            margin-bottom: 30px;
+        }
+
+        .settings-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e1e5e9;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .info-value {
+            color: #333;
+            font-family: monospace;
+            font-size: 14px;
+            word-break: break-all;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 2px solid #e1e5e9;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .no-data-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="settings-container">
+        <div class="settings-header">
+            <h1>⚙️ MyL.Zip Settings</h1>
+            <p>Manage your device configuration</p>
+        </div>
+
+        <div class="settings-content">
+            <a href="/setup-wizard.html" class="back-link">← Back to Setup Wizard</a>
+
+            <!-- Loading State -->
+            <div class="loading" id="loadingState">
+                <div class="loading-spinner"></div>
+                <p>Loading your device settings...</p>
+            </div>
+
+            <!-- Settings Content -->
+            <div id="settingsContent" style="display: none;">
+                <!-- Device Information -->
+                <div class="settings-section">
+                    <h2>🔑 Device Information</h2>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Device ID</div>
+                            <div class="info-value" id="deviceId">Not registered</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">User Initials</div>
+                            <div class="info-value" id="userInitials">Not specified</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Email</div>
+                            <div class="info-value" id="userEmail">Not specified</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Registration Date</div>
+                            <div class="info-value" id="registrationDate">Not registered</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Authentication Method</div>
+                            <div class="info-value">
+                                <span class="status-indicator status-active">Captcha Puzzle</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Security Status</div>
+                            <div class="info-value" id="securityStatus">
+                                <span class="status-indicator status-active">Active</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Authentication Info -->
+                <div class="settings-section">
+                    <h2>🔒 Authentication System</h2>
+                    <p style="color: #666; margin-bottom: 20px;">Your device uses a cognitive puzzle verification system instead of traditional API keys.</p>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Verification Type</div>
+                            <div class="info-value">Human Cognitive Puzzle</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Security Level</div>
+                            <div class="info-value">High (Bot-Resistant)</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Last Verification</div>
+                            <div class="info-value" id="lastVerification">During registration</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Next Verification</div>
+                            <div class="info-value">When required</div>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="triggerVerification()">🔐 Test Verification</button>
+                    </div>
+                </div>
+
+                <!-- Data Management -->
+                <div class="settings-section">
+                    <h2>📊 Data Management</h2>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Data Export Available</div>
+                            <div class="info-value">
+                                <span class="status-indicator status-active">Yes</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Privacy Level</div>
+                            <div class="info-value">High (Anonymized)</div>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="exportData()">📊 Export Data</button>
+                    </div>
+                </div>
+
+                <!-- Danger Zone -->
+                <div class="settings-section">
+                    <h2>⚠️ Danger Zone</h2>
+                    <p style="color: #666; margin-bottom: 20px;">These actions cannot be undone. Please be careful.</p>
+                    <div class="action-buttons">
+                        <button class="btn btn-danger" onclick="resetDevice()">🗑️ Reset Device</button>
+                        <button class="btn btn-danger" onclick="deleteAccount()">❌ Delete Account</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- No Data State -->
+            <div class="no-data" id="noDataState" style="display: none;">
+                <div class="no-data-icon">📱</div>
+                <h3>No Device Registered</h3>
+                <p>You need to register your device first to access settings.</p>
+                <a href="/setup-wizard.html" class="btn btn-primary" style="margin-top: 20px;">Go to Setup Wizard</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class SettingsManager {
+            constructor() {
+                this.deviceId = null;
+                this.userData = {};
+                this.init();
+            }
+
+            async init() {
+                await this.loadDeviceInfo();
+                
+                // Hide loading, show appropriate content
+                document.getElementById('loadingState').style.display = 'none';
+                
+                if (this.deviceId) {
+                    document.getElementById('settingsContent').style.display = 'block';
+                } else {
+                    document.getElementById('noDataState').style.display = 'block';
+                }
+            }
+
+            async loadDeviceInfo() {
+                try {
+                    // Get device data from localStorage
+                    this.deviceId = localStorage.getItem('mylzip_device_id');
+                    const userInitials = localStorage.getItem('mylzip_user_initials');
+                    const userEmail = localStorage.getItem('mylzip_user_email');
+                    const registrationDate = localStorage.getItem('mylzip_registration_date');
+
+                    // Update device information display
+                    document.getElementById('deviceId').textContent = this.deviceId || 'Not registered';
+                    document.getElementById('userInitials').textContent = userInitials || 'Not specified';
+                    document.getElementById('userEmail').textContent = userEmail || 'Not specified';
+                    document.getElementById('registrationDate').textContent = registrationDate ? 
+                        new Date(registrationDate).toLocaleDateString() : 'Not registered';
+                    
+                } catch (error) {
+                    console.error('Failed to load device info:', error);
+                    this.showError('Failed to load device information');
+                }
+            }
+
+            showError(message) {
+                alert('Error: ' + message);
+            }
+
+            showSuccess(message) {
+                alert('Success: ' + message);
+            }
+
+            // Action methods
+            triggerVerification() {
+                // Redirect to setup wizard to test the captcha
+                window.location.href = '/setup-wizard.html';
+            }
+
+            exportData() {
+                const exportData = {
+                    deviceInfo: {
+                        deviceId: this.deviceId,
+                        userInitials: localStorage.getItem('mylzip_user_initials'),
+                        userEmail: localStorage.getItem('mylzip_user_email'),
+                        registrationDate: localStorage.getItem('mylzip_registration_date')
+                    },
+                    exportDate: new Date().toISOString()
+                };
+                
+                const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `mylzip-data-${this.deviceId}-${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                this.showSuccess('Data exported successfully!');
+            }
+
+            async resetDevice() {
+                if (confirm('Are you sure you want to reset your device? This will remove all settings and require re-registration.')) {
+                    try {
+                        localStorage.removeItem('mylzip_device_id');
+                        localStorage.removeItem('mylzip_user_initials');
+                        localStorage.removeItem('mylzip_user_email');
+                        localStorage.removeItem('mylzip_registration_date');
+                        this.showSuccess('Device reset successfully! Redirecting to setup wizard...');
+                        setTimeout(() => {
+                            window.location.href = '/setup-wizard.html';
+                        }, 2000);
+                    } catch (error) {
+                        this.showError('Failed to reset device');
+                    }
+                }
+            }
+
+            async deleteAccount() {
+                if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                    if (confirm('This will permanently delete all your data. Are you absolutely sure?')) {
+                        try {
+                            localStorage.clear();
+                            this.showSuccess('Account deleted successfully!');
+                            setTimeout(() => {
+                                window.location.href = '/';
+                            }, 2000);
+                        } catch (error) {
+                            this.showError('Failed to delete account');
+                        }
+                    }
+                }
+            }
+        }
+
+        // Initialize settings manager
+        const settingsManager = new SettingsManager();
+
+        // Global functions for button clicks
+        function triggerVerification() { settingsManager.triggerVerification(); }
+        function exportData() { settingsManager.exportData(); }
+        function resetDevice() { settingsManager.resetDevice(); }
+        function deleteAccount() { settingsManager.deleteAccount(); }
+    </script>
+</body>
+</html>

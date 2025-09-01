@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔐 MyL.Zip Authentication</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .auth-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .auth-header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .auth-header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .auth-content {
+            padding: 40px;
+        }
+
+        .auth-status {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .auth-status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .auth-status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .auth-status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .auth-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border-left: 4px solid #667eea;
+        }
+
+        .auth-info h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .auth-info ul {
+            list-style: none;
+        }
+
+        .auth-info li {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .auth-info strong {
+            color: #333;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 2px solid #e1e5e9;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+
+        .auth-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .extension-test {
+            background: #e8f5e8;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border-left: 4px solid #28a745;
+        }
+
+        .extension-test h3 {
+            color: #28a745;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .extension-test p {
+            margin-bottom: 15px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .auth-container {
+                margin: 10px;
+            }
+            
+            .auth-content {
+                padding: 25px;
+            }
+            
+            .auth-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-header">
+            <h1>🔐 MyL.Zip Authentication</h1>
+            <p>Cross-device authentication and testing</p>
+        </div>
+
+        <div class="auth-content">
+            <div id="authStatus" class="auth-status info">
+                Verifying authentication token...
+            </div>
+
+            <div id="authInfo" class="auth-info" style="display: none;">
+                <h3>🔑 Authentication Details</h3>
+                <ul>
+                    <li><strong>Email:</strong> <span id="authEmail">Loading...</span></li>
+                    <li><strong>Device ID:</strong> <span id="authDeviceId">Loading...</span></li>
+                    <li><strong>Token:</strong> <span id="authToken">Loading...</span></li>
+                    <li><strong>Status:</strong> <span id="authStatusText">Loading...</span></li>
+                </ul>
+            </div>
+
+            <div id="extensionTest" class="extension-test" style="display: none;">
+                <h3>🧪 Extension Testing</h3>
+                <p>Now that you're authenticated, you can test the MyL.Zip Chrome extension on this device:</p>
+                
+                <ol style="margin-left: 20px; color: #666;">
+                    <li>Install the MyL.Zip Chrome extension</li>
+                    <li>Open the extension popup</li>
+                    <li>You should see your authenticated status</li>
+                    <li>Test the cross-platform chat functionality</li>
+                    <li>Try the clipboard features</li>
+                </ol>
+
+                <p style="margin-top: 15px; font-weight: 600; color: #28a745;">
+                    ✅ Your authentication is valid across all devices!
+                </p>
+            </div>
+
+            <div id="loadingSpinner" class="loading">
+                <div class="loading-spinner"></div>
+                <p>Processing authentication...</p>
+            </div>
+
+            <div id="authActions" class="auth-actions" style="display: none;">
+                <button class="btn btn-secondary" onclick="goToSetup()">Setup Wizard</button>
+                <button class="btn btn-primary" onclick="goToHome()">Go to Home</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class AuthManager {
+            constructor() {
+                this.token = null;
+                this.email = null;
+                this.deviceId = null;
+                this.init();
+            }
+
+            init() {
+                console.log('🔐 Auth Manager: Initializing...');
+                this.parseUrlParams();
+                this.validateToken();
+            }
+
+            parseUrlParams() {
+                const urlParams = new URLSearchParams(window.location.search);
+                this.token = urlParams.get('token');
+                this.email = urlParams.get('email');
+
+                console.log('🔐 URL params:', { token: this.token, email: this.email });
+            }
+
+            validateToken() {
+                if (!this.token || !this.email) {
+                    this.showError('Invalid authentication link. Missing token or email.');
+                    return;
+                }
+
+                // For cross-device authentication, we'll accept any valid token format
+                // In production, this would validate against a secure backend
+                if (this.token.startsWith('auth_') && this.email.includes('@')) {
+                    // Check if user is already registered with this email
+                    const registeredEmail = localStorage.getItem('mylzip_user_email');
+                    if (registeredEmail === this.email) {
+                        this.authenticateSuccess();
+                    } else {
+                        // New user - store the email and authenticate
+                        localStorage.setItem('mylzip_user_email', this.email);
+                        this.authenticateSuccess();
+                    }
+                } else {
+                    this.showError('Invalid authentication token format. Please request a new link.');
+                }
+            }
+
+            authenticateSuccess() {
+                console.log('✅ Authentication successful');
+                
+                // Get user data
+                this.deviceId = localStorage.getItem('mylzip_device_id');
+                const userInitials = localStorage.getItem('mylzip_user_initials');
+                const registrationDate = localStorage.getItem('mylzip_registration_date');
+
+                // Update UI
+                document.getElementById('authStatus').className = 'auth-status success';
+                document.getElementById('authStatus').textContent = '✅ Authentication successful!';
+
+                document.getElementById('authEmail').textContent = this.email;
+                document.getElementById('authDeviceId').textContent = this.deviceId || 'Generated on this device';
+                document.getElementById('authToken').textContent = this.token.substring(0, 20) + '...';
+                document.getElementById('authStatusText').textContent = 'Authenticated ✓';
+
+                // Show info and actions
+                document.getElementById('authInfo').style.display = 'block';
+                document.getElementById('extensionTest').style.display = 'block';
+                document.getElementById('authActions').style.display = 'flex';
+                document.getElementById('loadingSpinner').style.display = 'none';
+
+                // Store authentication state
+                localStorage.setItem('mylzip_authenticated', 'true');
+                localStorage.setItem('mylzip_auth_timestamp', new Date().toISOString());
+
+                // If no device ID exists, generate one
+                if (!this.deviceId) {
+                    this.deviceId = this.generateDeviceId();
+                    localStorage.setItem('mylzip_device_id', this.deviceId);
+                    document.getElementById('authDeviceId').textContent = this.deviceId;
+                }
+
+                console.log('🔐 User authenticated:', {
+                    email: this.email,
+                    deviceId: this.deviceId,
+                    userInitials,
+                    registrationDate
+                });
+            }
+
+            showError(message) {
+                console.error('❌ Authentication error:', message);
+                
+                document.getElementById('authStatus').className = 'auth-status error';
+                document.getElementById('authStatus').textContent = '❌ ' + message;
+
+                document.getElementById('authActions').style.display = 'flex';
+                document.getElementById('loadingSpinner').style.display = 'none';
+            }
+
+            generateDeviceId() {
+                const timestamp = Date.now().toString(36);
+                const random = Math.random().toString(36).substr(2, 9);
+                return `auth_${timestamp}_${random}`;
+            }
+        }
+
+        // Initialize auth manager
+        const authManager = new AuthManager();
+
+        // Global functions
+        function goToSetup() {
+            window.location.href = '/setup-wizard.html';
+        }
+
+        function goToHome() {
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html>

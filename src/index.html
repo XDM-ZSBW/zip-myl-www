@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyL.Zip - Secure SSL Certificate Management</title>
-    <meta name="description" content="Professional SSL certificate management and API key generation for secure web services">
+    <title>MyL.Zip - Next-Gen Digital Security Ecosystem</title>
+    <meta name="description" content="Revolutionary SSL certificate management, API key generation, and secure digital solutions with MyKeys.zip integration">
     <style>
         * {
             margin: 0;
@@ -12,19 +12,109 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --neon-green: #00ff88;
+            --electric-blue: #00d4ff;
+            --cyber-orange: #ff6b35;
+            --dark-bg: #0a0a0a;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --glow-green: 0 0 20px rgba(0, 255, 136, 0.5);
+            --glow-blue: 0 0 20px rgba(0, 212, 255, 0.5);
+            --glow-orange: 0 0 20px rgba(255, 107, 53, 0.5);
+            
+            /* Adaptive CSS Variables */
+            --primary-color: var(--neon-green);
+            --secondary-color: var(--electric-blue);
+            --accent-color: var(--cyber-orange);
+            --background-intensity: 0.1;
+            --animation-speed: 20s;
+            --glow-intensity: 0.5;
+            --card-opacity: 0.05;
+            --text-size: 1rem;
+            --spacing-multiplier: 1;
+        }
+
+        /* Adaptive Color Schemes */
+        .theme-cyberpunk {
+            --primary-color: #00ff88;
+            --secondary-color: #00d4ff;
+            --accent-color: #ff6b35;
+            --background-intensity: 0.15;
+            --glow-intensity: 0.6;
+        }
+
+        .theme-minimalist {
+            --primary-color: #ffffff;
+            --secondary-color: #cccccc;
+            --accent-color: #888888;
+            --background-intensity: 0.05;
+            --glow-intensity: 0.2;
+            --card-opacity: 0.02;
+        }
+
+        .theme-warm {
+            --primary-color: #ff6b35;
+            --secondary-color: #ff8c42;
+            --accent-color: #ffd93d;
+            --background-intensity: 0.12;
+            --glow-intensity: 0.4;
+        }
+
+        .theme-cool {
+            --primary-color: #00d4ff;
+            --secondary-color: #0099cc;
+            --accent-color: #0066ff;
+            --background-intensity: 0.08;
+            --glow-intensity: 0.3;
+        }
+
+        .theme-high-contrast {
+            --primary-color: #ffffff;
+            --secondary-color: #00ff00;
+            --accent-color: #ff0000;
+            --background-intensity: 0.2;
+            --glow-intensity: 0.8;
+            --card-opacity: 0.1;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #333;
+            background: var(--dark-bg);
+            color: white;
             min-height: 100vh;
             line-height: 1.6;
+            overflow-x: hidden;
+            font-size: var(--text-size);
+        }
+
+        /* Adaptive Animated Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, var(--primary-color) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, var(--secondary-color) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, var(--accent-color) 0%, transparent 50%);
+            opacity: var(--background-intensity);
+            z-index: -1;
+            animation: backgroundShift var(--animation-speed) ease-in-out infinite;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            33% { transform: scale(1.1) rotate(1deg); }
+            66% { transform: scale(0.9) rotate(-1deg); }
         }
 
         .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1rem 0;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(20px);
+            padding: calc(1rem * var(--spacing-multiplier)) 0;
+            border-bottom: 1px solid var(--primary-color);
             position: fixed;
             top: 0;
             width: 100%;
@@ -32,229 +122,376 @@
         }
 
         .nav {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 2rem;
+            padding: 0 calc(2rem * var(--spacing-multiplier));
         }
 
         .logo {
-            font-size: 1.8rem;
+            font-size: calc(2rem * var(--spacing-multiplier));
             font-weight: bold;
-            color: #667eea;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             text-decoration: none;
+            text-shadow: 0 0 calc(20px * var(--glow-intensity)) var(--primary-color);
         }
 
         .nav-links {
             display: flex;
-            gap: 2rem;
+            gap: calc(2rem * var(--spacing-multiplier));
             list-style: none;
         }
 
         .nav-links a {
-            color: #333;
+            color: white;
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.3s;
+            transition: all 0.3s;
+            padding: calc(0.5rem * var(--spacing-multiplier)) calc(1rem * var(--spacing-multiplier));
+            border-radius: calc(25px * var(--spacing-multiplier));
         }
 
         .nav-links a:hover {
-            color: #667eea;
+            background: var(--primary-color);
+            color: var(--dark-bg);
+            box-shadow: 0 0 calc(15px * var(--glow-intensity)) var(--primary-color);
         }
 
         .main {
-            margin-top: 80px;
-            padding: 4rem 2rem;
-            max-width: 1200px;
+            margin-top: calc(80px * var(--spacing-multiplier));
+            padding: calc(4rem * var(--spacing-multiplier)) calc(2rem * var(--spacing-multiplier));
+            max-width: 1400px;
             margin-left: auto;
             margin-right: auto;
         }
 
         .hero {
             text-align: center;
-            margin-bottom: 4rem;
+            margin-bottom: calc(4rem * var(--spacing-multiplier));
             color: white;
         }
 
         .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-size: calc(3.5rem * var(--spacing-multiplier));
+            margin-bottom: calc(1rem * var(--spacing-multiplier));
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 calc(30px * var(--glow-intensity)) var(--primary-color);
         }
 
         .hero p {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
+            font-size: calc(1.3rem * var(--spacing-multiplier));
+            margin-bottom: calc(2rem * var(--spacing-multiplier));
+            color: var(--secondary-color);
+            text-shadow: 0 0 calc(10px * var(--glow-intensity)) var(--secondary-color);
         }
 
         .cta-button {
             display: inline-block;
-            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            background: linear-gradient(45deg, var(--accent-color), var(--primary-color));
             color: white;
-            padding: 1rem 2rem;
-            border-radius: 50px;
+            padding: calc(1rem * var(--spacing-multiplier)) calc(2rem * var(--spacing-multiplier));
+            border-radius: calc(50px * var(--spacing-multiplier));
             text-decoration: none;
             font-weight: bold;
-            font-size: 1.1rem;
-            transition: transform 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            font-size: calc(1.1rem * var(--spacing-multiplier));
+            transition: all 0.3s;
+            box-shadow: 0 calc(4px * var(--spacing-multiplier)) calc(15px * var(--spacing-multiplier)) rgba(0, 0, 0, 0.2);
         }
 
         .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            transform: translateY(calc(-2px * var(--spacing-multiplier)));
+            box-shadow: 0 calc(6px * var(--spacing-multiplier)) calc(20px * var(--spacing-multiplier)) rgba(0, 0, 0, 0.3);
+        }
+
+        /* Chatbot Section */
+        .chatbot-section {
+            background: rgba(255, 255, 255, var(--card-opacity));
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--secondary-color);
+            border-radius: calc(20px * var(--spacing-multiplier));
+            padding: calc(3rem * var(--spacing-multiplier));
+            margin-bottom: calc(4rem * var(--spacing-multiplier));
+            box-shadow: 0 0 calc(20px * var(--glow-intensity)) var(--secondary-color);
+        }
+
+        .chatbot-title {
+            text-align: center;
+            font-size: calc(2.5rem * var(--spacing-multiplier));
+            margin-bottom: calc(2rem * var(--spacing-multiplier));
+            color: var(--primary-color);
+            text-shadow: 0 0 calc(15px * var(--glow-intensity)) var(--primary-color);
+        }
+
+        .chatbot-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--secondary-color);
+            overflow: hidden;
+        }
+
+        .chatbot-messages {
+            height: 300px;
+            padding: calc(1rem * var(--spacing-multiplier));
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .chatbot-input {
+            display: flex;
+            padding: calc(1rem * var(--spacing-multiplier));
+            background: rgba(0, 0, 0, 0.4);
+            border-top: 1px solid var(--secondary-color);
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: calc(0.8rem * var(--spacing-multiplier)) calc(1rem * var(--spacing-multiplier));
+            border: 1px solid var(--secondary-color);
+            border-radius: calc(25px * var(--spacing-multiplier));
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            outline: none;
+            margin-right: calc(0.5rem * var(--spacing-multiplier));
+        }
+
+        .chatbot-input input:focus {
+            box-shadow: 0 0 calc(20px * var(--glow-intensity)) var(--secondary-color);
+        }
+
+        .chatbot-input button {
+            background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            border: none;
+            padding: calc(0.8rem * var(--spacing-multiplier)) calc(1.5rem * var(--spacing-multiplier));
+            border-radius: calc(25px * var(--spacing-multiplier));
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .chatbot-input button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 calc(20px * var(--glow-intensity)) var(--secondary-color);
+        }
+
+        .message {
+            margin-bottom: calc(1rem * var(--spacing-multiplier));
+            padding: calc(0.8rem * var(--spacing-multiplier)) calc(1rem * var(--spacing-multiplier));
+            border-radius: calc(15px * var(--spacing-multiplier));
+            max-width: 80%;
+            animation: messageSlide 0.3s ease-out;
+        }
+
+        @keyframes messageSlide {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            background: linear-gradient(45deg, var(--accent-color), var(--primary-color));
+            color: white;
+            margin-left: auto;
+            box-shadow: 0 0 calc(20px * var(--glow-intensity)) var(--accent-color);
+        }
+
+        .message.bot {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid var(--secondary-color);
+        }
+
+        /* USB Offer Section */
+        .usb-offer {
+            background: rgba(255, 255, 255, var(--card-opacity));
+            border: 1px solid var(--accent-color);
+            border-radius: calc(20px * var(--spacing-multiplier));
+            padding: calc(3rem * var(--spacing-multiplier));
+            margin-bottom: calc(4rem * var(--spacing-multiplier));
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 calc(20px * var(--glow-intensity)) var(--accent-color);
+            text-align: center;
+        }
+
+        .usb-offer h2 {
+            font-size: calc(2.5rem * var(--spacing-multiplier));
+            color: var(--accent-color);
+            margin-bottom: calc(1rem * var(--spacing-multiplier));
+        }
+
+        .usb-offer p {
+            color: #ccc;
+            font-size: calc(1.1rem * var(--spacing-multiplier));
+            margin-bottom: calc(2rem * var(--spacing-multiplier));
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .usb-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--accent-color);
+            border-radius: calc(15px * var(--spacing-multiplier));
+            padding: calc(2rem * var(--spacing-multiplier));
+            margin: calc(2rem * var(--spacing-multiplier)) 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .usb-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 107, 53, 0.1), transparent);
+            animation: usbGlow 3s linear infinite;
+        }
+
+        @keyframes usbGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .usb-icon {
+            font-size: calc(4rem * var(--spacing-multiplier));
+            margin-bottom: calc(1rem * var(--spacing-multiplier));
+            color: var(--accent-color);
+        }
+
+        .donation-button {
+            background: linear-gradient(45deg, var(--accent-color), var(--primary-color));
+            color: white;
+            border: none;
+            padding: calc(1rem * var(--spacing-multiplier)) calc(2rem * var(--spacing-multiplier));
+            border-radius: calc(25px * var(--spacing-multiplier));
+            font-size: calc(1.1rem * var(--spacing-multiplier));
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 calc(20px * var(--glow-intensity)) var(--accent-color);
+        }
+
+        .donation-button:hover {
+            transform: translateY(calc(-2px * var(--spacing-multiplier)));
+            box-shadow: 0 0 calc(20px * var(--glow-intensity)) var(--primary-color);
         }
 
         .features {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 4rem;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: calc(2rem * var(--spacing-multiplier));
+            margin-bottom: calc(4rem * var(--spacing-multiplier));
         }
 
         .feature-card {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 2rem;
-            border-radius: 15px;
+            background: rgba(255, 255, 255, var(--card-opacity));
+            padding: calc(2.5rem * var(--spacing-multiplier));
+            border-radius: calc(20px * var(--spacing-multiplier));
             backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
+            border: 1px solid var(--primary-color);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .feature-card:hover::before {
+            left: 100%;
         }
 
         .feature-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(calc(-10px * var(--spacing-multiplier)));
+            box-shadow: 0 0 calc(20px * var(--glow-intensity)) var(--primary-color);
         }
 
         .feature-card h3 {
-            color: #667eea;
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: calc(1rem * var(--spacing-multiplier));
+            font-size: calc(1.8rem * var(--spacing-multiplier));
         }
 
         .feature-card p {
-            color: #666;
-            margin-bottom: 1rem;
+            color: #ccc;
+            margin-bottom: calc(1.5rem * var(--spacing-multiplier));
         }
 
-        .chat-container {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            z-index: 1000;
+        .feature-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
         }
 
-        .chat-button {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s;
-        }
-
-        .chat-button:hover {
-            transform: scale(1.1);
-        }
-
-        .chat-window {
-            position: absolute;
-            bottom: 70px;
-            right: 0;
-            width: 350px;
-            height: 400px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            display: none;
-            flex-direction: column;
-        }
-
-        .chat-header {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-            padding: 1rem;
-            border-radius: 15px 15px 0 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .chat-messages {
-            flex: 1;
-            padding: 1rem;
-            overflow-y: auto;
-            max-height: 300px;
-        }
-
-        .chat-input {
-            padding: 1rem;
-            border-top: 1px solid #eee;
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .chat-input input {
-            flex: 1;
-            padding: 0.5rem;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            outline: none;
-        }
-
-        .chat-input button {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            cursor: pointer;
-        }
-
-        .message {
-            margin-bottom: 1rem;
-            padding: 0.5rem 1rem;
-            border-radius: 15px;
-            max-width: 80%;
-        }
-
-        .message.user {
-            background: #667eea;
-            color: white;
-            margin-left: auto;
-        }
-
-        .message.bot {
-            background: #f0f0f0;
-            color: #333;
+        .feature-link:hover {
+            text-shadow: 0 0 calc(10px * var(--glow-intensity)) var(--primary-color);
         }
 
         .footer {
             background: rgba(0, 0, 0, 0.1);
             color: white;
             text-align: center;
-            padding: 2rem;
-            margin-top: 4rem;
+            padding: calc(2rem * var(--spacing-multiplier));
+            margin-top: calc(4rem * var(--spacing-multiplier));
         }
 
+        /* Typing Indicator */
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--secondary-color);
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        /* Responsive Design */
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
+            :root {
+                --spacing-multiplier: 0.8;
+                --text-size: 0.9rem;
             }
             
             .nav-links {
                 display: none;
             }
-            
-            .chat-window {
-                width: 300px;
-                right: -50px;
+        }
+
+        @media (max-width: 480px) {
+            :root {
+                --spacing-multiplier: 0.7;
+                --text-size: 0.85rem;
             }
         }
     </style>
@@ -266,101 +503,403 @@
             <ul class="nav-links">
                 <li><a href="/setup-wizard.html">Setup Wizard</a></li>
                 <li><a href="/auth.html">Authentication</a></li>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="#ecosystem">Ecosystem</a></li>
+                <li><a href="#usb-offer">USB Offer</a></li>
             </ul>
         </nav>
     </header>
 
     <main class="main">
         <section class="hero">
-            <h1>Secure SSL Certificate Management</h1>
-            <p>Professional-grade SSL certificate provisioning and API key generation for your web services</p>
-            <a href="/setup-wizard.html" class="cta-button">🚀 Start Setup Wizard</a>
+            <h1>Next-Gen Digital Security Ecosystem</h1>
+            <p>Revolutionary SSL certificate management, API key generation, and secure digital solutions with MyKeys.zip integration</p>
+            <a href="/setup-wizard.html" class="cta-button">🚀 Launch Setup Wizard</a>
         </section>
 
-        <section id="features" class="features">
+        <section class="chatbot-section">
+            <h2 class="chatbot-title">🤖 AI Ecosystem Guide</h2>
+            <div class="chatbot-container">
+                <div class="chatbot-messages" id="chatbotMessages">
+                    <div class="message bot">
+                        👋 Welcome! I'm your AI guide to the MyL.Zip ecosystem. Ask me about SSL certificates, MyKeys.zip, USB devices, or anything else!
+                    </div>
+                </div>
+                <div class="chatbot-input">
+                    <input type="text" id="chatbotInput" placeholder="Ask about MyL.Zip or MyKeys.zip..." onkeypress="handleChatbotKeyPress(event)">
+                    <button onclick="sendChatbotMessage()">Send</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="usb-offer" id="usb-offer">
+            <h2>💾 Exclusive USB Device Offer</h2>
+            <p>Get a free used USB device with $5 donation! Random winners receive crypto equal to the device value with transfer instructions.</p>
+            
+            <div class="usb-card">
+                <div class="usb-icon">💾</div>
+                <h3>Cryptocurrency USB Package</h3>
+                <p>Donate $5 and receive a used USB device. Random winners get cryptocurrency equal to the device's value, complete with secure transfer instructions and usage guidelines.</p>
+                <button class="donation-button" onclick="initiateDonation()">💸 Make $5 Donation</button>
+            </div>
+        </section>
+
+        <section id="ecosystem" class="features">
             <div class="feature-card">
                 <h3>🔐 SSL Certificate Management</h3>
-                <p>Automated SSL certificate provisioning with UUID subdomain support for secure connections.</p>
-                <a href="/setup-wizard.html" style="color: #667eea; text-decoration: none;">→ Get Started</a>
+                <p>Automated SSL certificate provisioning with UUID subdomain support. Military-grade encryption for bulletproof security.</p>
+                <a href="/setup-wizard.html" class="feature-link">→ Launch Setup</a>
             </div>
             
             <div class="feature-card">
                 <h3>🔑 API Key Generation</h3>
-                <p>Secure API key generation with device-specific permissions and access controls.</p>
-                <a href="/setup-wizard.html" style="color: #667eea; text-decoration: none;">→ Generate Keys</a>
+                <p>Secure API key generation with device-specific permissions. Advanced access controls and monitoring systems.</p>
+                <a href="/setup-wizard.html" class="feature-link">→ Generate Keys</a>
             </div>
             
             <div class="feature-card">
-                <h3>🛡️ Device Authentication</h3>
-                <p>Robust device verification and authentication system with Chrome extension integration.</p>
-                <a href="/auth.html" style="color: #667eea; text-decoration: none;">→ Authenticate</a>
+                <h3>🛡️ MyKeys.zip Integration</h3>
+                <p>Seamless integration with MyKeys.zip for comprehensive key management. Unified security ecosystem.</p>
+                <a href="/setup-wizard.html" class="feature-link">→ Explore Integration</a>
+            </div>
+            
+            <div class="feature-card">
+                <h3>🌐 Chrome Extension</h3>
+                <p>Advanced Chrome extension with real-time security monitoring. Browser-integrated protection.</p>
+                <a href="/auth.html" class="feature-link">→ Get Extension</a>
             </div>
         </section>
     </main>
 
-    <div class="chat-container">
-        <button class="chat-button" onclick="toggleChat()">💬</button>
-        <div class="chat-window" id="chatWindow">
-            <div class="chat-header">
-                <span>MyL.Zip Support</span>
-                <button onclick="toggleChat()" style="background: none; border: none; color: white; cursor: pointer;">✕</button>
-            </div>
-            <div class="chat-messages" id="chatMessages">
-                <div class="message bot">
-                    👋 Welcome to MyL.Zip! How can I help you today?
-                </div>
-            </div>
-            <div class="chat-input">
-                <input type="text" id="chatInput" placeholder="Type your message..." onkeypress="handleChatKeyPress(event)">
-                <button onclick="sendMessage()">Send</button>
-            </div>
-        </div>
-    </div>
-
     <footer class="footer">
-        <p>&copy; 2025 MyL.Zip - Professional SSL Certificate Management</p>
+        <p>&copy; 2025 MyL.Zip - Next-Gen Digital Security Ecosystem | MyKeys.zip Integration</p>
     </footer>
 
     <script>
-        // Chat functionality
-        function toggleChat() {
-            const chatWindow = document.getElementById('chatWindow');
-            chatWindow.style.display = chatWindow.style.display === 'flex' ? 'none' : 'flex';
+        // Personalized Adaptive UI System
+        class AdaptiveUI {
+            constructor() {
+                this.userProfile = this.loadUserProfile();
+                this.interactionPatterns = this.loadInteractionPatterns();
+                this.visitCount = this.getVisitCount();
+                this.sessionStartTime = Date.now();
+                this.lastInteractionTime = Date.now();
+                this.interactionCount = 0;
+                this.scrollDepth = 0;
+                this.mouseMovementPattern = [];
+                this.timeSpentOnSections = {};
+                
+                this.initializeAdaptiveFeatures();
+                this.startBehaviorTracking();
+            }
+
+            loadUserProfile() {
+                const stored = localStorage.getItem('mylzip_user_profile');
+                return stored ? JSON.parse(stored) : {
+                    preferredTheme: 'cyberpunk',
+                    interactionSpeed: 'normal',
+                    attentionSpan: 'medium',
+                    colorPreference: 'vibrant',
+                    layoutPreference: 'standard',
+                    accessibilityLevel: 'standard',
+                    visitCount: 0,
+                    lastVisit: null,
+                    totalTimeSpent: 0
+                };
+            }
+
+            loadInteractionPatterns() {
+                const stored = localStorage.getItem('mylzip_interaction_patterns');
+                return stored ? JSON.parse(stored) : {
+                    averageSessionTime: 0,
+                    preferredSections: [],
+                    interactionFrequency: 'normal',
+                    scrollBehavior: 'normal',
+                    mouseMovementStyle: 'standard'
+                };
+            }
+
+            getVisitCount() {
+                return this.userProfile.visitCount || 0;
+            }
+
+            initializeAdaptiveFeatures() {
+                // Apply theme based on user profile
+                this.applyTheme();
+                
+                // Adjust UI based on visit count
+                this.adaptToVisitCount();
+                
+                // Apply accessibility features
+                this.applyAccessibilityFeatures();
+                
+                // Update user profile
+                this.updateUserProfile();
+            }
+
+            applyTheme() {
+                const themes = ['cyberpunk', 'minimalist', 'warm', 'cool', 'high-contrast'];
+                const preferredTheme = this.userProfile.preferredTheme;
+                
+                // Remove existing theme classes
+                document.body.classList.remove(...themes.map(t => `theme-${t}`));
+                
+                // Apply preferred theme
+                if (themes.includes(preferredTheme)) {
+                    document.body.classList.add(`theme-${preferredTheme}`);
+                }
+            }
+
+            adaptToVisitCount() {
+                const visitCount = this.visitCount;
+                
+                // Adjust animation speed based on familiarity
+                if (visitCount > 10) {
+                    document.documentElement.style.setProperty('--animation-speed', '15s');
+                } else if (visitCount > 5) {
+                    document.documentElement.style.setProperty('--animation-speed', '18s');
+                }
+                
+                // Adjust glow intensity based on experience
+                if (visitCount > 15) {
+                    document.documentElement.style.setProperty('--glow-intensity', '0.3');
+                } else if (visitCount > 8) {
+                    document.documentElement.style.setProperty('--glow-intensity', '0.4');
+                }
+                
+                // Adjust spacing for experienced users
+                if (visitCount > 20) {
+                    document.documentElement.style.setProperty('--spacing-multiplier', '0.9');
+                }
+            }
+
+            applyAccessibilityFeatures() {
+                const accessibilityLevel = this.userProfile.accessibilityLevel;
+                
+                if (accessibilityLevel === 'high') {
+                    document.documentElement.style.setProperty('--text-size', '1.2rem');
+                    document.documentElement.style.setProperty('--glow-intensity', '0.8');
+                    document.documentElement.style.setProperty('--spacing-multiplier', '1.2');
+                } else if (accessibilityLevel === 'low') {
+                    document.documentElement.style.setProperty('--text-size', '0.9rem');
+                    document.documentElement.style.setProperty('--glow-intensity', '0.3');
+                }
+            }
+
+            startBehaviorTracking() {
+                // Track mouse movement patterns (without storing coordinates)
+                let movementCount = 0;
+                let lastMoveTime = Date.now();
+                
+                document.addEventListener('mousemove', () => {
+                    movementCount++;
+                    const now = Date.now();
+                    
+                    if (now - lastMoveTime > 1000) {
+                        this.mouseMovementPattern.push({
+                            frequency: movementCount,
+                            timestamp: now
+                        });
+                        movementCount = 0;
+                        lastMoveTime = now;
+                    }
+                });
+
+                // Track scroll behavior
+                let lastScrollTop = 0;
+                document.addEventListener('scroll', () => {
+                    const scrollTop = window.pageYOffset;
+                    this.scrollDepth = Math.max(this.scrollDepth, scrollTop);
+                    
+                    // Track scroll speed
+                    const scrollSpeed = Math.abs(scrollTop - lastScrollTop);
+                    if (scrollSpeed > 50) {
+                        this.interactionPatterns.scrollBehavior = 'fast';
+                    } else if (scrollSpeed < 10) {
+                        this.interactionPatterns.scrollBehavior = 'slow';
+                    }
+                    
+                    lastScrollTop = scrollTop;
+                });
+
+                // Track time spent on sections
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const sectionId = entry.target.id || 'unknown';
+                            this.timeSpentOnSections[sectionId] = this.timeSpentOnSections[sectionId] || 0;
+                            
+                            const startTime = Date.now();
+                            const interval = setInterval(() => {
+                                if (entry.isIntersecting) {
+                                    this.timeSpentOnSections[sectionId] += 100;
+                                } else {
+                                    clearInterval(interval);
+                                }
+                            }, 100);
+                        }
+                    });
+                });
+
+                // Observe all sections
+                document.querySelectorAll('section').forEach(section => {
+                    observer.observe(section);
+                });
+
+                // Periodic behavior analysis
+                setInterval(() => {
+                    this.analyzeBehavior();
+                }, 30000); // Every 30 seconds
+            }
+
+            analyzeBehavior() {
+                const sessionTime = Date.now() - this.sessionStartTime;
+                const timeSinceLastInteraction = Date.now() - this.lastInteractionTime;
+                
+                // Analyze interaction patterns
+                if (this.interactionCount > 20) {
+                    this.interactionPatterns.interactionFrequency = 'high';
+                } else if (this.interactionCount < 5) {
+                    this.interactionPatterns.interactionFrequency = 'low';
+                }
+                
+                // Analyze mouse movement style
+                if (this.mouseMovementPattern.length > 0) {
+                    const avgFrequency = this.mouseMovementPattern.reduce((sum, p) => sum + p.frequency, 0) / this.mouseMovementPattern.length;
+                    if (avgFrequency > 50) {
+                        this.interactionPatterns.mouseMovementStyle = 'active';
+                    } else if (avgFrequency < 10) {
+                        this.interactionPatterns.mouseMovementStyle = 'passive';
+                    }
+                }
+                
+                // Adapt UI based on analysis
+                this.adaptUI();
+                
+                // Save patterns
+                this.saveInteractionPatterns();
+            }
+
+            adaptUI() {
+                const patterns = this.interactionPatterns;
+                
+                // Adjust animation speed based on interaction frequency
+                if (patterns.interactionFrequency === 'high') {
+                    document.documentElement.style.setProperty('--animation-speed', '15s');
+                } else if (patterns.interactionFrequency === 'low') {
+                    document.documentElement.style.setProperty('--animation-speed', '25s');
+                }
+                
+                // Adjust glow intensity based on mouse movement
+                if (patterns.mouseMovementStyle === 'active') {
+                    document.documentElement.style.setProperty('--glow-intensity', '0.6');
+                } else if (patterns.mouseMovementStyle === 'passive') {
+                    document.documentElement.style.setProperty('--glow-intensity', '0.3');
+                }
+                
+                // Adjust background intensity based on scroll behavior
+                if (patterns.scrollBehavior === 'fast') {
+                    document.documentElement.style.setProperty('--background-intensity', '0.08');
+                } else if (patterns.scrollBehavior === 'slow') {
+                    document.documentElement.style.setProperty('--background-intensity', '0.15');
+                }
+            }
+
+            updateUserProfile() {
+                this.userProfile.visitCount = this.visitCount + 1;
+                this.userProfile.lastVisit = new Date().toISOString();
+                this.userProfile.totalTimeSpent += Date.now() - this.sessionStartTime;
+                
+                // Determine preferred theme based on behavior
+                if (this.interactionPatterns.mouseMovementStyle === 'passive') {
+                    this.userProfile.preferredTheme = 'minimalist';
+                } else if (this.interactionPatterns.interactionFrequency === 'high') {
+                    this.userProfile.preferredTheme = 'cyberpunk';
+                }
+                
+                localStorage.setItem('mylzip_user_profile', JSON.stringify(this.userProfile));
+            }
+
+            saveInteractionPatterns() {
+                localStorage.setItem('mylzip_interaction_patterns', JSON.stringify(this.interactionPatterns));
+            }
+
+            // Public method to manually change theme
+            changeTheme(theme) {
+                this.userProfile.preferredTheme = theme;
+                this.applyTheme();
+                this.updateUserProfile();
+            }
         }
 
-        function sendMessage() {
-            const input = document.getElementById('chatInput');
-            const message = input.value.trim();
+        // Initialize adaptive UI
+        const adaptiveUI = new AdaptiveUI();
+
+        // Chatbot functionality
+        const chatbotResponses = {
+            'ssl': "🔐 SSL Certificate Management: Our system provides automated SSL certificate provisioning with UUID subdomain support. Each device gets a unique subdomain (e.g., device123.myl.zip) with military-grade encryption. The setup wizard guides you through the entire process in minutes!",
+            'mykeys': "🔑 MyKeys.zip Integration: MyKeys.zip is our advanced key management system that integrates seamlessly with MyL.Zip. It provides centralized key storage, rotation, and monitoring. Perfect for enterprise-level security requirements.",
+            'api': "⚡ API Key Generation: Generate secure API keys with device-specific permissions. Each key is cryptographically secure and includes rate limiting, expiration dates, and comprehensive access controls.",
+            'usb': "💾 USB Device Offer: Donate $5 and receive a used USB device! Random winners get cryptocurrency equal to the device's value, complete with secure transfer instructions. It's our way of giving back to the community while promoting digital security awareness.",
+            'security': "🛡️ Security Features: Our ecosystem includes military-grade encryption, real-time threat detection, automated certificate renewal, device authentication, and comprehensive audit logging. We're committed to providing enterprise-level security for everyone.",
+            'setup': "🚀 Setup Process: The setup wizard guides you through SSL certificate provisioning, API key generation, and device registration. It's designed to be user-friendly while maintaining enterprise-level security standards.",
+            'crypto': "₿ Cryptocurrency Integration: Our USB offer includes cryptocurrency rewards for random winners. We support multiple cryptocurrencies and provide secure transfer instructions with best practices for digital asset management.",
+            'personalization': "🎨 Personalized Experience: Your MyL.Zip experience adapts to your behavior patterns! The UI learns from your interactions, visit frequency, and preferences to provide a tailored experience without tracking clicks or keys directly."
+        };
+
+        function sendChatbotMessage() {
+            const input = document.getElementById('chatbotInput');
+            const message = input.value.trim().toLowerCase();
             
             if (message) {
-                addMessage(message, 'user');
+                addChatbotMessage(message, 'user');
                 input.value = '';
+                
+                // Update interaction tracking
+                adaptiveUI.interactionCount++;
+                adaptiveUI.lastInteractionTime = Date.now();
+                
+                // Show typing indicator
+                showTypingIndicator();
                 
                 // Simulate bot response
                 setTimeout(() => {
-                    const responses = [
-                        "Thanks for your message! I'll help you with that.",
-                        "Great question! Let me check our documentation.",
-                        "I can help you with the setup wizard. Have you tried visiting /setup-wizard.html?",
-                        "For SSL certificate issues, please use our setup wizard.",
-                        "Need help with API keys? The setup wizard will guide you through the process."
-                    ];
-                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-                    addMessage(randomResponse, 'bot');
-                }, 1000);
+                    hideTypingIndicator();
+                    const response = generateBotResponse(message);
+                    addChatbotMessage(response, 'bot');
+                }, 1500);
             }
         }
 
-        function handleChatKeyPress(event) {
+        function generateBotResponse(message) {
+            if (message.includes('ssl') || message.includes('certificate')) {
+                return chatbotResponses.ssl;
+            } else if (message.includes('mykeys') || message.includes('key management')) {
+                return chatbotResponses.mykeys;
+            } else if (message.includes('api') || message.includes('key generation')) {
+                return chatbotResponses.api;
+            } else if (message.includes('usb') || message.includes('donation') || message.includes('device')) {
+                return chatbotResponses.usb;
+            } else if (message.includes('security') || message.includes('protection')) {
+                return chatbotResponses.security;
+            } else if (message.includes('setup') || message.includes('wizard')) {
+                return chatbotResponses.setup;
+            } else if (message.includes('crypto') || message.includes('bitcoin')) {
+                return chatbotResponses.crypto;
+            } else if (message.includes('personal') || message.includes('adaptive') || message.includes('behavior')) {
+                return chatbotResponses.personalization;
+            } else {
+                return "🤖 Thanks for your message! I can help you with SSL certificates, MyKeys.zip integration, API key generation, USB device offers, security features, setup processes, cryptocurrency integration, and personalized experiences. What would you like to know more about?";
+            }
+        }
+
+        function handleChatbotKeyPress(event) {
             if (event.key === 'Enter') {
-                sendMessage();
+                sendChatbotMessage();
             }
         }
 
-        function addMessage(text, sender) {
-            const messages = document.getElementById('chatMessages');
+        function addChatbotMessage(text, sender) {
+            const messages = document.getElementById('chatbotMessages');
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${sender}`;
             messageDiv.textContent = text;
@@ -368,12 +907,42 @@
             messages.scrollTop = messages.scrollHeight;
         }
 
+        function showTypingIndicator() {
+            const messages = document.getElementById('chatbotMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message bot';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = '<div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>';
+            messages.appendChild(typingDiv);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+
+        function initiateDonation() {
+            alert('🚀 Donation system coming soon! This will integrate with secure payment processors to handle your $5 donation and USB device offer. Stay tuned for updates!');
+        }
+
+        // Theme switcher for testing
+        function switchTheme(theme) {
+            adaptiveUI.changeTheme(theme);
+        }
+
         // Console info for developers
-        console.log('🚀 [PRODUCTION] MyL.Zip Production Environment Active');
-        console.log('📋 [INFO] This is the production codebase for myl.zip');
+        console.log('🚀 [PRODUCTION] MyL.Zip Next-Gen Ecosystem Active');
+        console.log('📋 [INFO] Revolutionary SSL certificate management with MyKeys.zip integration');
+        console.log('🎨 [PERSONALIZATION] Adaptive UI system active - learning from user behavior');
         console.log('🔗 [SETUP] Setup Wizard: https://myl.zip/setup-wizard.html');
         console.log('🔐 [AUTH] Authentication: https://myl.zip/auth.html');
-        console.log('💬 [CHAT] Support chat is available');
+        console.log('🤖 [CHAT] AI-powered ecosystem guide available');
+        console.log('💾 [USB] USB device offer with crypto rewards');
+        console.log('👤 [USER] Visit count:', adaptiveUI.visitCount);
+        console.log('🎯 [THEME] Current theme:', adaptiveUI.userProfile.preferredTheme);
     </script>
 </body>
 </html>

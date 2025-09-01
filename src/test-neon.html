@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEST - MyL.Zip Neon Design</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --neon-green: #00ff88;
+            --electric-blue: #00d4ff;
+            --cyber-orange: #ff6b35;
+            --dark-bg: #0a0a0a;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --glow-green: 0 0 20px rgba(0, 255, 136, 0.5);
+            --glow-blue: 0 0 20px rgba(0, 212, 255, 0.5);
+            --glow-orange: 0 0 20px rgba(255, 107, 53, 0.5);
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: var(--dark-bg);
+            color: white;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 255, 136, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 107, 53, 0.1) 0%, transparent 50%);
+            animation: backgroundShift 10s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(1deg); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: textGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlow {
+            from { text-shadow: 0 0 10px var(--neon-green); }
+            to { text-shadow: 0 0 20px var(--neon-green), 0 0 30px var(--neon-green); }
+        }
+
+        .header h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--neon-green), var(--electric-blue), var(--cyber-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(30deg); }
+        }
+
+        .header p {
+            font-size: 1.5rem;
+            color: var(--electric-blue);
+            text-shadow: 0 0 10px var(--electric-blue);
+        }
+
+        .chatbot-section {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: var(--glow-green);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: var(--glow-green); }
+            50% { box-shadow: var(--glow-blue); }
+        }
+
+        .chatbot-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--neon-green);
+            text-shadow: 0 0 15px var(--neon-green);
+        }
+
+        .chat-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            border: 1px solid var(--neon-green);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: linear-gradient(45deg, var(--neon-green), var(--electric-blue));
+            padding: 1rem;
+            text-align: center;
+            font-weight: bold;
+            color: var(--dark-bg);
+        }
+
+        .chat-messages {
+            height: 300px;
+            overflow-y: auto;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            border-radius: 10px;
+            max-width: 80%;
+            animation: messageSlide 0.3s ease-out;
+        }
+
+        @keyframes messageSlide {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .message.bot {
+            background: linear-gradient(45deg, var(--electric-blue), var(--cyber-orange));
+            color: white;
+            margin-right: auto;
+            box-shadow: var(--glow-blue);
+        }
+
+        .message.user {
+            background: linear-gradient(45deg, var(--neon-green), var(--electric-blue));
+            color: var(--dark-bg);
+            margin-left: auto;
+            box-shadow: var(--glow-green);
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            gap: 0.5rem;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 1px solid var(--neon-green);
+            border-radius: 25px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .chat-input input:focus {
+            border-color: var(--electric-blue);
+            box-shadow: var(--glow-blue);
+        }
+
+        .chat-input button {
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(45deg, var(--cyber-orange), var(--neon-green));
+            border: none;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: var(--glow-orange);
+        }
+
+        .chat-input button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px var(--cyber-orange);
+        }
+
+        .usb-offer {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: var(--glow-orange);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .usb-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--cyber-orange);
+            text-shadow: 0 0 15px var(--cyber-orange);
+        }
+
+        .usb-description {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: var(--electric-blue);
+            line-height: 1.6;
+        }
+
+        .donation-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(45deg, var(--cyber-orange), var(--neon-green));
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            box-shadow: var(--glow-orange);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .donation-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px var(--cyber-orange);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            box-shadow: var(--glow-blue);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px var(--electric-blue);
+        }
+
+        .feature-card h3 {
+            color: var(--electric-blue);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .feature-card p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .chatbot-title, .usb-title {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 MyL.Zip</h1>
+            <p>Next-Gen Digital Security Ecosystem</p>
+        </div>
+
+        <div class="chatbot-section">
+            <h2 class="chatbot-title">🤖 AI Ecosystem Guide</h2>
+            <div class="chat-container">
+                <div class="chat-header">
+                    💬 Ask about MyL.Zip & MyKeys.zip Solutions
+                </div>
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message bot">
+                        👋 Welcome! I'm your AI guide to the MyL.Zip ecosystem. Ask me about SSL certificates, MyKeys.zip, USB devices, or anything else!
+                    </div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="chatInput" placeholder="Ask about MyL.Zip ecosystem..." onkeypress="handleChatKeyPress(event)">
+                    <button onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="usb-offer">
+            <h2 class="usb-title">💾 USB Device Offer</h2>
+            <p class="usb-description">
+                Get a free used USB device with a $5.00 donation! Random winners receive the same value in cryptocurrency on the USB device with transfer instructions.
+            </p>
+            <a href="#" class="donation-button">💸 Donate $5.00</a>
+        </div>
+
+        <div class="features">
+            <div class="feature-card">
+                <h3>🔐 SSL Certificates</h3>
+                <p>Professional-grade SSL certificate management with UUID subdomain support.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🔑 MyKeys.zip</h3>
+                <p>Secure API key generation and management for your digital services.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🛡️ Device Security</h3>
+                <p>Advanced device authentication and verification systems.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chat functionality
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                addMessage(message, 'user');
+                input.value = '';
+                
+                // Simulate AI response
+                setTimeout(() => {
+                    const responses = [
+                        "Great question! MyL.Zip offers professional SSL certificate management with UUID subdomain support.",
+                        "MyKeys.zip is our secure API key generation service. It integrates seamlessly with the MyL.Zip ecosystem.",
+                        "The USB device offer includes cryptocurrency rewards for random winners. Each device comes with transfer instructions.",
+                        "Our ecosystem includes SSL certificates, API keys, device authentication, and secure digital solutions.",
+                        "For SSL setup, visit our setup wizard. For API keys, check out MyKeys.zip integration."
+                    ];
+                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                    addMessage(randomResponse, 'bot');
+                }, 1000);
+            }
+        }
+
+        function handleChatKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function addMessage(text, sender) {
+            const messages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.textContent = text;
+            messages.appendChild(messageDiv);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        // Auto-start chat
+        setTimeout(() => {
+            addMessage("Try asking about 'SSL certificates', 'MyKeys.zip', or 'USB device offer'!", 'bot');
+        }, 2000);
+    </script>
+</body>
+</html>
+
