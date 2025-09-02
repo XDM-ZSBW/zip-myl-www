@@ -3,7 +3,10 @@
 
 class CrossPlatformChat {
   constructor() {
-    this.apiUrl = 'http://localhost:3333';
+    // Use production API URL for deployed site, localhost for development
+    this.apiUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+      ? 'http://localhost:3333' 
+      : 'https://api.myl.zip';
     this.deviceId = this.generateDeviceId();
     this.eventSource = null;
     this.isConnected = false;
@@ -54,8 +57,28 @@ class CrossPlatformChat {
       }
     } catch (error) {
       console.error('❌ Backend API connection failed:', error);
+      
+      // If production backend is down, show user-friendly message
+      if (this.apiUrl.includes('api.myl.zip') || this.apiUrl.includes('api.mykeys.zip')) {
+        console.log('🌐 Production backend temporarily unavailable - using local fallback');
+        this.showOfflineMessage();
+      }
+      
       return false;
     }
+  }
+
+  showOfflineMessage() {
+    // Display a user-friendly message when backend is offline
+    const message = {
+      id: 'offline-notice',
+      message: '🌐 Chat system is temporarily offline. Messages will be stored locally and sent when connection is restored.',
+      sourceDeviceId: 'system',
+      timestamp: new Date().toISOString(),
+      type: 'system'
+    };
+    
+    this.displayMessage(message);
   }
 
   startEventStream() {
